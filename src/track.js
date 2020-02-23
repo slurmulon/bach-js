@@ -38,17 +38,11 @@ export class Track {
     return this.data.map(beats => {
       return beats
         .filter(beat => !!beat.data)
-        .map(beat => {
-          return beat.items
-            .filter(item => item && item.kind === kind)
-            .map(({ kind, value }) => ({ kind, value }))
+        .map(({ items }) => {
+          return items.filter(item => item && item.kind === kind)
         })
         .flat()
     }).flat()
-
-    generator (kind = 'note') {
-
-    }
   }
 
 }
