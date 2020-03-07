@@ -20,7 +20,7 @@
     "interpeter"
   ],
   "author": "slurmulon",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/slurmulon/bach-js/issues"
   },
