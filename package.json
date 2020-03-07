@@ -1,7 +1,7 @@
 {
   "name": "bach-js",
   "version": "1.0.0",
-  "description": "Bach.JSON music notation parser for JS",
+  "description": "Bach music notation parser for JavaScript",
   "main": "dist/bundle.js",
   "scripts": {
     "build": "rollup -c",
