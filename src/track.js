@@ -38,20 +38,13 @@ export class Track {
   all (kind = 'note') {
     return this.data.map(beats => {
       return beats
-        //.map(beat => {
         .filter(beat => {
           if (beat.data) {
-            // TODO: Move this logic to Beat
             return beat.items.some(item => {
               return item && item.kind === kind
             })
           }
         })
-        // .filter(beat => !!beat.data)
-        // .map(({ items }) => {
-        //   return items.filter(item => item && item.kind === kind)
-        // })
-        // .flat()
     }).flat()
   }
 
