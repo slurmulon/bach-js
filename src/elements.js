@@ -57,9 +57,11 @@ export class Element {
 }
 
 /**
- * Represents a single beat in a track (Note, Scale, Chord, Rest, etc.)
+ * Represents a single beat in a track.
  *
- * duration -> notes
+ * Beats are represented as a duple and may contain multiple elements
+ *
+ * duration -> notes (elements)
  */
 export class Beat {
 
