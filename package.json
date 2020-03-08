@@ -19,7 +19,7 @@
     "parser",
     "interpeter"
   ],
-  "author": "slurmulon",
+  "author": "Erik Vavro",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/slurmulon/bach-js/issues"
