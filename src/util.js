@@ -1,3 +1,5 @@
+import validate from './validate'
+
 // Creates Bach.JSON elements/atoms from minimal data
 // WARN: Now dup'd in rebach
 export const atomize = (kind, value) => ({
@@ -6,6 +8,18 @@ export const atomize = (kind, value) => ({
     init: { arguments: [value] }
   }
 })
+
+export const normalize = source => {
+  if (validate(source)) {
+    return Object.assign(source, {
+      data: source.data.map(Beat.from)
+    })
+  }
+
+  console.error(validate.errors)
+
+  throw TypeError('Invalid Bach.JSON data')
+}
 
 // Creates a reduced and simplified version of the track with only populated sections
 export const sectionize = source => source.data
