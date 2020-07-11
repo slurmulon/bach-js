@@ -36,7 +36,20 @@ var createClass = function () {
 
 
 
+var defineProperty = function (obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
 
+  return obj;
+};
 
 
 
@@ -152,7 +165,7 @@ var Element = function () {
   }, {
     key: 'kind',
     get: function get$$1() {
-      var explicits = ['Note', 'Scale', 'Chord', 'Mode', 'Triad', 'Rest'];
+      var explicits = ['Note', 'Scale', 'Chord', 'Mode', 'Triad', 'Pentatonic', 'Rest'];
       var keyword = this.data.atom.keyword;
 
       if (explicits.includes(keyword)) {
@@ -231,6 +244,9 @@ var validate = ajv.compile(schema);
 
 // TODO: Possibly rename to Bach, Track will just be a Gig construct
 var Track = function () {
+
+  // TODO:
+  // constructor ({ source, tempo })
   function Track(source) {
     classCallCheck(this, Track);
 
@@ -280,6 +296,9 @@ var Track = function () {
   }, {
     key: 'at',
 
+
+    // TODO: get mspb (ms-per-meter-beat essentially, since our `ms-per-beat` in bach is really, in practice, `ms-per-lowest-beat` (need to correct for this in `bach!)
+    // TODO: consider moving `interval` (and this new getter) to a `time` module or something
 
     /**
      * Determines the measure and beat found at the provided indices
@@ -332,7 +351,58 @@ var Track = function () {
   return Track;
 }();
 
+// Creates Bach.JSON elements/atoms from minimal data
+// WARN: Now dup'd in rebach
+var atomize = function atomize(kind, value) {
+  return {
+    atom: {
+      keyword: kind.toLowerCase(),
+      init: { arguments: [value] }
+    }
+  };
+};
+
+// Creates a reduced and simplified version of the track with only populated sections
+var sectionize = function sectionize(source) {
+  return source.data.map(function (measure) {
+    return measure.filter(function (beat) {
+      return !!beat.data;
+    }).map(simplifyBeat);
+  }).reduce(function (all, one) {
+    return all.concat(one);
+  }, []);
+};
+
+// Groups sequentially identical phrases by summation of duration:
+// TODO
+var condense = function condense(source) {};var simplifyNote = function simplifyNote(note) {
+  var _note$atom = note.atom,
+      keyword = _note$atom.keyword,
+      init = _note$atom.init;
+
+  var _init$arguments = slicedToArray(init.arguments, 1),
+      value = _init$arguments[0];
+
+  var kind = keyword.toLowerCase();
+
+  return { kind: kind, value: value };
+};
+
+// Provides a reduced/simplified representation of a Bach beat and its notes
+var simplifyBeat = function simplifyBeat(beat) {
+  return beat.data.notes.map(simplifyNote).reduce(function (acc, note) {
+    return Object.assign(acc, defineProperty({
+      duration: beat.data.duration
+    }, note.kind, note.value));
+  }, {});
+};
+
 exports.Track = Track;
 exports.Element = Element;
 exports.Beat = Beat;
 exports.validate = validate;
+exports.atomize = atomize;
+exports.sectionize = sectionize;
+exports.condense = condense;
+exports.simplifyNote = simplifyNote;
+exports.simplifyBeat = simplifyBeat;
