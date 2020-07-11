@@ -19,7 +19,7 @@ export class Element {
   }
 
   get kind () {
-    const explicits = ['Note', 'Scale', 'Chord', 'Mode', 'Triad', 'Rest']
+    const explicits = ['Note', 'Scale', 'Chord', 'Mode', 'Triad', 'Pentatonic', 'Rest']
     const keyword = this.data.atom.keyword
 
     if (explicits.includes(keyword)) {
