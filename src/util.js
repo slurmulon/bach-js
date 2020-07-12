@@ -1,3 +1,4 @@
+import { Beat } from './elements'
 import validate from './validate'
 
 // Creates Bach.JSON elements/atoms from minimal data
@@ -58,4 +59,4 @@ export const simplifyBeat = beat => beat.data.notes
     [note.kind]: note.value
   }), {})
 
-export default { atomize, simplifyNote, simplifyBeat }
+export default { atomize, normalize, simplifyNote, simplifyBeat }

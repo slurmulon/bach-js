@@ -362,6 +362,18 @@ var atomize = function atomize(kind, value) {
   };
 };
 
+var normalize = function normalize(source) {
+  if (validate(source)) {
+    return Object.assign(source, {
+      data: source.data.map(Beat.from)
+    });
+  }
+
+  console.error(validate.errors);
+
+  throw TypeError('Invalid Bach.JSON data');
+};
+
 // Creates a reduced and simplified version of the track with only populated sections
 var sectionize = function sectionize(source) {
   return source.data.map(function (measure) {
@@ -402,6 +414,7 @@ exports.Element = Element;
 exports.Beat = Beat;
 exports.validate = validate;
 exports.atomize = atomize;
+exports.normalize = normalize;
 exports.sectionize = sectionize;
 exports.condense = condense;
 exports.simplifyNote = simplifyNote;
