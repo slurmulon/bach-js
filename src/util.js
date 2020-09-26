@@ -6,7 +6,7 @@ import validate from './validate'
 export const atomize = (kind, value) => ({
   atom: {
     keyword: kind.toLowerCase(),
-    init: { arguments: [value] }
+    arguments: [value]
   }
 })
 
@@ -44,8 +44,7 @@ export const condense = source => {
 
 // Provides a reduced/simplified representation of a Bach atom/note
 export const simplifyNote = note => {
-  const { atom: { keyword, init } } = note
-  const [value] = init.arguments
+  const { atom: { keyword, arguments: [value] } } = note
   const kind = keyword.toLowerCase()
 
   return { kind, value }
