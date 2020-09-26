@@ -15,7 +15,7 @@ export class Element {
   }
 
   get inputs () {
-    return this.data.atom.init['arguments']
+    return this.data.atom['arguments']
   }
 
   get kind () {

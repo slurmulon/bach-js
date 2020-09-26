@@ -160,7 +160,7 @@ var Element = function () {
   }, {
     key: 'inputs',
     get: function get$$1() {
-      return this.data.atom.init['arguments'];
+      return this.data.atom['arguments'];
     }
   }, {
     key: 'kind',
@@ -250,9 +250,12 @@ var Track = function () {
   function Track(source) {
     classCallCheck(this, Track);
 
-    if (!validate(source)) {
-      throw TypeError('Invalid Bach.JSON source data: ' + JSON.stringify(validate.errors));
-    }
+    // Temporarily disabling validation while regularly switching
+    // between Bach 1.0.0-SNAPSHOT and 1.1.0-SNAPSHOT
+    //
+    // if (!validate(source)) {
+    //   throw TypeError(`Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}`)
+    // }
 
     this.source = source;
   }
@@ -357,7 +360,7 @@ var atomize = function atomize(kind, value) {
   return {
     atom: {
       keyword: kind.toLowerCase(),
-      init: { arguments: [value] }
+      arguments: [value]
     }
   };
 };
@@ -390,10 +393,8 @@ var sectionize = function sectionize(source) {
 var condense = function condense(source) {};var simplifyNote = function simplifyNote(note) {
   var _note$atom = note.atom,
       keyword = _note$atom.keyword,
-      init = _note$atom.init;
-
-  var _init$arguments = slicedToArray(init.arguments, 1),
-      value = _init$arguments[0];
+      _note$atom$arguments = slicedToArray(_note$atom.arguments, 1),
+      value = _note$atom$arguments[0];
 
   var kind = keyword.toLowerCase();
 

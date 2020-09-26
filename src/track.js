@@ -7,9 +7,12 @@ export class Track {
   // TODO:
   // constructor ({ source, tempo })
   constructor (source) {
-    if (!validate(source)) {
-      throw TypeError(`Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}`)
-    }
+    // Temporarily disabling validation while regularly switching
+    // between Bach 1.0.0-SNAPSHOT and 1.1.0-SNAPSHOT
+    //
+    // if (!validate(source)) {
+    //   throw TypeError(`Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}`)
+    // }
 
     this.source = source
   }
