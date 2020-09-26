@@ -160,7 +160,6 @@ var Element = function () {
   }, {
     key: 'inputs',
     get: function get$$1() {
-      console.log('[bach-js] inputs sanity check?');
       return this.data.atom['arguments'];
     }
   }, {
