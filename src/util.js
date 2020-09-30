@@ -43,16 +43,20 @@ export const condense = source => {
 }
 
 // Provides a reduced/simplified representation of a Bach atom/note
+// TODO: Rename to `simplifyBeatItem`
 export const simplifyNote = note => {
-  const { atom: { keyword, arguments: [value] } } = note
+  // const { atom: { keyword, arguments: [value] } } = note
+  const { keyword, arguments: [value] } = note
   const kind = keyword.toLowerCase()
 
   return { kind, value }
 }
 
 // Provides a reduced/simplified representation of a Bach beat and its notes
-export const simplifyBeat = beat => beat.data.notes
-  .map(simplifyNote)
+// export const simplifyBeat = beat => beat.data.notes
+//   // TODO: Rename to `simplifyBeat`
+//   .map(simplifyNote)
+export const simplifyBeat = beat => beat.items
   .reduce((acc, note) => Object.assign(acc, {
     duration: beat.data.duration,
     [note.kind]: note.value
