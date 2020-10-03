@@ -1,13 +1,11 @@
 import { Beat } from './elements'
 import validate from './validate'
 
-// Creates Bach.JSON elements/atoms from minimal data
+// Creates Bach.JSON beat elements from minimal data
 // WARN: Now dup'd in rebach
 export const atomize = (kind, value) => ({
-  atom: {
-    keyword: kind.toLowerCase(),
-    arguments: [value]
-  }
+  keyword: kind.toLowerCase(),
+  arguments: [value]
 })
 
 export const normalize = source => {
@@ -42,17 +40,17 @@ export const condense = source => {
   // Note: Does not wrap head and tail if there's more than 2 elements
 }
 
-// Provides a reduced/simplified representation of a Bach atom/note
-export const simplifyNote = note => {
-  const { atom: { keyword, arguments: [value] } } = note
+// Provides a reduced/simplified representation of a Bach beat item/element
+export const simplifyBeatItem = item => {
+  const { keyword, arguments: [value] } = item
   const kind = keyword.toLowerCase()
 
   return { kind, value }
 }
 
-// Provides a reduced/simplified representation of a Bach beat and its notes
-export const simplifyBeat = beat => beat.data.notes
-  .map(simplifyNote)
+// Provides a reduced/simplified representation of a Bach beat and its items
+export const simplifyBeat = beat => beat.data.items
+  .map(simplifyBeatItem)
   .reduce((acc, note) => Object.assign(acc, {
     duration: beat.data.duration,
     [note.kind]: note.value

@@ -67,7 +67,7 @@ export class Track {
 
     const diff = tempos.user / tempos.init
 
-    return this.headers['ms-per-beat'] / diff
+    return this.headers['ms-per-pulse-beat'] / diff
   }
 
   // TODO: get mspb (ms-per-meter-beat essentially, since our `ms-per-beat` in bach is really, in practice, `ms-per-lowest-beat` (need to correct for this in `bach!)
