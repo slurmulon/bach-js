@@ -160,13 +160,13 @@ var Element = function () {
   }, {
     key: 'inputs',
     get: function get$$1() {
-      return this.data.atom['arguments'];
+      return this.data['arguments'];
     }
   }, {
     key: 'kind',
     get: function get$$1() {
       var explicits = ['Note', 'Scale', 'Chord', 'Mode', 'Triad', 'Pentatonic', 'Rest'];
-      var keyword = this.data.atom.keyword;
+      var keyword = this.data.keyword;
 
       if (explicits.includes(keyword)) {
         return keyword.toLowerCase();
@@ -195,18 +195,14 @@ var Beat = function () {
   createClass(Beat, [{
     key: 'duration',
     get: function get$$1() {
-      return !this.empty ? this.data.duration : 0;
+      return this.exists ? this.data.duration : 0;
     }
   }, {
     key: 'items',
     get: function get$$1() {
       if (this.empty) return [];
 
-      var notes = this.data.notes;
-
-      var items = Array.isArray(notes) ? notes : [notes];
-
-      return items.map(function (item) {
+      return this.data.items.map(function (item) {
         return new Element(item);
       });
     }
@@ -348,20 +344,18 @@ var Track = function () {
 
       var diff = tempos.user / tempos.init;
 
-      return this.headers['ms-per-beat'] / diff;
+      return this.headers['ms-per-pulse-beat'] / diff;
     }
   }]);
   return Track;
 }();
 
-// Creates Bach.JSON elements/atoms from minimal data
+// Creates Bach.JSON beat elements from minimal data
 // WARN: Now dup'd in rebach
 var atomize = function atomize(kind, value) {
   return {
-    atom: {
-      keyword: kind.toLowerCase(),
-      arguments: [value]
-    }
+    keyword: kind.toLowerCase(),
+    arguments: [value]
   };
 };
 
@@ -390,20 +384,19 @@ var sectionize = function sectionize(source) {
 
 // Groups sequentially identical phrases by summation of duration:
 // TODO
-var condense = function condense(source) {};var simplifyNote = function simplifyNote(note) {
-  var _note$atom = note.atom,
-      keyword = _note$atom.keyword,
-      _note$atom$arguments = slicedToArray(_note$atom.arguments, 1),
-      value = _note$atom$arguments[0];
+var condense = function condense(source) {};var simplifyBeatItem = function simplifyBeatItem(item) {
+  var keyword = item.keyword,
+      _item$arguments = slicedToArray(item.arguments, 1),
+      value = _item$arguments[0];
 
   var kind = keyword.toLowerCase();
 
   return { kind: kind, value: value };
 };
 
-// Provides a reduced/simplified representation of a Bach beat and its notes
+// Provides a reduced/simplified representation of a Bach beat and its items
 var simplifyBeat = function simplifyBeat(beat) {
-  return beat.data.notes.map(simplifyNote).reduce(function (acc, note) {
+  return beat.data.items.map(simplifyBeatItem).reduce(function (acc, note) {
     return Object.assign(acc, defineProperty({
       duration: beat.data.duration
     }, note.kind, note.value));
@@ -418,5 +411,5 @@ exports.atomize = atomize;
 exports.normalize = normalize;
 exports.sectionize = sectionize;
 exports.condense = condense;
-exports.simplifyNote = simplifyNote;
+exports.simplifyBeatItem = simplifyBeatItem;
 exports.simplifyBeat = simplifyBeat;
