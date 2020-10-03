@@ -76,11 +76,6 @@ export class Beat {
   get items () {
     if (this.empty) return []
 
-    // const { notes } = this.data
-    // const items = Array.isArray(notes) ? notes : [notes]
-
-    // return items.map(item => new Element(item))
-
     return this.data.items.map(item => new Element(item))
   }
 
