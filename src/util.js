@@ -20,6 +20,18 @@ export const normalize = source => {
   throw TypeError('Invalid Bach.JSON data')
 }
 
+// Converts a parsed Track's `data` back into its serialized form (vanilla bach.json)
+export const serialize = track => {
+  const data = track.data
+    .map(measure => {
+      return measure.map(beat => {
+        return beat && beat.data
+      })
+    })
+
+  return Object.assign({}, track, { data })
+}
+
 // Creates a reduced and simplified version of the track with only populated sections
 export const sectionize = source => source.data
   .map(measure =>
@@ -56,4 +68,4 @@ export const simplifyBeat = beat => beat.data.items
     [note.kind]: note.value
   }), {})
 
-export default { atomize, normalize, simplifyNote, simplifyBeat }
+export default { atomize, normalize, serialize, simplifyNote, simplifyBeat }
