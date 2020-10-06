@@ -19,14 +19,20 @@ export class Element {
   }
 
   get kind () {
-    const explicits = ['Note', 'Scale', 'Chord', 'Mode', 'Triad', 'Pentatonic', 'Rest']
-    const keyword = this.data.keyword
+    // const explicits = ['Note', 'Scale', 'Chord', 'Mode', 'Triad', 'Pentatonic', 'Penta', 'Rest', '~']
+    const keyword = this.data.keyword.toLowerCase()
 
-    if (explicits.includes(keyword)) {
-      return keyword.toLowerCase()
-    }
+    // if (semantics.includes(keyword)) {
+      // return keyword.toLowerCase()
+    // }
 
-    return this.identify()
+    // return this.identify()
+    // const kind = this.identify() || keyword
+    const kind = keyword
+
+    console.log('[bach-js] kind', this.data, kind)
+
+    return kind
   }
 
   identify () {
