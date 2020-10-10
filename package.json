@@ -1,6 +1,6 @@
 {
   "name": "bach-js",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Bach music notation parser for JS",
   "main": "dist/bundle.js",
   "scripts": {

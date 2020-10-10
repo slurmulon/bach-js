@@ -165,14 +165,7 @@ var Element = function () {
   }, {
     key: 'kind',
     get: function get$$1() {
-      var explicits = ['Note', 'Scale', 'Chord', 'Mode', 'Triad', 'Pentatonic', 'Rest'];
-      var keyword = this.data.keyword;
-
-      if (explicits.includes(keyword)) {
-        return keyword.toLowerCase();
-      }
-
-      return this.identify();
+      return this.data.keyword.toLowerCase();
     }
   }]);
   return Element;
@@ -181,9 +174,9 @@ var Element = function () {
 /**
  * Represents a single beat in a track.
  *
- * Beats are represented as a duple and may contain multiple elements
+ * Beats are represented as a tuple and may contain multiple elements
  *
- * duration -> notes (elements)
+ * duration -> items (elements)
  */
 var Beat = function () {
   function Beat(data) {
@@ -246,12 +239,9 @@ var Track = function () {
   function Track(source) {
     classCallCheck(this, Track);
 
-    // Temporarily disabling validation while regularly switching
-    // between Bach 1.0.0-SNAPSHOT and 1.1.0-SNAPSHOT
-    //
-    // if (!validate(source)) {
-    //   throw TypeError(`Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}`)
-    // }
+    if (!validate(source)) {
+      throw TypeError('Invalid Bach.JSON source data: ' + JSON.stringify(validate.errors));
+    }
 
     this.source = source;
   }
@@ -361,7 +351,7 @@ var atomize = function atomize(kind, value) {
 
 var normalize = function normalize(source) {
   if (validate(source)) {
-    return Object.assign(source, {
+    return Object.assign({}, source, {
       data: source.data.map(Beat.from)
     });
   }
@@ -369,6 +359,18 @@ var normalize = function normalize(source) {
   console.error(validate.errors);
 
   throw TypeError('Invalid Bach.JSON data');
+};
+
+// Converts a parsed Track's `data` back into its serialized form (vanilla bach.json)
+//  - Perhaps better suited as a static method on Track
+var serialize = function serialize(track) {
+  var data = track.data.map(function (measure) {
+    return measure.map(function (beat) {
+      return beat && beat.data;
+    });
+  });
+
+  return Object.assign({}, track, { data: data });
 };
 
 // Creates a reduced and simplified version of the track with only populated sections
@@ -396,10 +398,10 @@ var condense = function condense(source) {};var simplifyBeatItem = function simp
 
 // Provides a reduced/simplified representation of a Bach beat and its items
 var simplifyBeat = function simplifyBeat(beat) {
-  return beat.data.items.map(simplifyBeatItem).reduce(function (acc, note) {
+  return beat.data.items.map(simplifyBeatItem).reduce(function (acc, item) {
     return Object.assign(acc, defineProperty({
       duration: beat.data.duration
-    }, note.kind, note.value));
+    }, item.kind, item.value));
   }, {});
 };
 
@@ -409,6 +411,7 @@ exports.Beat = Beat;
 exports.validate = validate;
 exports.atomize = atomize;
 exports.normalize = normalize;
+exports.serialize = serialize;
 exports.sectionize = sectionize;
 exports.condense = condense;
 exports.simplifyBeatItem = simplifyBeatItem;
