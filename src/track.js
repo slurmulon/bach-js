@@ -7,12 +7,9 @@ export class Track {
   // TODO:
   // constructor ({ source, tempo })
   constructor (source) {
-    // Temporarily disabling validation while regularly switching
-    // between Bach 1.0.0-SNAPSHOT and 1.1.0-SNAPSHOT
-    //
-    // if (!validate(source)) {
-    //   throw TypeError(`Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}`)
-    // }
+    if (!validate(source)) {
+      throw TypeError(`Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}`)
+    }
 
     this.source = source
   }
@@ -67,7 +64,7 @@ export class Track {
 
     const diff = tempos.user / tempos.init
 
-    return this.headers['ms-per-beat'] / diff
+    return this.headers['ms-per-pulse-beat'] / diff
   }
 
   // TODO: get mspb (ms-per-meter-beat essentially, since our `ms-per-beat` in bach is really, in practice, `ms-per-lowest-beat` (need to correct for this in `bach!)

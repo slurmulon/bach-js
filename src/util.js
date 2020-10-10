@@ -1,18 +1,16 @@
 import { Beat } from './elements'
 import validate from './validate'
 
-// Creates Bach.JSON elements/atoms from minimal data
+// Creates Bach.JSON beat elements from minimal data
 // WARN: Now dup'd in rebach
 export const atomize = (kind, value) => ({
-  atom: {
-    keyword: kind.toLowerCase(),
-    arguments: [value]
-  }
+  keyword: kind.toLowerCase(),
+  arguments: [value]
 })
 
 export const normalize = source => {
   if (validate(source)) {
-    return Object.assign(source, {
+    return Object.assign({}, source, {
       data: source.data.map(Beat.from)
     })
   }
@@ -20,6 +18,19 @@ export const normalize = source => {
   console.error(validate.errors)
 
   throw TypeError('Invalid Bach.JSON data')
+}
+
+// Converts a parsed Track's `data` back into its serialized form (vanilla bach.json)
+//  - Perhaps better suited as a static method on Track
+export const serialize = track => {
+  const data = track.data
+    .map(measure => {
+      return measure.map(beat => {
+        return beat && beat.data
+      })
+    })
+
+  return Object.assign({}, track, { data })
 }
 
 // Creates a reduced and simplified version of the track with only populated sections
@@ -42,20 +53,20 @@ export const condense = source => {
   // Note: Does not wrap head and tail if there's more than 2 elements
 }
 
-// Provides a reduced/simplified representation of a Bach atom/note
-export const simplifyNote = note => {
-  const { atom: { keyword, arguments: [value] } } = note
+// Provides a reduced/simplified representation of a Bach beat item/element
+export const simplifyBeatItem = item => {
+  const { keyword, arguments: [value] } = item
   const kind = keyword.toLowerCase()
 
   return { kind, value }
 }
 
-// Provides a reduced/simplified representation of a Bach beat and its notes
-export const simplifyBeat = beat => beat.data.notes
-  .map(simplifyNote)
-  .reduce((acc, note) => Object.assign(acc, {
+// Provides a reduced/simplified representation of a Bach beat and its items
+export const simplifyBeat = beat => beat.data.items
+  .map(simplifyBeatItem)
+  .reduce((acc, item) => Object.assign(acc, {
     duration: beat.data.duration,
-    [note.kind]: note.value
+    [item.kind]: item.value
   }), {})
 
-export default { atomize, normalize, simplifyNote, simplifyBeat }
+export default { atomize, normalize, serialize, simplifyNote, simplifyBeat }

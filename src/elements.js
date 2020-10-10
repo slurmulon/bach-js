@@ -15,18 +15,11 @@ export class Element {
   }
 
   get inputs () {
-    return this.data.atom['arguments']
+    return this.data['arguments']
   }
 
   get kind () {
-    const explicits = ['Note', 'Scale', 'Chord', 'Mode', 'Triad', 'Pentatonic', 'Rest']
-    const keyword = this.data.atom.keyword
-
-    if (explicits.includes(keyword)) {
-      return keyword.toLowerCase()
-    }
-
-    return this.identify()
+    return this.data.keyword.toLowerCase()
   }
 
   identify () {
@@ -59,9 +52,9 @@ export class Element {
 /**
  * Represents a single beat in a track.
  *
- * Beats are represented as a duple and may contain multiple elements
+ * Beats are represented as a tuple and may contain multiple elements
  *
- * duration -> notes (elements)
+ * duration -> items (elements)
  */
 export class Beat {
 
@@ -70,16 +63,13 @@ export class Beat {
   }
 
   get duration () {
-    return !this.empty ? this.data.duration : 0
+    return this.exists ? this.data.duration : 0
   }
 
   get items () {
     if (this.empty) return []
 
-    const { notes } = this.data
-    const items = Array.isArray(notes) ? notes : [notes]
-
-    return items.map(item => new Element(item))
+    return this.data.items.map(item => new Element(item))
   }
 
   get empty () {
