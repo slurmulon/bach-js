@@ -19,20 +19,7 @@ export class Element {
   }
 
   get kind () {
-    // const explicits = ['Note', 'Scale', 'Chord', 'Mode', 'Triad', 'Pentatonic', 'Penta', 'Rest', '~']
-    const keyword = this.data.keyword.toLowerCase()
-
-    // if (semantics.includes(keyword)) {
-      // return keyword.toLowerCase()
-    // }
-
-    // return this.identify()
-    // const kind = this.identify() || keyword
-    const kind = keyword
-
-    console.log('[bach-js] kind', this.data, kind)
-
-    return kind
+    return this.data.keyword.toLowerCase()
   }
 
   identify () {
@@ -65,9 +52,9 @@ export class Element {
 /**
  * Represents a single beat in a track.
  *
- * Beats are represented as a duple and may contain multiple elements
+ * Beats are represented as a tuple and may contain multiple elements
  *
- * duration -> notes (elements)
+ * duration -> items (elements)
  */
 export class Beat {
 

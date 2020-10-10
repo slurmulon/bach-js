@@ -10,7 +10,7 @@ export const atomize = (kind, value) => ({
 
 export const normalize = source => {
   if (validate(source)) {
-    return Object.assign(source, {
+    return Object.assign({}, source, {
       data: source.data.map(Beat.from)
     })
   }
@@ -21,6 +21,7 @@ export const normalize = source => {
 }
 
 // Converts a parsed Track's `data` back into its serialized form (vanilla bach.json)
+//  - Perhaps better suited as a static method on Track
 export const serialize = track => {
   const data = track.data
     .map(measure => {
@@ -63,9 +64,9 @@ export const simplifyBeatItem = item => {
 // Provides a reduced/simplified representation of a Bach beat and its items
 export const simplifyBeat = beat => beat.data.items
   .map(simplifyBeatItem)
-  .reduce((acc, note) => Object.assign(acc, {
+  .reduce((acc, item) => Object.assign(acc, {
     duration: beat.data.duration,
-    [note.kind]: note.value
+    [item.kind]: item.value
   }), {})
 
 export default { atomize, normalize, serialize, simplifyNote, simplifyBeat }
