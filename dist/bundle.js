@@ -277,7 +277,7 @@ var Track = function () {
     }
 
     /**
-     * Determines how long to wait between each interval based on the track and user tempo
+     * Determines how long to wait between each interval (pulse beat) based on the track and user tempo
      *
      * @returns {number}
      */
@@ -292,14 +292,14 @@ var Track = function () {
     /**
      * Determines the measure and beat found at the provided indices
      *
-     * @param {number} measureIndex
-     * @param {number} beatIndex
+     * @param {number} measure
+     * @param {number} beat
      * @returns {Object}
      */
     value: function at(measureIndex, beatIndex) {
       try {
-        var measure = this.data[measureIndex];
-        var beat = measure[beatIndex];
+        var measure = this.data[Math.floor(measureIndex)];
+        var beat = measure[Math.floor(beatIndex)];
 
         return { measure: measure, beat: beat };
       } catch (e) {
@@ -336,6 +336,35 @@ var Track = function () {
 
       return this.headers['ms-per-pulse-beat'] / diff;
     }
+
+    /**
+     * Specifies the total number of pulse beats (i.e. "pulses") in a measure
+     *
+     * @returns {number}
+     */
+
+  }, {
+    key: 'pulses',
+    get: function get$$1() {
+      return this.headers['pulse-beats-per-measure'];
+    }
+
+    /**
+     * Determines the total number of measures and beats in the track.
+     *
+     * @returns {Object}
+     */
+
+  }, {
+    key: 'total',
+    get: function get$$1() {
+      var measures = this.data.length;
+      var beats = this.data.reduce(function (acc, measure) {
+        return acc + measure.length;
+      }, 0);
+
+      return { measures: measures, beats: beats };
+    }
   }]);
   return Track;
 }();
@@ -349,6 +378,7 @@ var atomize = function atomize(kind, value) {
   };
 };
 
+// TODO: Seems we should just use 'new Track' instead. Remove.
 var normalize = function normalize(source) {
   if (validate(source)) {
     return Object.assign({}, source, {

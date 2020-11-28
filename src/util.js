@@ -8,6 +8,7 @@ export const atomize = (kind, value) => ({
   arguments: [value]
 })
 
+// TODO: Seems we should just use 'new Track' instead. Remove.
 export const normalize = source => {
   if (validate(source)) {
     return Object.assign({}, source, {

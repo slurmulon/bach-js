@@ -51,7 +51,7 @@ export class Track {
   }
 
   /**
-   * Determines how long to wait between each interval based on the track and user tempo
+   * Determines how long to wait between each interval (pulse beat) based on the track and user tempo
    *
    * @returns {number}
    */
@@ -67,20 +67,42 @@ export class Track {
     return this.headers['ms-per-pulse-beat'] / diff
   }
 
+
+  /**
+   * Specifies the total number of pulse beats (i.e. "pulses") in a measure
+   *
+   * @returns {number}
+   */
+  get pulses () {
+    return this.headers['pulse-beats-per-measure']
+  }
+
+  /**
+   * Determines the total number of measures and beats in the track.
+   *
+   * @returns {Object}
+   */
+  get total () {
+    const measures = this.data.length
+    const beats = this.data.reduce((acc, measure) => acc + measure.length, 0)
+
+    return { measures, beats }
+  }
+
   // TODO: get mspb (ms-per-meter-beat essentially, since our `ms-per-beat` in bach is really, in practice, `ms-per-lowest-beat` (need to correct for this in `bach!)
   // TODO: consider moving `interval` (and this new getter) to a `time` module or something
 
   /**
    * Determines the measure and beat found at the provided indices
    *
-   * @param {number} measureIndex
-   * @param {number} beatIndex
+   * @param {number} measure
+   * @param {number} beat
    * @returns {Object}
    */
   at (measureIndex, beatIndex) {
     try {
-      const measure = this.data[measureIndex]
-      const beat = measure[beatIndex]
+      const measure = this.data[Math.floor(measureIndex)]
+      const beat = measure[Math.floor(beatIndex)]
 
       return { measure, beat }
     } catch (e) {
