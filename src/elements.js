@@ -1,4 +1,5 @@
 import teoria from 'teoria'
+import { notesIn } from './util'
 
 /**
  * Represents a single playable element (Note, Scale, Chord, Mode, Triad or Rest)
@@ -8,6 +9,8 @@ export class Element {
 
   constructor (data) {
     this.data = data
+    // TODO: Consider using nanoid to generate pseudo-unique beat element identifiers
+    // this.id = id || nanoid()
   }
 
   get value () {
@@ -21,6 +24,20 @@ export class Element {
   get kind () {
     return this.data.keyword.toLowerCase()
   }
+
+  get notes () {
+    return notesIn(this.kind, this.value)
+  }
+
+  // get notes () {
+  //   const { kind, value } = this
+
+  //   return this.value
+  //     ? this.kind === 'chord'
+  //       ? notesInChord(value)
+  //       : notesInScale(value)
+  //     : []
+  // }
 
   identify () {
     try {
@@ -60,6 +77,8 @@ export class Beat {
 
   constructor (data) {
     this.data = data
+    // TODO: Consider using nanoid to generate pseudo-unique beat identifiers
+    // this.id = id || nanoid()
   }
 
   get duration () {
@@ -72,12 +91,26 @@ export class Beat {
     return this.data.items.map(item => new Element(item))
   }
 
+  get kinds () {
+    return [...new Set(this.items.map(({ kind }) => kind))]
+  }
+
+  get values () {
+    return this.items.reduce((acc, item) => {
+      return Object.assign(acc, { [item.kind]: item.value })
+    }, {})
+  }
+
   get empty () {
     return !this.data
   }
 
   get exists () {
     return !this.empty
+  }
+
+  first (kind) {
+    return this.items.find(item => kind == item.kind)
   }
 
   static from (beats) {

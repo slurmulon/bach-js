@@ -68,6 +68,7 @@ export class Track {
   }
 
 
+  // TODO: Take `barOf` approach in client playing mixin instead (providing both pulse and beat units here)
   /**
    * Specifies the total number of pulse beats (i.e. "pulses") in a measure
    *
@@ -93,7 +94,7 @@ export class Track {
   // TODO: consider moving `interval` (and this new getter) to a `time` module or something
 
   /**
-   * Determines the measure and beat found at the provided indices
+   * Determines the measure and beat found at the provided indices in a safe manner (modulates indices)
    *
    * @param {number} measure
    * @param {number} beat
@@ -101,8 +102,8 @@ export class Track {
    */
   at (measureIndex, beatIndex) {
     try {
-      const measure = this.data[Math.floor(measureIndex)]
-      const beat = measure[Math.floor(beatIndex)]
+      const measure = this.data[Math.floor(measureIndex) % this.total.measures]
+      const beat = measure[Math.floor(beatIndex) % measure.length]
 
       return { measure, beat }
     } catch (e) {

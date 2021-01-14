@@ -1,4 +1,5 @@
 export * from './track'
 export * from './elements'
+export * from './note'
 export * from './validate'
 export * from './util'

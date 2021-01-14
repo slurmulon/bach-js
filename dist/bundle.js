@@ -109,6 +109,28 @@ var slicedToArray = function () {
   };
 }();
 
+
+
+
+
+
+
+
+
+
+
+
+
+var toConsumableArray = function (arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  } else {
+    return Array.from(arr);
+  }
+};
+
 /**
  * Represents a single playable element (Note, Scale, Chord, Mode, Triad or Rest)
  */
@@ -118,6 +140,8 @@ var Element = function () {
     classCallCheck(this, Element);
 
     this.data = data;
+    // TODO: Consider using nanoid to generate pseudo-unique beat element identifiers
+    // this.id = id || nanoid()
   }
 
   createClass(Element, [{
@@ -183,9 +207,18 @@ var Beat = function () {
     classCallCheck(this, Beat);
 
     this.data = data;
+    // TODO: Consider using nanoid to generate pseudo-unique beat identifiers
+    // this.id = id || nanoid()
   }
 
   createClass(Beat, [{
+    key: 'first',
+    value: function first(kind) {
+      return this.items.find(function (item) {
+        return kind == item.kind;
+      });
+    }
+  }, {
     key: 'duration',
     get: function get$$1() {
       return this.exists ? this.data.duration : 0;
@@ -198,6 +231,21 @@ var Beat = function () {
       return this.data.items.map(function (item) {
         return new Element(item);
       });
+    }
+  }, {
+    key: 'kinds',
+    get: function get$$1() {
+      return [].concat(toConsumableArray(new Set(this.items.map(function (_ref2) {
+        var kind = _ref2.kind;
+        return kind;
+      }))));
+    }
+  }, {
+    key: 'values',
+    get: function get$$1() {
+      return this.items.reduce(function (acc, item) {
+        return Object.assign(acc, defineProperty({}, item.kind, item.value));
+      }, {});
     }
   }, {
     key: 'empty',
@@ -290,7 +338,7 @@ var Track = function () {
     // TODO: consider moving `interval` (and this new getter) to a `time` module or something
 
     /**
-     * Determines the measure and beat found at the provided indices
+     * Determines the measure and beat found at the provided indices in a safe manner (modulates indices)
      *
      * @param {number} measure
      * @param {number} beat
@@ -298,8 +346,8 @@ var Track = function () {
      */
     value: function at(measureIndex, beatIndex) {
       try {
-        var measure = this.data[Math.floor(measureIndex)];
-        var beat = measure[Math.floor(beatIndex)];
+        var measure = this.data[Math.floor(measureIndex) % this.total.measures];
+        var beat = measure[Math.floor(beatIndex) % measure.length];
 
         return { measure: measure, beat: beat };
       } catch (e) {
@@ -337,6 +385,7 @@ var Track = function () {
       return this.headers['ms-per-pulse-beat'] / diff;
     }
 
+    // TODO: Take `barOf` approach in client playing mixin instead (providing both pulse and beat units here)
     /**
      * Specifies the total number of pulse beats (i.e. "pulses") in a measure
      *
@@ -367,6 +416,60 @@ var Track = function () {
     }
   }]);
   return Track;
+}();
+
+var Note = function () {
+  function Note() {
+    classCallCheck(this, Note);
+  }
+
+  createClass(Note, null, [{
+    key: 'parse',
+    value: function parse(value) {
+      // return teoria.note.fromMIDI(value)//.scientific()
+      return teoria.note(value);
+    }
+
+    // TODO: Consider using chroma instead
+    // TODO: Use this in nek, and anywhere else this same logic might be used
+
+  }, {
+    key: 'valueOf',
+    value: function valueOf(note) {
+      // return teoria.note(note).midi() % 12
+      // return teoria.note(note).chroma()
+      return teoria.note(note).scientific()
+      // TODO: Centralize! Replace everywhere in bach-sheet, nek, etc.
+      .replace(/[0-9]+$/, '');
+    }
+  }, {
+    key: 'valuesOf',
+    value: function valuesOf(notes) {
+      return notes.map(Note.valueOf);
+    }
+  }, {
+    key: 'generalize',
+    value: function generalize(note) {
+      return teoria.note(Note.valueOf(note));
+    }
+
+    // static unify (notes = []) {
+
+  }, {
+    key: 'reduce',
+    value: function reduce() {
+      var notes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+      // const unique = [...new Set(notes.map(Note.generalize))]
+      var unique = [].concat(toConsumableArray(new Set(Note.valuesOf(notes))));
+
+      return unique.map(function (value) {
+        // return teoria.note.fromMIDI(value).scientific()
+        return Note.parse(value).scientific();
+      });
+    }
+  }]);
+  return Note;
 }();
 
 // Creates Bach.JSON beat elements from minimal data
@@ -435,9 +538,20 @@ var simplifyBeat = function simplifyBeat(beat) {
   }, {});
 };
 
+// TODO: Move to new 'note' module
+// export const generalizeNote = note => {
+//   const value = teoria.note(note).midi() % 12
+// }
+
+// // TODO: Move to new 'note' module
+// export const reduceNotes = (notes = []) => {
+//   const keys = notes.map(note => teoria.note(note).midi() % 12)
+// }
+
 exports.Track = Track;
 exports.Element = Element;
 exports.Beat = Beat;
+exports.Note = Note;
 exports.validate = validate;
 exports.atomize = atomize;
 exports.normalize = normalize;
