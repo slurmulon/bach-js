@@ -45,9 +45,9 @@ export const sectionize = source => source.data
   )
   .reduce((all, one) => all.concat(one), [])
 
-// TODO: Probably move this into a more specific `section` module
+// TODO: Probably move this into a more specific `section` or even `bach` module
 export const traversed = source => {
-  const sections = sectionize(source)
+  const sections = sectionize(normalize(source))
   // TODO: Move into `section` module
   // const clamp = index => index % sections.length
   const clamp = index => {
@@ -60,31 +60,16 @@ export const traversed = source => {
     // const parts
     const { duration } = section
     const base = omit(section, ['duration'])
-    // const { duration, ...section } = data
     const key = clamp(index)
 
-    console.log('[traverse section] duration', duration)
-
-    // const notes = notesIn(
     return Object.entries(base)
       .reduce((acc, [kind, value]) => {
         const prev = sections[clamp(key - 1)]
         const next = sections[clamp(key + 1)]
 
-        // console.log('--- traverse prev, next', prev, next)
-
-        // return compareSections(prev, base, next)
-        return Object.assign(acc, compareSections(prev, base, next))
-        // return Object.assign(kind, { [kind]: value })
-      // }, {})
+        return Object.assign(acc, compareSections(prev, section, next))
       }, { duration })
   })
-
-  // TODO
-  // {
-  //   chord: { value: 'Cmaj7',
-  //   notes: [],
-  //   delta: { 'C2': { prev: false, next: true }
 }
 
 // Groups sequentially identical phrases by summation of duration:
@@ -108,14 +93,14 @@ export function compareSections (prev, base, next) {
 
   return Object.entries(root)
     .reduce((acc, [kind, value]) => {
-      console.log('---- compare value, prev, next', value, prev[kind], next[kind])
+      // console.log('---- compare value, prev, next', value, prev[kind], next[kind])
       const notes = {
         root: notesIn(kind, value),
         prev: notesIn(kind, prev[kind]),
         next: notesIn(kind, next[kind])
       }
 
-      console.log('----------- notes prev, next', notes.prev, notes.next)
+      // console.log('----------- notes prev, next', notes.prev, notes.next)
 
       const delta = notes.root.reduce((diffs, note) => {
         return Object.assign(diffs, {

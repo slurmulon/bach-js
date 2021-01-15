@@ -273,9 +273,9 @@ var sectionize = function sectionize(source) {
   }, []);
 };
 
-// TODO: Probably move this into a more specific `section` module
+// TODO: Probably move this into a more specific `section` or even `bach` module
 var traversed = function traversed(source) {
-  var sections = sectionize(source);
+  var sections = sectionize(normalize(source));
   // TODO: Move into `section` module
   // const clamp = index => index % sections.length
   var clamp = function clamp(index) {
@@ -289,12 +289,8 @@ var traversed = function traversed(source) {
     var duration = section.duration;
 
     var base = omit(section, ['duration']);
-    // const { duration, ...section } = data
     var key = clamp(index);
 
-    console.log('[traverse section] duration', duration);
-
-    // const notes = notesIn(
     return Object.entries(base).reduce(function (acc, _ref) {
       var _ref2 = slicedToArray(_ref, 2),
           kind = _ref2[0],
@@ -303,20 +299,9 @@ var traversed = function traversed(source) {
       var prev = sections[clamp(key - 1)];
       var next = sections[clamp(key + 1)];
 
-      // console.log('--- traverse prev, next', prev, next)
-
-      // return compareSections(prev, base, next)
-      return Object.assign(acc, compareSections(prev, base, next));
-      // return Object.assign(kind, { [kind]: value })
-      // }, {})
+      return Object.assign(acc, compareSections(prev, section, next));
     }, { duration: duration });
   });
-
-  // TODO
-  // {
-  //   chord: { value: 'Cmaj7',
-  //   notes: [],
-  //   delta: { 'C2': { prev: false, next: true }
 };
 
 // Groups sequentially identical phrases by summation of duration:
@@ -344,16 +329,15 @@ function compareSections(prev, base, next) {
         kind = _ref4[0],
         value = _ref4[1];
 
-    console.log('---- compare value, prev, next', value, prev[kind], next[kind]);
+    // console.log('---- compare value, prev, next', value, prev[kind], next[kind])
     var notes = {
       root: notesIn(kind, value),
       prev: notesIn(kind, prev[kind]),
       next: notesIn(kind, next[kind])
-    };
 
-    console.log('----------- notes prev, next', notes.prev, notes.next);
+      // console.log('----------- notes prev, next', notes.prev, notes.next)
 
-    var delta = notes.root.reduce(function (diffs, note) {
+    };var delta = notes.root.reduce(function (diffs, note) {
       return Object.assign(diffs, defineProperty({}, note, {
         prev: notes.prev.some(function (prev) {
           return Note.equals(note, prev);
