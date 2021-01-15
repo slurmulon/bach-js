@@ -1,4 +1,5 @@
 import { Beat } from './elements'
+import { Note } from './note'
 import validate from './validate'
 import teoria from 'teoria'
 
@@ -49,25 +50,26 @@ export const traversed = source => {
   const sections = sectionize(source)
   const clamp = index => index % sections.length
 
-  return sections.map((data, index) => {
-    const { duration, ...section } = data
+  return sections.map((section, index) => {
+    // const { duration, ...section } = data
     const key = clamp(index)
 
     // const notes = notesIn(
     return Object.entries(section)
-      .reduce(acc, ([kind, value]) => {
+      .reduce((acc, [kind, value]) => {
         const prev = sections[clamp(key - 1)]
         const next = sections[clamp(key + 1)]
-        const notes = notesIn(kind, value)
-        const extended = {
-          value,
-          notes,
-          delta: {
+        // const notes = notesIn(kind, value)
+        // const extended = {
+        //   value,
+        //   notes,
+        //   delta: {
 
-          }
-        }
+        //   }
+        // }
 
-        return Object.assign(kind, { [kind]: value })
+        return compareSections(prev, section, next)
+        // return Object.assign(kind, { [kind]: value })
       }, {})
   })
 
@@ -89,12 +91,48 @@ export const condense = source => {
   // Note: Does not wrap head and tail if there's more than 2 elements
 }
 
-export const sectionNoteDeltas (left, right) {
-  const { duration, ...primary } = left
-  const { duration, ...secondary } = right
+// export const sectionNoteDeltas (left, right) {
+// export function compareSections (left, right) {
+// export function compareSections (left, base, right) {
+export function compareSections (prev, base, next) {
+  // let { duration, ...prev } = left
+  // let { duration, ...root } = base
+  // let { duration, ...next } = right
+  // const { duration, ...root } = base
+  // const root = Object.assign({}, base, { duration: undefined })
+  const root = Object.assign({}, base)
+  delete root.duration
 
-  return Object.entries(primary)
-    .map
+  return Object.entries(root)
+    // .map(([kind, value]) => {
+    .reduce((acc, [kind, value]) => {
+      console.log('compare kind, vallue', kind, value)
+      const notes = {
+        // primary: notesIn(primary, kind),
+        // secondary: notesIn(secondary[kind], kind)
+        root: notesIn(kind, value),
+        prev: notesIn(kind, prev[kind]),
+        next: notesIn(kind, next[kind])
+      }
+
+      const delta = notes.root.reduce((diffs, note) => {
+        return Object.assign(diffs, {
+          [note]: {
+            prev: notes.prev.some(prev => Note.equals(note, prev)),
+            next: notes.next.some(next => Note.equals(note, next))
+          }
+        })
+      }, {})
+
+      return Object.assign(acc, {
+        [kind]: {
+          value,
+          delta,
+          notes: notes.root
+        }
+      })
+    }, base)
+    // }, {})
   // const notes = notesIn(kind, value)
 
 }

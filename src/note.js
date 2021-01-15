@@ -2,9 +2,23 @@ import teoria from 'teoria'
 
 export class Note {
 
+  static hash (note) {
+    return Note.parse(note).chroma()
+  }
+
+  // static fromElem ({ kind, value }) {
+    
+  // }
+
   static parse (value) {
     // return teoria.note.fromMIDI(value)//.scientific()
-    return teoria.note(value)
+    // LAST
+    // return teoria.note(value)
+    if (typeof value === 'string') {
+      return teoria.note(value)
+    } else if (value instanceof teoria.Note) {
+      return value
+    }
   }
 
   // TODO: Consider using chroma instead
@@ -36,6 +50,10 @@ export class Note {
       // return teoria.note.fromMIDI(value).scientific()
       return Note.parse(value).scientific()
     })
+  }
+
+  static equals (left, right) {
+    return Note.hash(left) == Note.hash(right)
   }
 
 }
