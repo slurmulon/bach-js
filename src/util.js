@@ -49,7 +49,6 @@ export const sectionize = source => source.data
 export const traversed = source => {
   const sections = sectionize(normalize(source))
   // TODO: Move into `section` module
-  // const clamp = index => index % sections.length
   const clamp = index => {
     const key = index >= 0 ? index : sections.length + index
     return key % sections.length
@@ -86,21 +85,14 @@ export const condense = source => {
 export function compareSections (prev, base, next) {
   const { duration } = base
   const root = omit(base, ['duration'])
-  // const root = Object.assign({}, base)
-  // delete root.duration
-  //
-  console.log('[compare] duration', duration)
 
   return Object.entries(root)
     .reduce((acc, [kind, value]) => {
-      // console.log('---- compare value, prev, next', value, prev[kind], next[kind])
       const notes = {
         root: notesIn(kind, value),
         prev: notesIn(kind, prev[kind]),
         next: notesIn(kind, next[kind])
       }
-
-      // console.log('----------- notes prev, next', notes.prev, notes.next)
 
       const delta = notes.root.reduce((diffs, note) => {
         return Object.assign(diffs, {
@@ -205,7 +197,7 @@ export function notesIn (kind, value) {
 // export function omit (obj, props) {
 //   return pick(obj, Object.keys(obj).filter(key => !props.includes(key)))
 // }
-function omit (obj, props) {
+export function omit (obj, props) {
   return Object.keys(obj).reduce((acc, key) => {
     if (!props.includes(key)) {
        acc[key] = obj[key]
@@ -226,5 +218,7 @@ export default {
   notesInScale,
   notesIn,
   simplifyNote,
-  simplifyBeat
+  simplifyBeat,
+  // TEMP
+  omit
 }

@@ -277,7 +277,6 @@ var sectionize = function sectionize(source) {
 var traversed = function traversed(source) {
   var sections = sectionize(normalize(source));
   // TODO: Move into `section` module
-  // const clamp = index => index % sections.length
   var clamp = function clamp(index) {
     var key = index >= 0 ? index : sections.length + index;
     return key % sections.length;
@@ -319,25 +318,19 @@ function compareSections(prev, base, next) {
   var duration = base.duration;
 
   var root = omit(base, ['duration']);
-  // const root = Object.assign({}, base)
-  // delete root.duration
-  //
-  console.log('[compare] duration', duration);
 
   return Object.entries(root).reduce(function (acc, _ref3) {
     var _ref4 = slicedToArray(_ref3, 2),
         kind = _ref4[0],
         value = _ref4[1];
 
-    // console.log('---- compare value, prev, next', value, prev[kind], next[kind])
     var notes = {
       root: notesIn(kind, value),
       prev: notesIn(kind, prev[kind]),
       next: notesIn(kind, next[kind])
+    };
 
-      // console.log('----------- notes prev, next', notes.prev, notes.next)
-
-    };var delta = notes.root.reduce(function (diffs, note) {
+    var delta = notes.root.reduce(function (diffs, note) {
       return Object.assign(diffs, defineProperty({}, note, {
         prev: notes.prev.some(function (prev) {
           return Note.equals(note, prev);
@@ -753,10 +746,116 @@ var Track = function () {
   return Track;
 }();
 
+var Sections = function () {
+  function Sections(source) {
+    classCallCheck(this, Sections);
+
+    // TODO: Move to validate module, copied from Track
+    if (!validate(source)) {
+      throw TypeError('Invalid Bach.JSON source data: ' + JSON.stringify(validate.errors));
+    }
+
+    this.source = source;
+  }
+
+  createClass(Sections, [{
+    key: 'clamp',
+    value: function clamp(index) {
+      var length = this.all.length;
+
+      var key = index >= 0 ? index : length + index;
+
+      return key % length;
+    }
+  }, {
+    key: 'compare',
+    value: function compare(prev, base, next) {
+      return Sections.compare(prev, base, next);
+    }
+  }, {
+    key: 'all',
+    get: function get$$1() {
+      return sectionize(normalize(this.source));
+    }
+  }, {
+    key: 'linked',
+    get: function get$$1() {
+      var _this = this;
+
+      // get traversed () {
+      var sections = this.all;
+
+
+      console.log('linked sections', sections);
+
+      return sections.map(function (section, index) {
+        // TODO: Consider refactoring section to this struct: { duration: 1, parts: { ... } } to avoid use of `omit`
+        // const parts
+        var duration = section.duration;
+
+        var base = omit(section, ['duration']);
+        var key = _this.clamp(index);
+
+        return Object.entries(base).reduce(function (acc, _ref) {
+          var _ref2 = slicedToArray(_ref, 2),
+              kind = _ref2[0],
+              value = _ref2[1];
+
+          var prev = sections[_this.clamp(key - 1)];
+          var next = sections[_this.clamp(key + 1)];
+
+          // return Object.assign(acc, compareSections(prev, section, next))
+          return Object.assign(acc, _this.compare(prev, section, next));
+        }, { duration: duration });
+      });
+    }
+  }], [{
+    key: 'compare',
+    value: function compare(prev, base, next) {
+      var duration = base.duration;
+
+      var root = omit(base, ['duration']);
+
+      return Object.entries(root).reduce(function (acc, _ref3) {
+        var _ref4 = slicedToArray(_ref3, 2),
+            kind = _ref4[0],
+            value = _ref4[1];
+
+        console.log('---- link compare value', kind, value);
+        var notes = {
+          root: notesIn(kind, value),
+          prev: notesIn(kind, prev[kind]),
+          next: notesIn(kind, next[kind])
+        };
+
+        var delta = notes.root.reduce(function (diffs, note) {
+          return Object.assign(diffs, defineProperty({}, note, {
+            prev: notes.prev.some(function (prev) {
+              return Note.equals(note, prev);
+            }),
+            next: notes.next.some(function (next) {
+              return Note.equals(note, next);
+            })
+          }));
+        }, {});
+
+        return Object.assign(acc, defineProperty({}, kind, {
+          value: value,
+          delta: delta,
+          notes: notes.root
+        }));
+        // }, base)
+      }, { duration: duration });
+    }
+  }]);
+  return Sections;
+}();
+
 exports.Track = Track;
 exports.Element = Element;
 exports.Beat = Beat;
 exports.Note = Note;
+exports.Sections = Sections;
 exports.validate = validate;
 exports.atomize = atomize;
 exports.normalize = normalize;
@@ -773,3 +872,4 @@ exports.scaleToString = scaleToString;
 exports.notesInChord = notesInChord;
 exports.notesInScale = notesInScale;
 exports.notesIn = notesIn;
+exports.omit = omit;
