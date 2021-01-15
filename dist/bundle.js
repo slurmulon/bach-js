@@ -276,34 +276,40 @@ var sectionize = function sectionize(source) {
 // TODO: Probably move this into a more specific `section` module
 var traversed = function traversed(source) {
   var sections = sectionize(source);
+  // TODO: Move into `section` module
+  // const clamp = index => index % sections.length
   var clamp = function clamp(index) {
-    return index % sections.length;
+    var key = index >= 0 ? index : sections.length + index;
+    return key % sections.length;
   };
 
   return sections.map(function (section, index) {
+    // TODO: Consider refactoring section to this struct: { duration: 1, parts: { ... } } to avoid use of `omit`
+    // const parts
+    var duration = section.duration;
+
+    var base = omit(section, ['duration']);
     // const { duration, ...section } = data
     var key = clamp(index);
 
+    console.log('[traverse section] duration', duration);
+
     // const notes = notesIn(
-    return Object.entries(section).reduce(function (acc, _ref) {
+    return Object.entries(base).reduce(function (acc, _ref) {
       var _ref2 = slicedToArray(_ref, 2),
           kind = _ref2[0],
           value = _ref2[1];
 
       var prev = sections[clamp(key - 1)];
       var next = sections[clamp(key + 1)];
-      // const notes = notesIn(kind, value)
-      // const extended = {
-      //   value,
-      //   notes,
-      //   delta: {
 
-      //   }
-      // }
+      // console.log('--- traverse prev, next', prev, next)
 
-      return compareSections(prev, section, next);
+      // return compareSections(prev, base, next)
+      return Object.assign(acc, compareSections(prev, base, next));
       // return Object.assign(kind, { [kind]: value })
-    }, {});
+      // }, {})
+    }, { duration: duration });
   });
 
   // TODO
@@ -315,30 +321,37 @@ var traversed = function traversed(source) {
 
 // Groups sequentially identical phrases by summation of duration:
 // TODO
-var condense = function condense(source) {};function compareSections(prev, base, next) {
-  // let { duration, ...prev } = left
-  // let { duration, ...root } = base
-  // let { duration, ...next } = right
-  // const { duration, ...root } = base
-  // const root = Object.assign({}, base, { duration: undefined })
-  var root = Object.assign({}, base);
-  delete root.duration;
+var condense = function condense(source) {
+  // e.g.
+  // [1 -> :A, 3 -> :A]
+  //    becomes
+  // [4 -> :A]
+  //
+  // Note: Does not wrap head and tail if there's more than 2 elements
+};
 
-  return Object.entries(root)
-  // .map(([kind, value]) => {
-  .reduce(function (acc, _ref3) {
+function compareSections(prev, base, next) {
+  var duration = base.duration;
+
+  var root = omit(base, ['duration']);
+  // const root = Object.assign({}, base)
+  // delete root.duration
+  //
+  console.log('[compare] duration', duration);
+
+  return Object.entries(root).reduce(function (acc, _ref3) {
     var _ref4 = slicedToArray(_ref3, 2),
         kind = _ref4[0],
         value = _ref4[1];
 
-    console.log('compare kind, vallue', kind, value);
+    console.log('---- compare value, prev, next', value, prev[kind], next[kind]);
     var notes = {
-      // primary: notesIn(primary, kind),
-      // secondary: notesIn(secondary[kind], kind)
       root: notesIn(kind, value),
       prev: notesIn(kind, prev[kind]),
       next: notesIn(kind, next[kind])
     };
+
+    console.log('----------- notes prev, next', notes.prev, notes.next);
 
     var delta = notes.root.reduce(function (diffs, note) {
       return Object.assign(diffs, defineProperty({}, note, {
@@ -356,9 +369,8 @@ var condense = function condense(source) {};function compareSections(prev, base,
       delta: delta,
       notes: notes.root
     }));
-  }, base);
-  // }, {})
-  // const notes = notesIn(kind, value)
+    // }, base)
+  }, { duration: duration });
 }
 
 // Provides a reduced/simplified representation of a Bach beat item/element
@@ -439,6 +451,24 @@ function notesInScale(value) {
 // TODO: Make this less explicit and rigid (e.g. map kind -> note parser)
 function notesIn(kind, value) {
   return value ? kind === 'chord' ? notesInChord(value) : notesInScale(value) : [];
+}
+
+// TODO: Upgrade Babel to 7 to use rest-spread
+// export function pick (obj, props) {
+//   return Object.assign({}, ...props.map(prop => ({ [prop]: obj[prop] })))
+// }
+
+// export function omit (obj, props) {
+//   return pick(obj, Object.keys(obj).filter(key => !props.includes(key)))
+// }
+function omit(obj, props) {
+  return Object.keys(obj).reduce(function (acc, key) {
+    if (!props.includes(key)) {
+      acc[key] = obj[key];
+    }
+
+    return acc;
+  }, {});
 }
 
 /**

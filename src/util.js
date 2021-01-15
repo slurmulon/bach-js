@@ -48,29 +48,36 @@ export const sectionize = source => source.data
 // TODO: Probably move this into a more specific `section` module
 export const traversed = source => {
   const sections = sectionize(source)
-  const clamp = index => index % sections.length
+  // TODO: Move into `section` module
+  // const clamp = index => index % sections.length
+  const clamp = index => {
+    const key = index >= 0 ? index : sections.length + index
+    return key % sections.length
+  }
 
   return sections.map((section, index) => {
+    // TODO: Consider refactoring section to this struct: { duration: 1, parts: { ... } } to avoid use of `omit`
+    // const parts
+    const { duration } = section
+    const base = omit(section, ['duration'])
     // const { duration, ...section } = data
     const key = clamp(index)
 
+    console.log('[traverse section] duration', duration)
+
     // const notes = notesIn(
-    return Object.entries(section)
+    return Object.entries(base)
       .reduce((acc, [kind, value]) => {
         const prev = sections[clamp(key - 1)]
         const next = sections[clamp(key + 1)]
-        // const notes = notesIn(kind, value)
-        // const extended = {
-        //   value,
-        //   notes,
-        //   delta: {
 
-        //   }
-        // }
+        // console.log('--- traverse prev, next', prev, next)
 
-        return compareSections(prev, section, next)
+        // return compareSections(prev, base, next)
+        return Object.assign(acc, compareSections(prev, base, next))
         // return Object.assign(kind, { [kind]: value })
-      }, {})
+      // }, {})
+      }, { duration })
   })
 
   // TODO
@@ -91,29 +98,24 @@ export const condense = source => {
   // Note: Does not wrap head and tail if there's more than 2 elements
 }
 
-// export const sectionNoteDeltas (left, right) {
-// export function compareSections (left, right) {
-// export function compareSections (left, base, right) {
 export function compareSections (prev, base, next) {
-  // let { duration, ...prev } = left
-  // let { duration, ...root } = base
-  // let { duration, ...next } = right
-  // const { duration, ...root } = base
-  // const root = Object.assign({}, base, { duration: undefined })
-  const root = Object.assign({}, base)
-  delete root.duration
+  const { duration } = base
+  const root = omit(base, ['duration'])
+  // const root = Object.assign({}, base)
+  // delete root.duration
+  //
+  console.log('[compare] duration', duration)
 
   return Object.entries(root)
-    // .map(([kind, value]) => {
     .reduce((acc, [kind, value]) => {
-      console.log('compare kind, vallue', kind, value)
+      console.log('---- compare value, prev, next', value, prev[kind], next[kind])
       const notes = {
-        // primary: notesIn(primary, kind),
-        // secondary: notesIn(secondary[kind], kind)
         root: notesIn(kind, value),
         prev: notesIn(kind, prev[kind]),
         next: notesIn(kind, next[kind])
       }
+
+      console.log('----------- notes prev, next', notes.prev, notes.next)
 
       const delta = notes.root.reduce((diffs, note) => {
         return Object.assign(diffs, {
@@ -131,10 +133,8 @@ export function compareSections (prev, base, next) {
           notes: notes.root
         }
       })
-    }, base)
-    // }, {})
-  // const notes = notesIn(kind, value)
-
+    // }, base)
+    }, { duration })
 }
 
 // Provides a reduced/simplified representation of a Bach beat item/element
@@ -210,6 +210,24 @@ export function notesIn (kind, value) {
       ? notesInChord(value)
       : notesInScale(value)
     : []
+}
+
+// TODO: Upgrade Babel to 7 to use rest-spread
+// export function pick (obj, props) {
+//   return Object.assign({}, ...props.map(prop => ({ [prop]: obj[prop] })))
+// }
+
+// export function omit (obj, props) {
+//   return pick(obj, Object.keys(obj).filter(key => !props.includes(key)))
+// }
+function omit (obj, props) {
+  return Object.keys(obj).reduce((acc, key) => {
+    if (!props.includes(key)) {
+       acc[key] = obj[key]
+    }
+
+    return acc
+  }, {})
 }
 
 export default {
