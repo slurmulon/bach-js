@@ -2,6 +2,7 @@ import { Note } from './note'
 import { validate } from './validate'
 import { sectionize, normalize, notesIn, omit } from './util'
 
+// TODO: Generally refactor section to this struct: { duration: 1, parts: { ... } } to avoid use of `omit` around `duration`
 export class Sections {
 
   constructor (source) {
@@ -10,8 +11,6 @@ export class Sections {
       throw TypeError(`Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}`)
     }
 
-    // this.source = source
-    // this.data = sectionize(normalize(source))
     this.source = normalize(source)
     this.data = sectionize(this.source)
   }
@@ -29,7 +28,6 @@ export class Sections {
     const { data: sections } = this
 
     return sections.map((section, index) => {
-      // TODO: Consider refactoring section to this struct: { duration: 1, parts: { ... } } to avoid use of `omit`
       const { duration } = section
       const base = this.parts(section)
       const key = this.clamp(index)
@@ -77,43 +75,26 @@ export class Sections {
 
   compare (prev, base, next) {
     const { duration } = base
-    // const root = this.parts(base)
-    const root = this.parts(this.expand(base))
+    const parts = this.parts(this.expand(base))
 
-    return Object.entries(root)
+    return Object.entries(parts)
       .reduce((acc, [kind, part]) => {
-      // .reduce((acc, [kind, value]) => {
         const notes = {
-          // root: notesIn(kind, value),
-          // root: part.notes,
           prev: notesIn(kind, prev[kind]),
           next: notesIn(kind, next[kind])
         }
 
-        const diffs = part.notes.reduce((diffs, note) => {
-       //  const diffs = notes.root.reduce((diffs, note) => {
-          return Object.assign(diffs, {
+        const diffs = part.notes.reduce((diffs, note) =>
+          Object.assign(diffs, {
             [note]: {
               prev: notes.prev.some(prev => Note.equals(note, prev)),
               next: notes.next.some(next => Note.equals(note, next))
             }
-          })
-        }, {})
+          }), {})
 
         acc[kind].diffs = diffs
 
         return acc
-
-        // return 
-
-        // return Object.assign(acc, {
-        //   [kind]: {
-        //     value,
-        //     notes: notes.root,
-        //     diffs
-        //   }
-        // })
-      // }, { duration })
-      }, Object.assign({ duration }, root))
+      }, Object.assign({ duration }, parts))
   }
 }
