@@ -16,19 +16,30 @@ export class Note {
     // return teoria.note(value)
     if (typeof value === 'string') {
       return teoria.note(value)
-    } else if (value instanceof teoria.Note) {
+    } else if (typeof value === 'object' || value instanceof teoria.Note) {
       return value
     }
+
+    return value
+  }
+
+  static pitchOf (note) {
+    // TODO: Move valueOf contents here
+    return Note.valueOf(note)
   }
 
   // TODO: Consider using chroma instead
   // TODO: Use this in nek, and anywhere else this same logic might be used
+  // static pitchOf (note) {
   static valueOf (note) {
     // return teoria.note(note).midi() % 12
     // return teoria.note(note).chroma()
-    return teoria
-      .note(note)
+    // LAST
+    // return teoria
+    //   .note(note)
+    return Note.parse(note)
       .scientific()
+      // .toLowerCase()
       // TODO: Centralize! Replace everywhere in bach-sheet, nek, etc.
       .replace(/[0-9]+$/, '')
   }

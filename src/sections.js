@@ -2,7 +2,6 @@ import { Note } from './note'
 import { validate } from './validate'
 import { sectionize, sectionize2, normalize, notesIn, omit } from './util'
 
-// TODO: Generally refactor section to this struct: { duration: 1, parts: { ... } } to avoid use of `omit` around `duration`
 export class Sections {
 
   constructor (source) {
@@ -25,30 +24,15 @@ export class Sections {
     return this.data.map(section => this.expand(section))
   }
 
-  get linked () {
+  // get linked () {
+  get compared () {
     const { data: sections } = this
 
     return sections.map((section, index) => {
-      const { duration } = section
-      const base = this.parts(section)
-      const key = this.clamp(index)
-
-      const prev = sections[this.clamp(key - 1)]
-      const next = sections[this.clamp(key + 1)]
+      const prev = sections[this.clamp(index - 1)]
+      const next = sections[this.clamp(index + 1)]
 
       return this.compare(prev, section, next)
-
-      // return Object.entries(base)
-      // const parts = Object.entries(section.parts)
-      //   .reduce((acc, [kind, value]) => {
-      //     const prev = sections[this.clamp(key - 1)]
-      //     const next = sections[this.clamp(key + 1)]
-
-      //     return Object.assign(acc, this.compare(prev, section, next))
-      //   }, section.parts)
-
-      // return Object.assign(section, { parts })
-        // }, { duration })
     })
   }
 
@@ -70,13 +54,7 @@ export class Sections {
   // }
 
   expand (section) {
-    // const { duration } = section
-    // const parts = this.parts(section)
-    console.log('\n\n\n^^^^^^^ expanding section', section)
-
-    // return Object.entries(parts)
     const parts = Object.entries(section.parts)
-      // .reduce((acc, [kind, value]) => {
       .reduce((acc, [kind, value]) => {
         return typeof value === 'string' ? Object.assign(acc, {
           [kind]: {
@@ -84,7 +62,6 @@ export class Sections {
             notes: notesIn(kind, value)
           }
         }) : acc
-      // }, { duration })
       }, section.parts)
 
 
@@ -93,12 +70,8 @@ export class Sections {
 
   compare (prev, base, next) {
     const { duration } = base
-    // const parts = this.parts(this.expand(base))
     const section = this.expand(base)
 
-    console.log('COMPARING section', section)
-
-    // return Object.entries(parts)
     const parts = Object.entries(section.parts)
       .reduce((acc, [kind, part]) => {
         const notes = {
@@ -117,7 +90,6 @@ export class Sections {
         acc[kind].diffs = diffs
 
         return acc
-      // }, Object.assign({ duration }, parts))
       }, section.parts)
 
     return Object.assign(section, { parts })
