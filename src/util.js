@@ -127,6 +127,7 @@ export const simplifyBeat = beat => beat.data.items
   .map(simplifyBeatItem)
   .reduce((acc, item) => Object.assign(acc, {
     duration: beat.data.duration,
+    // TODO: Wrap kinds in "parts" prop! Makes accessibility and parsing much simpler (`duration` becomes non-special)
     [item.kind]: item.value
   }), {})
 
