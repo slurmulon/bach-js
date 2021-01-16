@@ -382,6 +382,7 @@ var simplifyBeat = function simplifyBeat(beat) {
 //
 
 function scaleify(value) {
+  console.log('&&&&& scaleifying', (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' ? JSON.stringify(value, null, 2) : value);
   if (typeof value === 'string') {
     var _value$split = value.split(' '),
         _value$split2 = slicedToArray(_value$split, 2),
@@ -759,6 +760,38 @@ var Sections = function () {
   }
 
   createClass(Sections, [{
+    key: 'expand',
+    value: function expand(section) {
+      var duration = section.duration;
+
+      var parts = this.parts(section);
+      // parse (section) {
+      return Object.entries(parts).reduce(function (acc, _ref) {
+        var _ref2 = slicedToArray(_ref, 2),
+            kind = _ref2[0],
+            value = _ref2[1];
+
+        console.log('--- expanding', kind, value);
+        return Object.assign(acc, defineProperty({}, kind, {
+          value: value,
+          notes: notesIn(kind, value)
+        }));
+      }, { duration: duration });
+    }
+
+    // TODO: Remove this once struct is refactored so all layers are under `parts` instead of on same level as `duration`
+
+  }, {
+    key: 'parts',
+    value: function parts(section) {
+      return omit(section, ['duration']);
+    }
+
+    // expand (section) {
+    // TODO: Adds `value` and `notes`
+    // }
+
+  }, {
     key: 'clamp',
     value: function clamp(index) {
       var length = this.all.length;
@@ -770,65 +803,24 @@ var Sections = function () {
   }, {
     key: 'compare',
     value: function compare(prev, base, next) {
-      return Sections.compare(prev, base, next);
-    }
-  }, {
-    key: 'all',
-    get: function get$$1() {
-      return sectionize(normalize(this.source));
-    }
-  }, {
-    key: 'linked',
-    get: function get$$1() {
-      var _this = this;
-
-      // get traversed () {
-      var sections = this.all;
-
-
-      console.log('linked sections', sections);
-
-      return sections.map(function (section, index) {
-        // TODO: Consider refactoring section to this struct: { duration: 1, parts: { ... } } to avoid use of `omit`
-        // const parts
-        var duration = section.duration;
-
-        var base = omit(section, ['duration']);
-        var key = _this.clamp(index);
-
-        return Object.entries(base).reduce(function (acc, _ref) {
-          var _ref2 = slicedToArray(_ref, 2),
-              kind = _ref2[0],
-              value = _ref2[1];
-
-          var prev = sections[_this.clamp(key - 1)];
-          var next = sections[_this.clamp(key + 1)];
-
-          // return Object.assign(acc, compareSections(prev, section, next))
-          return Object.assign(acc, _this.compare(prev, section, next));
-        }, { duration: duration });
-      });
-    }
-  }], [{
-    key: 'compare',
-    value: function compare(prev, base, next) {
       var duration = base.duration;
+      // const root = omit(base, ['duration'])
 
-      var root = omit(base, ['duration']);
+      var root = this.parts(base);
 
       return Object.entries(root).reduce(function (acc, _ref3) {
         var _ref4 = slicedToArray(_ref3, 2),
             kind = _ref4[0],
             value = _ref4[1];
 
-        console.log('---- link compare value', kind, value);
         var notes = {
           root: notesIn(kind, value),
+          // root: value.notes,
           prev: notesIn(kind, prev[kind]),
           next: notesIn(kind, next[kind])
         };
 
-        var delta = notes.root.reduce(function (diffs, note) {
+        var diffs = notes.root.reduce(function (diffs, note) {
           return Object.assign(diffs, defineProperty({}, note, {
             prev: notes.prev.some(function (prev) {
               return Note.equals(note, prev);
@@ -840,12 +832,61 @@ var Sections = function () {
         }, {});
 
         return Object.assign(acc, defineProperty({}, kind, {
-          value: value,
-          delta: delta,
-          notes: notes.root
+          // TODO: Remove value and notes after `parse` method
+          // value,
+          // notes: notes.root,
+          diffs: diffs
         }));
-        // }, base)
       }, { duration: duration });
+    }
+  }, {
+    key: 'data',
+    get: function get$$1() {
+      return sectionize(normalize(this.source));
+    }
+  }, {
+    key: 'all',
+    get: function get$$1() {
+      var _this = this;
+
+      // return sectionize(normalize(this.source))
+      // TODO: Parse
+      return this.data.map(function (section) {
+        return _this.expand(section);
+      });
+    }
+
+    // get traversed () {
+
+  }, {
+    key: 'linked',
+    get: function get$$1() {
+      var _this2 = this;
+
+      // const { all: sections } = this
+      var sections = this.data;
+
+
+      return sections.map(function (section, index) {
+        // TODO: Consider refactoring section to this struct: { duration: 1, parts: { ... } } to avoid use of `omit`
+        // const parts
+        var duration = section.duration;
+        // const base = omit(section, ['duration'])
+
+        var base = _this2.parts(section);
+        var key = _this2.clamp(index);
+
+        return Object.entries(base).reduce(function (acc, _ref5) {
+          var _ref6 = slicedToArray(_ref5, 2),
+              kind = _ref6[0],
+              value = _ref6[1];
+
+          var prev = sections[_this2.clamp(key - 1)];
+          var next = sections[_this2.clamp(key + 1)];
+
+          return Object.assign(acc, _this2.compare(prev, section, next));
+        }, { duration: duration });
+      });
     }
   }]);
   return Sections;

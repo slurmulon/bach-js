@@ -142,6 +142,7 @@ export const simplifyBeat = beat => beat.data.items
 //
 
 export function scaleify (value) {
+  console.log('&&&&& scaleifying', typeof value === 'object' ? JSON.stringify(value, null, 2) : value)
   if (typeof value === 'string') {
     const [tonic, type] = value.split(' ')
 
