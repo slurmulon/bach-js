@@ -45,6 +45,16 @@ export const sectionize = source => source.data
   )
   .reduce((all, one) => all.concat(one), [])
 
+// Creates a reduced and simplified version of the track with only populated sections
+export const sectionize2 = source => source.data
+  .map(measure =>
+    measure
+      .filter(beat => !!beat.data)
+      .map(partitionBeat)
+  )
+  .reduce((all, one) => all.concat(one), [])
+
+// REMOVE
 // TODO: Probably move this into a more specific `section` or even `bach` module
 export const traversed = source => {
   const sections = sectionize(normalize(source))
@@ -82,6 +92,7 @@ export const condense = source => {
   // Note: Does not wrap head and tail if there's more than 2 elements
 }
 
+// REMOVE
 export function compareSections (prev, base, next) {
   const { duration } = base
   const root = omit(base, ['duration'])
@@ -130,6 +141,31 @@ export const simplifyBeat = beat => beat.data.items
     // TODO: Wrap kinds in "parts" prop! Makes accessibility and parsing much simpler (`duration` becomes non-special)
     [item.kind]: item.value
   }), {})
+
+// export const simplifyBeat2 = beat => beat.data.items
+//   .map(simplifyBeatItem)
+//   .reduce((acc, item) => {
+//     const parts = Object.assign(acc, 
+//     return Object.assign(acc, {
+//       duration: beat.data.duration,
+//       // TODO: Wrap kinds in "parts" prop! Makes accessibility and parsing much simpler (`duration` becomes non-special)
+//       [item.kind]: item.value
+//     })
+//   }), {})
+
+export const partitionBeat = beat => beat.data.items
+  .map(simplifyBeatItem)
+  .reduce((acc, item) => {
+    const parts = Object.assign({}, acc.parts, {
+      [item.kind]: item.value
+    })
+
+    return Object.assign(acc, {
+      duration: beat.data.duration,
+      parts
+    })
+  }, {})
+
 
 export function scaleify (value) {
   if (typeof value === 'string') {
