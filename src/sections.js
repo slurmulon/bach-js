@@ -1,6 +1,6 @@
 import { Note } from './note'
 import { validate } from './validate'
-import { sectionize, normalize, notesIn, omit } from './util'
+import { sectionize, sectionize2, normalize, notesIn, omit } from './util'
 
 // TODO: Generally refactor section to this struct: { duration: 1, parts: { ... } } to avoid use of `omit` around `duration`
 export class Sections {
@@ -12,7 +12,8 @@ export class Sections {
     }
 
     this.source = normalize(source)
-    this.data = sectionize(this.source)
+    // this.data = sectionize(this.source)
+    this.data = sectionize2(this.source)
   }
 
   // get data () {
@@ -32,19 +33,29 @@ export class Sections {
       const base = this.parts(section)
       const key = this.clamp(index)
 
-      return Object.entries(base)
-        .reduce((acc, [kind, value]) => {
-          const prev = sections[this.clamp(key - 1)]
-          const next = sections[this.clamp(key + 1)]
+      const prev = sections[this.clamp(key - 1)]
+      const next = sections[this.clamp(key + 1)]
 
-          return Object.assign(acc, this.compare(prev, section, next))
-        }, { duration })
+      return this.compare(prev, section, next)
+
+      // return Object.entries(base)
+      // const parts = Object.entries(section.parts)
+      //   .reduce((acc, [kind, value]) => {
+      //     const prev = sections[this.clamp(key - 1)]
+      //     const next = sections[this.clamp(key + 1)]
+
+      //     return Object.assign(acc, this.compare(prev, section, next))
+      //   }, section.parts)
+
+      // return Object.assign(section, { parts })
+        // }, { duration })
     })
   }
 
   // TODO: Remove this once struct is refactored so all layers are under `parts` instead of on same level as `duration`
   parts (section) {
-    return omit(section, ['duration'])
+    // return omit(section, ['duration'])
+    return section.parts
   }
 
   clamp (index) {
@@ -59,10 +70,13 @@ export class Sections {
   // }
 
   expand (section) {
-    const { duration } = section
-    const parts = this.parts(section)
+    // const { duration } = section
+    // const parts = this.parts(section)
+    console.log('\n\n\n^^^^^^^ expanding section', section)
 
-    return Object.entries(parts)
+    // return Object.entries(parts)
+    const parts = Object.entries(section.parts)
+      // .reduce((acc, [kind, value]) => {
       .reduce((acc, [kind, value]) => {
         return typeof value === 'string' ? Object.assign(acc, {
           [kind]: {
@@ -70,14 +84,22 @@ export class Sections {
             notes: notesIn(kind, value)
           }
         }) : acc
-      }, { duration })
+      // }, { duration })
+      }, section.parts)
+
+
+    return Object.assign(section, { parts })
   }
 
   compare (prev, base, next) {
     const { duration } = base
-    const parts = this.parts(this.expand(base))
+    // const parts = this.parts(this.expand(base))
+    const section = this.expand(base)
 
-    return Object.entries(parts)
+    console.log('COMPARING section', section)
+
+    // return Object.entries(parts)
+    const parts = Object.entries(section.parts)
       .reduce((acc, [kind, part]) => {
         const notes = {
           prev: notesIn(kind, prev[kind]),
@@ -95,6 +117,9 @@ export class Sections {
         acc[kind].diffs = diffs
 
         return acc
-      }, Object.assign({ duration }, parts))
+      // }, Object.assign({ duration }, parts))
+      }, section.parts)
+
+    return Object.assign(section, { parts })
   }
 }

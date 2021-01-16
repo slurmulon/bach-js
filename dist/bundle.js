@@ -273,6 +273,18 @@ var sectionize = function sectionize(source) {
   }, []);
 };
 
+// Creates a reduced and simplified version of the track with only populated sections
+var sectionize2 = function sectionize2(source) {
+  return source.data.map(function (measure) {
+    return measure.filter(function (beat) {
+      return !!beat.data;
+    }).map(partitionBeat);
+  }).reduce(function (all, one) {
+    return all.concat(one);
+  }, []);
+};
+
+// REMOVE
 // TODO: Probably move this into a more specific `section` or even `bach` module
 var traversed = function traversed(source) {
   var sections = sectionize(normalize(source));
@@ -305,16 +317,7 @@ var traversed = function traversed(source) {
 
 // Groups sequentially identical phrases by summation of duration:
 // TODO
-var condense = function condense(source) {
-  // e.g.
-  // [1 -> :A, 3 -> :A]
-  //    becomes
-  // [4 -> :A]
-  //
-  // Note: Does not wrap head and tail if there's more than 2 elements
-};
-
-function compareSections(prev, base, next) {
+var condense = function condense(source) {};function compareSections(prev, base, next) {
   var duration = base.duration;
 
   var root = omit(base, ['duration']);
@@ -367,6 +370,28 @@ var simplifyBeat = function simplifyBeat(beat) {
     return Object.assign(acc, defineProperty({
       duration: beat.data.duration
     }, item.kind, item.value));
+  }, {});
+};
+
+// export const simplifyBeat2 = beat => beat.data.items
+//   .map(simplifyBeatItem)
+//   .reduce((acc, item) => {
+//     const parts = Object.assign(acc, 
+//     return Object.assign(acc, {
+//       duration: beat.data.duration,
+//       // TODO: Wrap kinds in "parts" prop! Makes accessibility and parsing much simpler (`duration` becomes non-special)
+//       [item.kind]: item.value
+//     })
+//   }), {})
+
+var partitionBeat = function partitionBeat(beat) {
+  return beat.data.items.map(simplifyBeatItem).reduce(function (acc, item) {
+    var parts = Object.assign({}, acc.parts, defineProperty({}, item.kind, item.value));
+
+    return Object.assign(acc, {
+      duration: beat.data.duration,
+      parts: parts
+    });
   }, {});
 };
 
@@ -735,6 +760,7 @@ var Track = function () {
   return Track;
 }();
 
+// TODO: Generally refactor section to this struct: { duration: 1, parts: { ... } } to avoid use of `omit` around `duration`
 var Sections = function () {
   function Sections(source) {
     classCallCheck(this, Sections);
@@ -744,13 +770,17 @@ var Sections = function () {
       throw TypeError('Invalid Bach.JSON source data: ' + JSON.stringify(validate.errors));
     }
 
-    this.source = source;
-    this.data = sectionize(normalize(source));
+    this.source = normalize(source);
+    // this.data = sectionize(this.source)
+    this.data = sectionize2(this.source);
   }
 
   // get data () {
   //   return sectionize(normalize(this.source))
   // }
+
+  // WARN: Currently unused. Most methods use `section` in compressed data structure right now, which seems to be working well enough.
+
 
   createClass(Sections, [{
     key: 'parts',
@@ -758,7 +788,8 @@ var Sections = function () {
 
     // TODO: Remove this once struct is refactored so all layers are under `parts` instead of on same level as `duration`
     value: function parts(section) {
-      return omit(section, ['duration']);
+      // return omit(section, ['duration'])
+      return section.parts;
     }
   }, {
     key: 'clamp',
@@ -769,43 +800,57 @@ var Sections = function () {
 
       return key % length;
     }
+
+    // compress (section) {
+    //   // TODO: Returns original data struct, which is better if you want light-weight data and don't care about the compared/macroscopic view of the sections
+    // }
+
   }, {
     key: 'expand',
     value: function expand(section) {
-      var duration = section.duration;
+      // const { duration } = section
+      // const parts = this.parts(section)
+      console.log('\n\n\n^^^^^^^ expanding section', section);
 
-      var parts = this.parts(section);
-
-      return Object.entries(parts).reduce(function (acc, _ref) {
+      // return Object.entries(parts)
+      var parts = Object.entries(section.parts)
+      // .reduce((acc, [kind, value]) => {
+      .reduce(function (acc, _ref) {
         var _ref2 = slicedToArray(_ref, 2),
             kind = _ref2[0],
             value = _ref2[1];
 
-        return Object.assign(acc, defineProperty({}, kind, {
+        return typeof value === 'string' ? Object.assign(acc, defineProperty({}, kind, {
           value: value,
           notes: notesIn(kind, value)
-        }));
-      }, { duration: duration });
+        })) : acc;
+        // }, { duration })
+      }, section.parts);
+
+      return Object.assign(section, { parts: parts });
     }
   }, {
     key: 'compare',
     value: function compare(prev, base, next) {
       var duration = base.duration;
+      // const parts = this.parts(this.expand(base))
 
-      var root = this.parts(base);
+      var section = this.expand(base);
 
-      return Object.entries(root).reduce(function (acc, _ref3) {
+      console.log('COMPARING section', section);
+
+      // return Object.entries(parts)
+      var parts = Object.entries(section.parts).reduce(function (acc, _ref3) {
         var _ref4 = slicedToArray(_ref3, 2),
             kind = _ref4[0],
-            value = _ref4[1];
+            part = _ref4[1];
 
         var notes = {
-          root: notesIn(kind, value),
           prev: notesIn(kind, prev[kind]),
           next: notesIn(kind, next[kind])
         };
 
-        var diffs = notes.root.reduce(function (diffs, note) {
+        var diffs = part.notes.reduce(function (diffs, note) {
           return Object.assign(diffs, defineProperty({}, note, {
             prev: notes.prev.some(function (prev) {
               return Note.equals(note, prev);
@@ -816,13 +861,13 @@ var Sections = function () {
           }));
         }, {});
 
-        return Object.assign(acc, defineProperty({}, kind, {
-          // TODO: Remove value and notes after `parse` method
-          value: value,
-          notes: notes.root,
-          diffs: diffs
-        }));
-      }, { duration: duration });
+        acc[kind].diffs = diffs;
+
+        return acc;
+        // }, Object.assign({ duration }, parts))
+      }, section.parts);
+
+      return Object.assign(section, { parts: parts });
     }
   }, {
     key: 'all',
@@ -842,22 +887,27 @@ var Sections = function () {
 
 
       return sections.map(function (section, index) {
-        // TODO: Consider refactoring section to this struct: { duration: 1, parts: { ... } } to avoid use of `omit`
         var duration = section.duration;
 
         var base = _this2.parts(section);
         var key = _this2.clamp(index);
 
-        return Object.entries(base).reduce(function (acc, _ref5) {
-          var _ref6 = slicedToArray(_ref5, 2),
-              kind = _ref6[0],
-              value = _ref6[1];
+        var prev = sections[_this2.clamp(key - 1)];
+        var next = sections[_this2.clamp(key + 1)];
 
-          var prev = sections[_this2.clamp(key - 1)];
-          var next = sections[_this2.clamp(key + 1)];
+        return _this2.compare(prev, section, next);
 
-          return Object.assign(acc, _this2.compare(prev, section, next));
-        }, { duration: duration });
+        // return Object.entries(base)
+        // const parts = Object.entries(section.parts)
+        //   .reduce((acc, [kind, value]) => {
+        //     const prev = sections[this.clamp(key - 1)]
+        //     const next = sections[this.clamp(key + 1)]
+
+        //     return Object.assign(acc, this.compare(prev, section, next))
+        //   }, section.parts)
+
+        // return Object.assign(section, { parts })
+        // }, { duration })
       });
     }
   }]);
@@ -874,11 +924,13 @@ exports.atomize = atomize;
 exports.normalize = normalize;
 exports.serialize = serialize;
 exports.sectionize = sectionize;
+exports.sectionize2 = sectionize2;
 exports.traversed = traversed;
 exports.condense = condense;
 exports.compareSections = compareSections;
 exports.simplifyBeatItem = simplifyBeatItem;
 exports.simplifyBeat = simplifyBeat;
+exports.partitionBeat = partitionBeat;
 exports.scaleify = scaleify;
 exports.chordify = chordify;
 exports.scaleToString = scaleToString;
