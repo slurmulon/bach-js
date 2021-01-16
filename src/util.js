@@ -197,13 +197,15 @@ export function scaleToString (scale) {
 export function notesInChord (value) {
   return chordify(value)
     .notes()
-    .map(note => note.toString())
+    // .map(note => note.toString())
+    .map(note => Note.valueOf(note))
 }
 
 export function notesInScale (value) {
   return scaleify(value)
     .notes()
-    .map(note => note.toString())
+    // .map(note => note.toString())
+    .map(note => Note.valueOf(note))
 }
 
 // TODO: Make this less explicit and rigid (e.g. map kind -> note parser)
