@@ -130,19 +130,7 @@ export const simplifyBeat = beat => beat.data.items
     [item.kind]: item.value
   }), {})
 
-// TODO: Move to new 'note' module
-// export const generalizeNote = note => {
-//   const value = teoria.note(note).midi() % 12
-// }
-
-// // TODO: Move to new 'note' module
-// export const reduceNotes = (notes = []) => {
-//   const keys = notes.map(note => teoria.note(note).midi() % 12)
-// }
-//
-
 export function scaleify (value) {
-  console.log('&&&&& scaleifying', typeof value === 'object' ? JSON.stringify(value, null, 2) : value)
   if (typeof value === 'string') {
     const [tonic, type] = value.split(' ')
 

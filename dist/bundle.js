@@ -370,19 +370,7 @@ var simplifyBeat = function simplifyBeat(beat) {
   }, {});
 };
 
-// TODO: Move to new 'note' module
-// export const generalizeNote = note => {
-//   const value = teoria.note(note).midi() % 12
-// }
-
-// // TODO: Move to new 'note' module
-// export const reduceNotes = (notes = []) => {
-//   const keys = notes.map(note => teoria.note(note).midi() % 12)
-// }
-//
-
 function scaleify(value) {
-  console.log('&&&&& scaleifying', (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' ? JSON.stringify(value, null, 2) : value);
   if (typeof value === 'string') {
     var _value$split = value.split(' '),
         _value$split2 = slicedToArray(_value$split, 2),
@@ -757,54 +745,52 @@ var Sections = function () {
     }
 
     this.source = source;
+    this.data = sectionize(normalize(source));
   }
 
+  // get data () {
+  //   return sectionize(normalize(this.source))
+  // }
+
   createClass(Sections, [{
-    key: 'expand',
-    value: function expand(section) {
-      var duration = section.duration;
+    key: 'parts',
 
-      var parts = this.parts(section);
-      // parse (section) {
-      return Object.entries(parts).reduce(function (acc, _ref) {
-        var _ref2 = slicedToArray(_ref, 2),
-            kind = _ref2[0],
-            value = _ref2[1];
-
-        console.log('--- expanding', kind, value);
-        return Object.assign(acc, defineProperty({}, kind, {
-          value: value,
-          notes: notesIn(kind, value)
-        }));
-      }, { duration: duration });
-    }
 
     // TODO: Remove this once struct is refactored so all layers are under `parts` instead of on same level as `duration`
-
-  }, {
-    key: 'parts',
     value: function parts(section) {
       return omit(section, ['duration']);
     }
-
-    // expand (section) {
-    // TODO: Adds `value` and `notes`
-    // }
-
   }, {
     key: 'clamp',
     value: function clamp(index) {
-      var length = this.all.length;
+      var length = this.data.length;
 
       var key = index >= 0 ? index : length + index;
 
       return key % length;
     }
   }, {
+    key: 'expand',
+    value: function expand(section) {
+      var duration = section.duration;
+
+      var parts = this.parts(section);
+
+      return Object.entries(parts).reduce(function (acc, _ref) {
+        var _ref2 = slicedToArray(_ref, 2),
+            kind = _ref2[0],
+            value = _ref2[1];
+
+        return Object.assign(acc, defineProperty({}, kind, {
+          value: value,
+          notes: notesIn(kind, value)
+        }));
+      }, { duration: duration });
+    }
+  }, {
     key: 'compare',
     value: function compare(prev, base, next) {
       var duration = base.duration;
-      // const root = omit(base, ['duration'])
 
       var root = this.parts(base);
 
@@ -815,7 +801,6 @@ var Sections = function () {
 
         var notes = {
           root: notesIn(kind, value),
-          // root: value.notes,
           prev: notesIn(kind, prev[kind]),
           next: notesIn(kind, next[kind])
         };
@@ -833,45 +818,32 @@ var Sections = function () {
 
         return Object.assign(acc, defineProperty({}, kind, {
           // TODO: Remove value and notes after `parse` method
-          // value,
-          // notes: notes.root,
+          value: value,
+          notes: notes.root,
           diffs: diffs
         }));
       }, { duration: duration });
-    }
-  }, {
-    key: 'data',
-    get: function get$$1() {
-      return sectionize(normalize(this.source));
     }
   }, {
     key: 'all',
     get: function get$$1() {
       var _this = this;
 
-      // return sectionize(normalize(this.source))
-      // TODO: Parse
       return this.data.map(function (section) {
         return _this.expand(section);
       });
     }
-
-    // get traversed () {
-
   }, {
     key: 'linked',
     get: function get$$1() {
       var _this2 = this;
 
-      // const { all: sections } = this
       var sections = this.data;
 
 
       return sections.map(function (section, index) {
         // TODO: Consider refactoring section to this struct: { duration: 1, parts: { ... } } to avoid use of `omit`
-        // const parts
         var duration = section.duration;
-        // const base = omit(section, ['duration'])
 
         var base = _this2.parts(section);
         var key = _this2.clamp(index);
