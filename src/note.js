@@ -9,7 +9,7 @@ export class Note {
       return value
     }
 
-    return value
+    throw TypeError(`Unknown note type (${typeof value}): ${value}`)
   }
 
   static expand (kind, note) {

@@ -1,6 +1,6 @@
 import { Note } from './note'
 import { validate } from './validate'
-import { sectionize, sectionize2, normalize, notesIn, omit } from './data'
+import { sectionize, normalize, notesIn } from './data'
 
 export class Sections {
 
@@ -11,34 +11,11 @@ export class Sections {
     }
 
     this.source = normalize(source)
-    // this.data = sectionize(this.source)
-    this.data = sectionize2(this.source)
+    this.data = sectionize(this.source)
   }
-
-  // get data () {
-  //   return sectionize(normalize(this.source))
-  // }
 
   get all () {
     return this.data.map(section => this.expand(section))
-  }
-
-  // get linked () {
-  get compared () {
-    const { data: sections } = this
-
-    return sections.map((section, index) => {
-      const prev = sections[this.clamp(index - 1)]
-      const next = sections[this.clamp(index + 1)]
-
-      return this.compare(prev, section, next)
-    })
-  }
-
-  // TODO: Remove this once struct is refactored so all layers are under `parts` instead of on same level as `duration`
-  parts (section) {
-    // return omit(section, ['duration'])
-    return section.parts
   }
 
   clamp (index) {
@@ -62,34 +39,6 @@ export class Sections {
             notes: notesIn(kind, value)
           }
         }) : acc
-      }, section.parts)
-
-
-    return Object.assign(section, { parts })
-  }
-
-  compare (prev, base, next) {
-    const { duration } = base
-    const section = this.expand(base)
-
-    const parts = Object.entries(section.parts)
-      .reduce((acc, [kind, part]) => {
-        const notes = {
-          prev: notesIn(kind, prev[kind]),
-          next: notesIn(kind, next[kind])
-        }
-
-        const diffs = part.notes.reduce((diffs, note) =>
-          Object.assign(diffs, {
-            [note]: {
-              prev: notes.prev.some(prev => Note.equals(note, prev)),
-              next: notes.next.some(next => Note.equals(note, next))
-            }
-          }), {})
-
-        acc[kind].diffs = diffs
-
-        return acc
       }, section.parts)
 
     return Object.assign(section, { parts })
