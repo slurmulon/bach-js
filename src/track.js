@@ -1,5 +1,5 @@
 import { Beat } from './elements'
-import { validate } from './validate'
+import { valid } from './validate'
 
 // TODO: Possibly rename to Bach, Track will just be a Gig construct
 export class Track {
@@ -7,11 +7,7 @@ export class Track {
   // TODO:
   // constructor ({ source, tempo })
   constructor (source) {
-    if (!validate(source)) {
-      throw TypeError(`Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}`)
-    }
-
-    this.source = source
+    this.source = valid(source)
   }
 
   /**
@@ -89,9 +85,6 @@ export class Track {
 
     return { measures, beats }
   }
-
-  // TODO: get mspb (ms-per-meter-beat essentially, since our `ms-per-beat` in bach is really, in practice, `ms-per-lowest-beat` (need to correct for this in `bach!)
-  // TODO: consider moving `interval` (and this new getter) to a `time` module or something
 
   /**
    * Determines the measure and beat found at the provided indices in a safe manner (modulates indices)

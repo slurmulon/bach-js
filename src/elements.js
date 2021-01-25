@@ -1,4 +1,4 @@
-import teoria from 'teoria'
+import { note as teoriaNote } from 'teoria'
 import { notesIn } from './data'
 
 /**
@@ -29,16 +29,7 @@ export class Element {
     return notesIn(this.kind, this.value)
   }
 
-  // get notes () {
-  //   const { kind, value } = this
-
-  //   return this.value
-  //     ? this.kind === 'chord'
-  //       ? notesInChord(value)
-  //       : notesInScale(value)
-  //     : []
-  // }
-
+  // TODO: Refactor to use data/scaleify and data/chordify
   identify () {
     try {
       teoria.note(this.value)

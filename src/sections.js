@@ -1,16 +1,11 @@
 import { Note } from './note'
-import { validate } from './validate'
+import { valid } from './validate'
 import { sectionize, normalize, notesIn } from './data'
 
 export class Sections {
 
   constructor (source) {
-    // TODO: Move to validate module, copied from Track
-    if (!validate(source)) {
-      throw TypeError(`Invalid Bach.JSON source data: ${JSON.stringify(validate.errors)}`)
-    }
-
-    this.source = normalize(source)
+    this.source = normalize(valid(source))
     this.data = sectionize(this.source)
   }
 

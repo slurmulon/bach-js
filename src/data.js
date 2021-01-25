@@ -85,13 +85,12 @@ export const partitionBeat = beat => beat.data.items
     })
   }, {})
 
-
 export function scaleify (value) {
   if (typeof value === 'string') {
     const [tonic, type] = value.split(' ')
 
     // TODO: Potentially use type.toLowerCase instead, to guarantee smooth interopability
-    return teoriaScale(tonic, type)
+    return teoriaScale(tonic, type.toLowerCase())
   } else if (value instanceof TeoriaScale) {
     return value
   }

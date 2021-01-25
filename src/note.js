@@ -1,11 +1,11 @@
-import teoria from 'teoria'
+import { note as teoriaNote, Note as TeoriaNote } from 'teoria'
 
 export class Note {
 
   static parse (value) {
     if (typeof value === 'string') {
-      return teoria.note(value)
-    } else if (typeof value === 'object' || value instanceof teoria.Note) {
+      return teoriaNote(value)
+    } else if (typeof value === 'object' || value instanceof TeoriaNote) {
       return value
     }
 
@@ -39,7 +39,7 @@ export class Note {
   }
 
   static generalize (note) {
-    return teoria.note(Note.valueOf(note))
+    return teoriaNote(Note.valueOf(note))
   }
 
   static unite (notes = []) {
