@@ -1,7 +1,12 @@
 import { Beat } from './elements'
 import { Note } from './note'
 import validate from './validate'
-import teoria from 'teoria'
+import {
+  scale as teoriaScale,
+  chord as teoriaChord,
+  Scale as TeoriaScale,
+  Chord as TeoriaChord
+} from 'teoria'
 
 // Creates Bach.JSON beat elements from minimal data.
 // WARN: Now dup'd in rebach
@@ -86,8 +91,8 @@ export function scaleify (value) {
     const [tonic, type] = value.split(' ')
 
     // TODO: Potentially use type.toLowerCase instead, to guarantee smooth interopability
-    return teoria.scale(tonic, type)
-  } else if (value instanceof teoria.Scale) {
+    return teoriaScale(tonic, type)
+  } else if (value instanceof TeoriaScale) {
     return value
   }
 
@@ -96,8 +101,8 @@ export function scaleify (value) {
 
 export function chordify (value) {
   if (typeof value === 'string') {
-    return teoria.chord(value)
-  } else if (value instanceof teoria.Chord) {
+    return teoriaChord(value)
+  } else if (value instanceof TeoriaChord) {
     return value
   }
 
