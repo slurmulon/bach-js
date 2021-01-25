@@ -2,18 +2,7 @@ import teoria from 'teoria'
 
 export class Note {
 
-  static hash (note) {
-    return Note.parse(note).chroma()
-  }
-
-  // static fromElem ({ kind, value }) {
-    
-  // }
-
   static parse (value) {
-    // return teoria.note.fromMIDI(value)//.scientific()
-    // LAST
-    // return teoria.note(value)
     if (typeof value === 'string') {
       return teoria.note(value)
     } else if (typeof value === 'object' || value instanceof teoria.Note) {
@@ -23,20 +12,21 @@ export class Note {
     return value
   }
 
+  static expand (kind, note) {
+    return notesIn(kind, note)
+  }
+
+  static hash (note) {
+    return Note.parse(note).chroma()
+  }
+
   static pitchOf (note) {
-    // TODO: Move valueOf contents here
     return Note.valueOf(note)
   }
 
   // TODO: Consider using chroma instead
   // TODO: Use this in nek, and anywhere else this same logic might be used
-  // static pitchOf (note) {
   static valueOf (note) {
-    // return teoria.note(note).midi() % 12
-    // return teoria.note(note).chroma()
-    // LAST
-    // return teoria
-    //   .note(note)
     return Note.parse(note)
       .scientific()
       // .toLowerCase()
@@ -52,15 +42,8 @@ export class Note {
     return teoria.note(Note.valueOf(note))
   }
 
-  // static unify (notes = []) {
-  static reduce (notes = []) {
-    // const unique = [...new Set(notes.map(Note.generalize))]
-    const unique = [...new Set(Note.valuesOf(notes))]
-
-    return unique.map(value => {
-      // return teoria.note.fromMIDI(value).scientific()
-      return Note.parse(value).scientific()
-    })
+  static unite (notes = []) {
+    return [...new Set(Note.valuesOf(notes))]
   }
 
   static equals (left, right) {

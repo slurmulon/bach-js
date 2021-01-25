@@ -1,6 +1,6 @@
 import { Note } from './note'
 import { validate } from './validate'
-import { sectionize, sectionize2, normalize, notesIn, omit } from './util'
+import { sectionize, sectionize2, normalize, notesIn, omit } from './data'
 
 export class Sections {
 
@@ -19,7 +19,6 @@ export class Sections {
   //   return sectionize(normalize(this.source))
   // }
 
-  // WARN: Currently unused. Most methods use `section` in compressed data structure right now, which seems to be working well enough.
   get all () {
     return this.data.map(section => this.expand(section))
   }
@@ -53,6 +52,7 @@ export class Sections {
   //   // TODO: Returns original data struct, which is better if you want light-weight data and don't care about the compared/macroscopic view of the sections
   // }
 
+  // TODO: Move to Section class so we dont' have to provide bach data
   expand (section) {
     const parts = Object.entries(section.parts)
       .reduce((acc, [kind, value]) => {

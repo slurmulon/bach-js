@@ -1,5 +1,5 @@
 import teoria from 'teoria'
-import { notesIn } from './util'
+import { notesIn } from './data'
 
 /**
  * Represents a single playable element (Note, Scale, Chord, Mode, Triad or Rest)
