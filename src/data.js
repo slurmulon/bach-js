@@ -132,6 +132,21 @@ export function notesIn (kind, value) {
     : []
 }
 
+// TODO: Use empty-schema (or another approach) to return default bach.json ehaders instead of empty object
+export const headersOf = source => (source && source.headers) || {}
+
+export const unitsOf = source => ({
+  beat: headersOf(source)['beat-unit'] || 1/4,
+  pulse: headersOf(source)['pulse-beat'] || 1/4,
+  second: 1,
+  ms: 1/1000
+})
+
+export const barsOf = source => ({
+  beat: headersOf(source)['beat-units-per-measure'] || 4,
+  pulse: headersOf(source)['pulse-beats-per-measure'] || 4
+})
+
 export default {
   atomize,
   normalize,
@@ -143,6 +158,9 @@ export default {
   notesInChord,
   notesInScale,
   notesIn,
+  headersOf,
+  unitsOf,
+  barsOf,
   simplifyBeatItem,
   partitionBeat
 }
