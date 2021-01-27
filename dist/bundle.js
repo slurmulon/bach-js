@@ -4,7 +4,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var teoria = _interopDefault(require('teoria'));
+var teoria$1 = require('teoria');
 var schema = _interopDefault(require('bach-json-schema'));
 var Ajv = _interopDefault(require('ajv'));
 
@@ -147,32 +147,36 @@ var toConsumableArray = function (arr) {
   }
 };
 
-var Note = function () {
-  function Note() {
-    classCallCheck(this, Note);
+var Note$1 = function () {
+  function Note$$1() {
+    classCallCheck(this, Note$$1);
   }
 
-  createClass(Note, null, [{
-    key: 'hash',
-    value: function hash(note) {
-      return Note.parse(note).chroma();
-    }
-
-    // static fromElem ({ kind, value }) {
-
-    // }
-
-  }, {
+  createClass(Note$$1, null, [{
     key: 'parse',
     value: function parse(value) {
-      // return teoria.note.fromMIDI(value)//.scientific()
-      // LAST
-      // return teoria.note(value)
       if (typeof value === 'string') {
-        return teoria.note(value);
-      } else if (value instanceof teoria.Note) {
+        return teoria$1.note(value);
+      } else if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' || value instanceof teoria$1.Note) {
         return value;
       }
+
+      throw TypeError('Unknown note type (' + (typeof value === 'undefined' ? 'undefined' : _typeof(value)) + '): ' + value);
+    }
+  }, {
+    key: 'expand',
+    value: function expand(kind, note$$1) {
+      return notesIn(kind, note$$1);
+    }
+  }, {
+    key: 'hash',
+    value: function hash(note$$1) {
+      return Note$$1.parse(note$$1).chroma();
+    }
+  }, {
+    key: 'pitchOf',
+    value: function pitchOf(note$$1) {
+      return Note$$1.valueOf(note$$1);
     }
 
     // TODO: Consider using chroma instead
@@ -180,46 +184,36 @@ var Note = function () {
 
   }, {
     key: 'valueOf',
-    value: function valueOf(note) {
-      // return teoria.note(note).midi() % 12
-      // return teoria.note(note).chroma()
-      return teoria.note(note).scientific()
+    value: function valueOf(note$$1) {
+      return Note$$1.parse(note$$1).scientific()
+      // .toLowerCase()
       // TODO: Centralize! Replace everywhere in bach-sheet, nek, etc.
       .replace(/[0-9]+$/, '');
     }
   }, {
     key: 'valuesOf',
     value: function valuesOf(notes) {
-      return notes.map(Note.valueOf);
+      return notes.map(Note$$1.valueOf);
     }
   }, {
     key: 'generalize',
-    value: function generalize(note) {
-      return teoria.note(Note.valueOf(note));
+    value: function generalize(note$$1) {
+      return teoria$1.note(Note$$1.valueOf(note$$1));
     }
-
-    // static unify (notes = []) {
-
   }, {
-    key: 'reduce',
-    value: function reduce() {
+    key: 'unite',
+    value: function unite() {
       var notes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
-      // const unique = [...new Set(notes.map(Note.generalize))]
-      var unique = [].concat(toConsumableArray(new Set(Note.valuesOf(notes))));
-
-      return unique.map(function (value) {
-        // return teoria.note.fromMIDI(value).scientific()
-        return Note.parse(value).scientific();
-      });
+      return [].concat(toConsumableArray(new Set(Note$$1.valuesOf(notes))));
     }
   }, {
     key: 'equals',
     value: function equals(left, right) {
-      return Note.hash(left) == Note.hash(right);
+      return Note$$1.hash(left) == Note$$1.hash(right);
     }
   }]);
-  return Note;
+  return Note$$1;
 }();
 
 var ajv = new Ajv();
@@ -228,7 +222,23 @@ ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
 
 var validate = ajv.compile(schema);
 
-// Creates Bach.JSON beat elements from minimal data
+var valid = function valid(bach) {
+  if (!validate(bach)) {
+    var message = 'Invalid Bach.JSON source data';
+    var pretty = function pretty(json) {
+      return JSON.stringify(json, null, 2);
+    };
+
+    console.error(message, pretty(bach));
+    console.error(pretty(validate.errors));
+
+    throw TypeError('Invalid Bach.JSON source data');
+  }
+
+  return bach;
+};
+
+// Creates Bach.JSON beat elements from minimal data.
 // WARN: Now dup'd in rebach
 var atomize = function atomize(kind, value) {
   return {
@@ -237,7 +247,8 @@ var atomize = function atomize(kind, value) {
   };
 };
 
-// TODO: Seems we should just use 'new Track' instead. Remove.
+// Consumes bach.json source data and parses/normalizes each beat.
+// Light-weight alternative to using Track constructor.
 var normalize = function normalize(source) {
   if (validate(source)) {
     return Object.assign({}, source, {
@@ -250,8 +261,7 @@ var normalize = function normalize(source) {
   throw TypeError('Invalid Bach.JSON data');
 };
 
-// Converts a parsed Track's `data` back into its serialized form (vanilla bach.json)
-//  - Perhaps better suited as a static method on Track
+// Converts a parsed Track's `data` back into its serialized form (vanilla bach.json).
 var serialize = function serialize(track) {
   var data = track.data.map(function (measure) {
     return measure.map(function (beat) {
@@ -262,19 +272,9 @@ var serialize = function serialize(track) {
   return Object.assign({}, track, { data: data });
 };
 
-// Creates a reduced and simplified version of the track with only populated sections
+// Creates a reduced and simplified version of the track with only populated sections.
+// Ideal data format for high-level iteration and/or cursor tracing in bach engines.
 var sectionize = function sectionize(source) {
-  return source.data.map(function (measure) {
-    return measure.filter(function (beat) {
-      return !!beat.data;
-    }).map(simplifyBeat);
-  }).reduce(function (all, one) {
-    return all.concat(one);
-  }, []);
-};
-
-// Creates a reduced and simplified version of the track with only populated sections
-var sectionize2 = function sectionize2(source) {
   return source.data.map(function (measure) {
     return measure.filter(function (beat) {
       return !!beat.data;
@@ -284,77 +284,9 @@ var sectionize2 = function sectionize2(source) {
   }, []);
 };
 
-// REMOVE
-// TODO: Probably move this into a more specific `section` or even `bach` module
-var traversed = function traversed(source) {
-  var sections = sectionize(normalize(source));
-  // TODO: Move into `section` module
-  var clamp = function clamp(index) {
-    var key = index >= 0 ? index : sections.length + index;
-    return key % sections.length;
-  };
-
-  return sections.map(function (section, index) {
-    // TODO: Consider refactoring section to this struct: { duration: 1, parts: { ... } } to avoid use of `omit`
-    // const parts
-    var duration = section.duration;
-
-    var base = omit(section, ['duration']);
-    var key = clamp(index);
-
-    return Object.entries(base).reduce(function (acc, _ref) {
-      var _ref2 = slicedToArray(_ref, 2),
-          kind = _ref2[0],
-          value = _ref2[1];
-
-      var prev = sections[clamp(key - 1)];
-      var next = sections[clamp(key + 1)];
-
-      return Object.assign(acc, compareSections(prev, section, next));
-    }, { duration: duration });
-  });
-};
-
 // Groups sequentially identical phrases by summation of duration:
 // TODO
-var condense = function condense(source) {};function compareSections(prev, base, next) {
-  var duration = base.duration;
-
-  var root = omit(base, ['duration']);
-
-  return Object.entries(root).reduce(function (acc, _ref3) {
-    var _ref4 = slicedToArray(_ref3, 2),
-        kind = _ref4[0],
-        value = _ref4[1];
-
-    var notes = {
-      root: notesIn(kind, value),
-      prev: notesIn(kind, prev[kind]),
-      next: notesIn(kind, next[kind])
-    };
-
-    var delta = notes.root.reduce(function (diffs, note) {
-      return Object.assign(diffs, defineProperty({}, note, {
-        prev: notes.prev.some(function (prev) {
-          return Note.equals(note, prev);
-        }),
-        next: notes.next.some(function (next) {
-          return Note.equals(note, next);
-        })
-      }));
-    }, {});
-
-    return Object.assign(acc, defineProperty({}, kind, {
-      value: value,
-      delta: delta,
-      notes: notes.root
-    }));
-    // }, base)
-  }, { duration: duration });
-}
-
-// Provides a reduced/simplified representation of a Bach beat item/element
-var simplifyBeatItem = function simplifyBeatItem(item) {
+var condense = function condense(source) {};var simplifyBeatItem = function simplifyBeatItem(item) {
   var keyword = item.keyword,
       _item$arguments = slicedToArray(item.arguments, 1),
       value = _item$arguments[0];
@@ -364,26 +296,8 @@ var simplifyBeatItem = function simplifyBeatItem(item) {
   return { kind: kind, value: value };
 };
 
-// Provides a reduced/simplified representation of a Bach beat and its items
-var simplifyBeat = function simplifyBeat(beat) {
-  return beat.data.items.map(simplifyBeatItem).reduce(function (acc, item) {
-    return Object.assign(acc, defineProperty({
-      duration: beat.data.duration
-    }, item.kind, item.value));
-  }, {});
-};
-
-// export const simplifyBeat2 = beat => beat.data.items
-//   .map(simplifyBeatItem)
-//   .reduce((acc, item) => {
-//     const parts = Object.assign(acc, 
-//     return Object.assign(acc, {
-//       duration: beat.data.duration,
-//       // TODO: Wrap kinds in "parts" prop! Makes accessibility and parsing much simpler (`duration` becomes non-special)
-//       [item.kind]: item.value
-//     })
-//   }), {})
-
+// Expands a beat and its items into a usable object grouped by "parts".
+// TODO: Instead of "parts" we should probably stick with "items", to be consistent with Bach
 var partitionBeat = function partitionBeat(beat) {
   return beat.data.items.map(simplifyBeatItem).reduce(function (acc, item) {
     var parts = Object.assign({}, acc.parts, defineProperty({}, item.kind, item.value));
@@ -405,8 +319,8 @@ function scaleify(value) {
     // TODO: Potentially use type.toLowerCase instead, to guarantee smooth interopability
 
 
-    return teoria.scale(tonic, type);
-  } else if (value instanceof teoria.Scale) {
+    return teoria$1.scale(tonic, type.toLowerCase());
+  } else if (value instanceof teoria$1.Scale) {
     return value;
   }
 
@@ -415,62 +329,64 @@ function scaleify(value) {
 
 function chordify(value) {
   if (typeof value === 'string') {
-    return teoria.chord(value);
-  } else if (value instanceof teoria.Chord) {
+    return teoria$1.chord(value);
+  } else if (value instanceof teoria$1.Chord) {
     return value;
   }
 
   throw TypeError('Unknown chord type (' + (typeof value === 'undefined' ? 'undefined' : _typeof(value)) + '): ' + value);
 }
 
-function scaleToString(scale) {
-  return scale.tonic.toString().slice(0, 2) + ' ' + scale.name;
+function scaleToString(scale$$1) {
+  return scale$$1.tonic.toString().slice(0, 2) + ' ' + scale$$1.name;
 }
 
 function notesInChord(value) {
-  return chordify(value).notes().map(function (note) {
-    return note.toString();
+  return chordify(value).notes().map(function (note$$1) {
+    return Note$1.valueOf(note$$1);
   });
 }
 
 function notesInScale(value) {
-  return scaleify(value).notes().map(function (note) {
-    return note.toString();
+  return scaleify(value).notes().map(function (note$$1) {
+    return Note$1.valueOf(note$$1);
   });
 }
 
-// TODO: Make this less explicit and rigid (e.g. map kind -> note parser)
-function notesIn(kind, value) {
+function notesIn$1(kind, value) {
   return value ? kind === 'chord' ? notesInChord(value) : notesInScale(value) : [];
 }
 
-// TODO: Upgrade Babel to 7 to use rest-spread
-// export function pick (obj, props) {
-//   return Object.assign({}, ...props.map(prop => ({ [prop]: obj[prop] })))
-// }
+// TODO: Use empty-schema (or another approach) to return default bach.json ehaders instead of empty object
+var headersOf = function headersOf(source) {
+  return source && source.headers || {};
+};
 
-// export function omit (obj, props) {
-//   return pick(obj, Object.keys(obj).filter(key => !props.includes(key)))
-// }
-function omit(obj, props) {
-  return Object.keys(obj).reduce(function (acc, key) {
-    if (!props.includes(key)) {
-      acc[key] = obj[key];
-    }
+var unitsOf = function unitsOf(source) {
+  return {
+    beat: headersOf(source)['beat-unit'] || 1 / 4,
+    pulse: headersOf(source)['pulse-beat'] || 1 / 4,
+    second: 1,
+    ms: 1 / 1000
+  };
+};
 
-    return acc;
-  }, {});
-}
+var barsOf = function barsOf(source) {
+  return {
+    beat: headersOf(source)['beat-units-per-measure'] || 4,
+    pulse: headersOf(source)['pulse-beats-per-measure'] || 4
+  };
+};
 
 /**
  * Represents a single playable element (Note, Scale, Chord, Mode, Triad or Rest)
  */
 // FIXME: Support rests (~)
 var Element = function () {
-  function Element(data) {
+  function Element(data$$1) {
     classCallCheck(this, Element);
 
-    this.data = data;
+    this.data = data$$1;
     // TODO: Consider using nanoid to generate pseudo-unique beat element identifiers
     // this.id = id || nanoid()
   }
@@ -479,16 +395,7 @@ var Element = function () {
     key: 'identify',
 
 
-    // get notes () {
-    //   const { kind, value } = this
-
-    //   return this.value
-    //     ? this.kind === 'chord'
-    //       ? notesInChord(value)
-    //       : notesInScale(value)
-    //     : []
-    // }
-
+    // TODO: Refactor to use data/scaleify and data/chordify
     value: function identify() {
       try {
         teoria.note(this.value);
@@ -500,9 +407,9 @@ var Element = function () {
         var _value$split = this.value.split(' '),
             _value$split2 = slicedToArray(_value$split, 2),
             key = _value$split2[0],
-            scale = _value$split2[1];
+            scale$$1 = _value$split2[1];
 
-        teoria.note(key).scale(scale.toLowerCase());
+        teoria.note(key).scale(scale$$1.toLowerCase());
 
         return 'scale';
       } catch (_) {}
@@ -511,10 +418,10 @@ var Element = function () {
       try {
         var _ref = [this.value.substring(0, 2), this.value.substring(2)],
             _key = _ref[0],
-            chord = _ref[1];
+            chord$$1 = _ref[1];
 
 
-        teoria.note(_key).chord(chord.toLowerCase());
+        teoria.note(_key).chord(chord$$1.toLowerCase());
 
         return 'chord';
       } catch (_) {}
@@ -537,7 +444,7 @@ var Element = function () {
   }, {
     key: 'notes',
     get: function get$$1() {
-      return notesIn(this.kind, this.value);
+      return notesIn$1(this.kind, this.value);
     }
   }]);
   return Element;
@@ -551,10 +458,10 @@ var Element = function () {
  * duration -> items (elements)
  */
 var Beat = function () {
-  function Beat(data) {
+  function Beat(data$$1) {
     classCallCheck(this, Beat);
 
-    this.data = data;
+    this.data = data$$1;
     // TODO: Consider using nanoid to generate pseudo-unique beat identifiers
     // this.id = id || nanoid()
   }
@@ -629,11 +536,7 @@ var Track = function () {
   function Track(source) {
     classCallCheck(this, Track);
 
-    if (!validate(source)) {
-      throw TypeError('Invalid Bach.JSON source data: ' + JSON.stringify(validate.errors));
-    }
-
-    this.source = source;
+    this.source = valid(source);
   }
 
   /**
@@ -675,9 +578,6 @@ var Track = function () {
   }, {
     key: 'at',
 
-
-    // TODO: get mspb (ms-per-meter-beat essentially, since our `ms-per-beat` in bach is really, in practice, `ms-per-lowest-beat` (need to correct for this in `bach!)
-    // TODO: consider moving `interval` (and this new getter) to a `time` module or something
 
     /**
      * Determines the measure and beat found at the provided indices in a safe manner (modulates indices)
@@ -760,38 +660,15 @@ var Track = function () {
   return Track;
 }();
 
-// TODO: Generally refactor section to this struct: { duration: 1, parts: { ... } } to avoid use of `omit` around `duration`
 var Sections = function () {
   function Sections(source) {
     classCallCheck(this, Sections);
 
-    // TODO: Move to validate module, copied from Track
-    if (!validate(source)) {
-      throw TypeError('Invalid Bach.JSON source data: ' + JSON.stringify(validate.errors));
-    }
-
-    this.source = normalize(source);
-    // this.data = sectionize(this.source)
-    this.data = sectionize2(this.source);
+    this.source = normalize(valid(source));
+    this.data = sectionize(this.source);
   }
 
-  // get data () {
-  //   return sectionize(normalize(this.source))
-  // }
-
-  // WARN: Currently unused. Most methods use `section` in compressed data structure right now, which seems to be working well enough.
-
-
   createClass(Sections, [{
-    key: 'parts',
-
-
-    // TODO: Remove this once struct is refactored so all layers are under `parts` instead of on same level as `duration`
-    value: function parts(section) {
-      // return omit(section, ['duration'])
-      return section.parts;
-    }
-  }, {
     key: 'clamp',
     value: function clamp(index) {
       var length = this.data.length;
@@ -805,66 +682,20 @@ var Sections = function () {
     //   // TODO: Returns original data struct, which is better if you want light-weight data and don't care about the compared/macroscopic view of the sections
     // }
 
+    // TODO: Move to Section class so we dont' have to provide bach data
+
   }, {
     key: 'expand',
     value: function expand(section) {
-      // const { duration } = section
-      // const parts = this.parts(section)
-      console.log('\n\n\n^^^^^^^ expanding section', section);
-
-      // return Object.entries(parts)
-      var parts = Object.entries(section.parts)
-      // .reduce((acc, [kind, value]) => {
-      .reduce(function (acc, _ref) {
+      var parts = Object.entries(section.parts).reduce(function (acc, _ref) {
         var _ref2 = slicedToArray(_ref, 2),
             kind = _ref2[0],
             value = _ref2[1];
 
         return typeof value === 'string' ? Object.assign(acc, defineProperty({}, kind, {
           value: value,
-          notes: notesIn(kind, value)
+          notes: notesIn$1(kind, value)
         })) : acc;
-        // }, { duration })
-      }, section.parts);
-
-      return Object.assign(section, { parts: parts });
-    }
-  }, {
-    key: 'compare',
-    value: function compare(prev, base, next) {
-      var duration = base.duration;
-      // const parts = this.parts(this.expand(base))
-
-      var section = this.expand(base);
-
-      console.log('COMPARING section', section);
-
-      // return Object.entries(parts)
-      var parts = Object.entries(section.parts).reduce(function (acc, _ref3) {
-        var _ref4 = slicedToArray(_ref3, 2),
-            kind = _ref4[0],
-            part = _ref4[1];
-
-        var notes = {
-          prev: notesIn(kind, prev[kind]),
-          next: notesIn(kind, next[kind])
-        };
-
-        var diffs = part.notes.reduce(function (diffs, note) {
-          return Object.assign(diffs, defineProperty({}, note, {
-            prev: notes.prev.some(function (prev) {
-              return Note.equals(note, prev);
-            }),
-            next: notes.next.some(function (next) {
-              return Note.equals(note, next);
-            })
-          }));
-        }, {});
-
-        acc[kind].diffs = diffs;
-
-        return acc;
-        // }, Object.assign({ duration }, parts))
       }, section.parts);
 
       return Object.assign(section, { parts: parts });
@@ -878,38 +709,6 @@ var Sections = function () {
         return _this.expand(section);
       });
     }
-  }, {
-    key: 'linked',
-    get: function get$$1() {
-      var _this2 = this;
-
-      var sections = this.data;
-
-
-      return sections.map(function (section, index) {
-        var duration = section.duration;
-
-        var base = _this2.parts(section);
-        var key = _this2.clamp(index);
-
-        var prev = sections[_this2.clamp(key - 1)];
-        var next = sections[_this2.clamp(key + 1)];
-
-        return _this2.compare(prev, section, next);
-
-        // return Object.entries(base)
-        // const parts = Object.entries(section.parts)
-        //   .reduce((acc, [kind, value]) => {
-        //     const prev = sections[this.clamp(key - 1)]
-        //     const next = sections[this.clamp(key + 1)]
-
-        //     return Object.assign(acc, this.compare(prev, section, next))
-        //   }, section.parts)
-
-        // return Object.assign(section, { parts })
-        // }, { duration })
-      });
-    }
   }]);
   return Sections;
 }();
@@ -917,24 +716,23 @@ var Sections = function () {
 exports.Track = Track;
 exports.Element = Element;
 exports.Beat = Beat;
-exports.Note = Note;
+exports.Note = Note$1;
 exports.Sections = Sections;
 exports.validate = validate;
+exports.valid = valid;
 exports.atomize = atomize;
 exports.normalize = normalize;
 exports.serialize = serialize;
 exports.sectionize = sectionize;
-exports.sectionize2 = sectionize2;
-exports.traversed = traversed;
 exports.condense = condense;
-exports.compareSections = compareSections;
 exports.simplifyBeatItem = simplifyBeatItem;
-exports.simplifyBeat = simplifyBeat;
 exports.partitionBeat = partitionBeat;
 exports.scaleify = scaleify;
 exports.chordify = chordify;
 exports.scaleToString = scaleToString;
 exports.notesInChord = notesInChord;
 exports.notesInScale = notesInScale;
-exports.notesIn = notesIn;
-exports.omit = omit;
+exports.notesIn = notesIn$1;
+exports.headersOf = headersOf;
+exports.unitsOf = unitsOf;
+exports.barsOf = barsOf;
