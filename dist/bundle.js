@@ -4,9 +4,25 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var teoria = _interopDefault(require('teoria'));
+var teoria$1 = require('teoria');
 var schema = _interopDefault(require('bach-json-schema'));
 var Ajv = _interopDefault(require('ajv'));
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
+
+
+
+
+
+
+
+
+
 
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -109,19 +125,277 @@ var slicedToArray = function () {
   };
 }();
 
+
+
+
+
+
+
+
+
+
+
+
+
+var toConsumableArray = function (arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  } else {
+    return Array.from(arr);
+  }
+};
+
+var Note$1 = function () {
+  function Note$$1() {
+    classCallCheck(this, Note$$1);
+  }
+
+  createClass(Note$$1, null, [{
+    key: 'parse',
+    value: function parse(value) {
+      if (typeof value === 'string') {
+        return teoria$1.note(value);
+      } else if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' || value instanceof teoria$1.Note) {
+        return value;
+      }
+
+      throw TypeError('Unknown note type (' + (typeof value === 'undefined' ? 'undefined' : _typeof(value)) + '): ' + value);
+    }
+  }, {
+    key: 'expand',
+    value: function expand(kind, note$$1) {
+      return notesIn(kind, note$$1);
+    }
+  }, {
+    key: 'hash',
+    value: function hash(note$$1) {
+      return Note$$1.parse(note$$1).chroma();
+    }
+  }, {
+    key: 'pitchOf',
+    value: function pitchOf(note$$1) {
+      return Note$$1.valueOf(note$$1);
+    }
+
+    // TODO: Consider using chroma instead
+    // TODO: Use this in nek, and anywhere else this same logic might be used
+
+  }, {
+    key: 'valueOf',
+    value: function valueOf(note$$1) {
+      return Note$$1.parse(note$$1).scientific()
+      // .toLowerCase()
+      // TODO: Centralize! Replace everywhere in bach-sheet, nek, etc.
+      .replace(/[0-9]+$/, '');
+    }
+  }, {
+    key: 'valuesOf',
+    value: function valuesOf(notes) {
+      return notes.map(Note$$1.valueOf);
+    }
+  }, {
+    key: 'generalize',
+    value: function generalize(note$$1) {
+      return teoria$1.note(Note$$1.valueOf(note$$1));
+    }
+  }, {
+    key: 'unite',
+    value: function unite() {
+      var notes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+      return [].concat(toConsumableArray(new Set(Note$$1.valuesOf(notes))));
+    }
+  }, {
+    key: 'equals',
+    value: function equals(left, right) {
+      return Note$$1.hash(left) == Note$$1.hash(right);
+    }
+  }]);
+  return Note$$1;
+}();
+
+var ajv = new Ajv();
+
+ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
+
+var validate = ajv.compile(schema);
+
+var valid = function valid(bach) {
+  if (!validate(bach)) {
+    var message = 'Invalid Bach.JSON source data';
+    var pretty = function pretty(json) {
+      return JSON.stringify(json, null, 2);
+    };
+
+    console.error(message, pretty(bach));
+    console.error(pretty(validate.errors));
+
+    throw TypeError('Invalid Bach.JSON source data');
+  }
+
+  return bach;
+};
+
+// Creates Bach.JSON beat elements from minimal data.
+// WARN: Now dup'd in rebach
+var atomize = function atomize(kind, value) {
+  return {
+    keyword: kind.toLowerCase(),
+    arguments: [value]
+  };
+};
+
+// Consumes bach.json source data and parses/normalizes each beat.
+// Light-weight alternative to using Track constructor.
+var normalize = function normalize(source) {
+  if (validate(source)) {
+    return Object.assign({}, source, {
+      data: source.data.map(Beat.from)
+    });
+  }
+
+  console.error(validate.errors);
+
+  throw TypeError('Invalid Bach.JSON data');
+};
+
+// Converts a parsed Track's `data` back into its serialized form (vanilla bach.json).
+var serialize = function serialize(track) {
+  var data = track.data.map(function (measure) {
+    return measure.map(function (beat) {
+      return beat && beat.data;
+    });
+  });
+
+  return Object.assign({}, track, { data: data });
+};
+
+// Creates a reduced and simplified version of the track with only populated sections.
+// Ideal data format for high-level iteration and/or cursor tracing in bach engines.
+var sectionize = function sectionize(source) {
+  return source.data.map(function (measure) {
+    return measure.filter(function (beat) {
+      return !!beat.data;
+    }).map(partitionBeat);
+  }).reduce(function (all, one) {
+    return all.concat(one);
+  }, []);
+};
+
+// Groups sequentially identical phrases by summation of duration:
+// TODO
+var condense = function condense(source) {};var simplifyBeatItem = function simplifyBeatItem(item) {
+  var keyword = item.keyword,
+      _item$arguments = slicedToArray(item.arguments, 1),
+      value = _item$arguments[0];
+
+  var kind = keyword.toLowerCase();
+
+  return { kind: kind, value: value };
+};
+
+// Expands a beat and its items into a usable object grouped by "parts".
+// TODO: Instead of "parts" we should probably stick with "items", to be consistent with Bach
+var partitionBeat = function partitionBeat(beat) {
+  return beat.data.items.map(simplifyBeatItem).reduce(function (acc, item) {
+    var parts = Object.assign({}, acc.parts, defineProperty({}, item.kind, item.value));
+
+    return Object.assign(acc, {
+      duration: beat.data.duration,
+      parts: parts
+    });
+  }, {});
+};
+
+function scaleify(value) {
+  if (typeof value === 'string') {
+    var _value$split = value.split(' '),
+        _value$split2 = slicedToArray(_value$split, 2),
+        tonic = _value$split2[0],
+        type = _value$split2[1];
+
+    // TODO: Potentially use type.toLowerCase instead, to guarantee smooth interopability
+
+
+    return teoria$1.scale(tonic, type.toLowerCase());
+  } else if (value instanceof teoria$1.Scale) {
+    return value;
+  }
+
+  throw TypeError('Unknown scale type (' + (typeof value === 'undefined' ? 'undefined' : _typeof(value)) + '): ' + value);
+}
+
+function chordify(value) {
+  if (typeof value === 'string') {
+    return teoria$1.chord(value);
+  } else if (value instanceof teoria$1.Chord) {
+    return value;
+  }
+
+  throw TypeError('Unknown chord type (' + (typeof value === 'undefined' ? 'undefined' : _typeof(value)) + '): ' + value);
+}
+
+function scaleToString(scale$$1) {
+  return scale$$1.tonic.toString().slice(0, 2) + ' ' + scale$$1.name;
+}
+
+function notesInChord(value) {
+  return chordify(value).notes().map(function (note$$1) {
+    return Note$1.valueOf(note$$1);
+  });
+}
+
+function notesInScale(value) {
+  return scaleify(value).notes().map(function (note$$1) {
+    return Note$1.valueOf(note$$1);
+  });
+}
+
+function notesIn$1(kind, value) {
+  return value ? kind === 'chord' ? notesInChord(value) : notesInScale(value) : [];
+}
+
+// TODO: Use empty-schema (or another approach) to return default bach.json ehaders instead of empty object
+var headersOf = function headersOf(source) {
+  return source && source.headers || {};
+};
+
+var unitsOf = function unitsOf(source) {
+  return {
+    beat: headersOf(source)['beat-unit'] || 1 / 4,
+    pulse: headersOf(source)['pulse-beat'] || 1 / 4,
+    second: 1,
+    ms: 1 / 1000
+  };
+};
+
+var barsOf = function barsOf(source) {
+  return {
+    beat: headersOf(source)['beat-units-per-measure'] || 4,
+    pulse: headersOf(source)['pulse-beats-per-measure'] || 4
+  };
+};
+
 /**
  * Represents a single playable element (Note, Scale, Chord, Mode, Triad or Rest)
  */
 // FIXME: Support rests (~)
 var Element = function () {
-  function Element(data) {
+  function Element(data$$1) {
     classCallCheck(this, Element);
 
-    this.data = data;
+    this.data = data$$1;
+    // TODO: Consider using nanoid to generate pseudo-unique beat element identifiers
+    // this.id = id || nanoid()
   }
 
   createClass(Element, [{
     key: 'identify',
+
+
+    // TODO: Refactor to use data/scaleify and data/chordify
     value: function identify() {
       try {
         teoria.note(this.value);
@@ -133,9 +407,9 @@ var Element = function () {
         var _value$split = this.value.split(' '),
             _value$split2 = slicedToArray(_value$split, 2),
             key = _value$split2[0],
-            scale = _value$split2[1];
+            scale$$1 = _value$split2[1];
 
-        teoria.note(key).scale(scale.toLowerCase());
+        teoria.note(key).scale(scale$$1.toLowerCase());
 
         return 'scale';
       } catch (_) {}
@@ -144,10 +418,10 @@ var Element = function () {
       try {
         var _ref = [this.value.substring(0, 2), this.value.substring(2)],
             _key = _ref[0],
-            chord = _ref[1];
+            chord$$1 = _ref[1];
 
 
-        teoria.note(_key).chord(chord.toLowerCase());
+        teoria.note(_key).chord(chord$$1.toLowerCase());
 
         return 'chord';
       } catch (_) {}
@@ -167,6 +441,11 @@ var Element = function () {
     get: function get$$1() {
       return this.data.keyword.toLowerCase();
     }
+  }, {
+    key: 'notes',
+    get: function get$$1() {
+      return notesIn$1(this.kind, this.value);
+    }
   }]);
   return Element;
 }();
@@ -179,13 +458,22 @@ var Element = function () {
  * duration -> items (elements)
  */
 var Beat = function () {
-  function Beat(data) {
+  function Beat(data$$1) {
     classCallCheck(this, Beat);
 
-    this.data = data;
+    this.data = data$$1;
+    // TODO: Consider using nanoid to generate pseudo-unique beat identifiers
+    // this.id = id || nanoid()
   }
 
   createClass(Beat, [{
+    key: 'first',
+    value: function first(kind) {
+      return this.items.find(function (item) {
+        return kind == item.kind;
+      });
+    }
+  }, {
     key: 'duration',
     get: function get$$1() {
       return this.exists ? this.data.duration : 0;
@@ -198,6 +486,21 @@ var Beat = function () {
       return this.data.items.map(function (item) {
         return new Element(item);
       });
+    }
+  }, {
+    key: 'kinds',
+    get: function get$$1() {
+      return [].concat(toConsumableArray(new Set(this.items.map(function (_ref2) {
+        var kind = _ref2.kind;
+        return kind;
+      }))));
+    }
+  }, {
+    key: 'values',
+    get: function get$$1() {
+      return this.items.reduce(function (acc, item) {
+        return Object.assign(acc, defineProperty({}, item.kind, item.value));
+      }, {});
     }
   }, {
     key: 'empty',
@@ -225,12 +528,6 @@ var Beat = function () {
   return Beat;
 }();
 
-var ajv = new Ajv();
-
-ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
-
-var validate = ajv.compile(schema);
-
 // TODO: Possibly rename to Bach, Track will just be a Gig construct
 var Track = function () {
 
@@ -239,11 +536,7 @@ var Track = function () {
   function Track(source) {
     classCallCheck(this, Track);
 
-    if (!validate(source)) {
-      throw TypeError('Invalid Bach.JSON source data: ' + JSON.stringify(validate.errors));
-    }
-
-    this.source = source;
+    this.source = valid(source);
   }
 
   /**
@@ -286,11 +579,8 @@ var Track = function () {
     key: 'at',
 
 
-    // TODO: get mspb (ms-per-meter-beat essentially, since our `ms-per-beat` in bach is really, in practice, `ms-per-lowest-beat` (need to correct for this in `bach!)
-    // TODO: consider moving `interval` (and this new getter) to a `time` module or something
-
     /**
-     * Determines the measure and beat found at the provided indices
+     * Determines the measure and beat found at the provided indices in a safe manner (modulates indices)
      *
      * @param {number} measure
      * @param {number} beat
@@ -298,8 +588,8 @@ var Track = function () {
      */
     value: function at(measureIndex, beatIndex) {
       try {
-        var measure = this.data[Math.floor(measureIndex)];
-        var beat = measure[Math.floor(beatIndex)];
+        var measure = this.data[Math.floor(measureIndex) % this.total.measures];
+        var beat = measure[Math.floor(beatIndex) % measure.length];
 
         return { measure: measure, beat: beat };
       } catch (e) {
@@ -337,6 +627,7 @@ var Track = function () {
       return this.headers['ms-per-pulse-beat'] / diff;
     }
 
+    // TODO: Take `barOf` approach in client playing mixin instead (providing both pulse and beat units here)
     /**
      * Specifies the total number of pulse beats (i.e. "pulses") in a measure
      *
@@ -369,80 +660,79 @@ var Track = function () {
   return Track;
 }();
 
-// Creates Bach.JSON beat elements from minimal data
-// WARN: Now dup'd in rebach
-var atomize = function atomize(kind, value) {
-  return {
-    keyword: kind.toLowerCase(),
-    arguments: [value]
-  };
-};
+var Sections = function () {
+  function Sections(source) {
+    classCallCheck(this, Sections);
 
-// TODO: Seems we should just use 'new Track' instead. Remove.
-var normalize = function normalize(source) {
-  if (validate(source)) {
-    return Object.assign({}, source, {
-      data: source.data.map(Beat.from)
-    });
+    this.source = normalize(valid(source));
+    this.data = sectionize(this.source);
   }
 
-  console.error(validate.errors);
+  createClass(Sections, [{
+    key: 'clamp',
+    value: function clamp(index) {
+      var length = this.data.length;
 
-  throw TypeError('Invalid Bach.JSON data');
-};
+      var key = index >= 0 ? index : length + index;
 
-// Converts a parsed Track's `data` back into its serialized form (vanilla bach.json)
-//  - Perhaps better suited as a static method on Track
-var serialize = function serialize(track) {
-  var data = track.data.map(function (measure) {
-    return measure.map(function (beat) {
-      return beat && beat.data;
-    });
-  });
+      return key % length;
+    }
 
-  return Object.assign({}, track, { data: data });
-};
+    // compress (section) {
+    //   // TODO: Returns original data struct, which is better if you want light-weight data and don't care about the compared/macroscopic view of the sections
+    // }
 
-// Creates a reduced and simplified version of the track with only populated sections
-var sectionize = function sectionize(source) {
-  return source.data.map(function (measure) {
-    return measure.filter(function (beat) {
-      return !!beat.data;
-    }).map(simplifyBeat);
-  }).reduce(function (all, one) {
-    return all.concat(one);
-  }, []);
-};
+    // TODO: Move to Section class so we dont' have to provide bach data
 
-// Groups sequentially identical phrases by summation of duration:
-// TODO
-var condense = function condense(source) {};var simplifyBeatItem = function simplifyBeatItem(item) {
-  var keyword = item.keyword,
-      _item$arguments = slicedToArray(item.arguments, 1),
-      value = _item$arguments[0];
+  }, {
+    key: 'expand',
+    value: function expand(section) {
+      var parts = Object.entries(section.parts).reduce(function (acc, _ref) {
+        var _ref2 = slicedToArray(_ref, 2),
+            kind = _ref2[0],
+            value = _ref2[1];
 
-  var kind = keyword.toLowerCase();
+        return typeof value === 'string' ? Object.assign(acc, defineProperty({}, kind, {
+          value: value,
+          notes: notesIn$1(kind, value)
+        })) : acc;
+      }, section.parts);
 
-  return { kind: kind, value: value };
-};
+      return Object.assign(section, { parts: parts });
+    }
+  }, {
+    key: 'all',
+    get: function get$$1() {
+      var _this = this;
 
-// Provides a reduced/simplified representation of a Bach beat and its items
-var simplifyBeat = function simplifyBeat(beat) {
-  return beat.data.items.map(simplifyBeatItem).reduce(function (acc, item) {
-    return Object.assign(acc, defineProperty({
-      duration: beat.data.duration
-    }, item.kind, item.value));
-  }, {});
-};
+      return this.data.map(function (section) {
+        return _this.expand(section);
+      });
+    }
+  }]);
+  return Sections;
+}();
 
 exports.Track = Track;
 exports.Element = Element;
 exports.Beat = Beat;
+exports.Note = Note$1;
+exports.Sections = Sections;
 exports.validate = validate;
+exports.valid = valid;
 exports.atomize = atomize;
 exports.normalize = normalize;
 exports.serialize = serialize;
 exports.sectionize = sectionize;
 exports.condense = condense;
 exports.simplifyBeatItem = simplifyBeatItem;
-exports.simplifyBeat = simplifyBeat;
+exports.partitionBeat = partitionBeat;
+exports.scaleify = scaleify;
+exports.chordify = chordify;
+exports.scaleToString = scaleToString;
+exports.notesInChord = notesInChord;
+exports.notesInScale = notesInScale;
+exports.notesIn = notesIn$1;
+exports.headersOf = headersOf;
+exports.unitsOf = unitsOf;
+exports.barsOf = barsOf;
