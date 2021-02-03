@@ -1,5 +1,5 @@
 import { Beat } from './elements'
-import { valid } from './validate'
+import { compose } from './data'
 
 // TODO: Possibly rename to Bach, Track will just be a Gig construct
 export class Track {
@@ -7,7 +7,7 @@ export class Track {
   // TODO:
   // constructor ({ source, tempo })
   constructor (source) {
-    this.source = valid(source)
+    this.source = compose(source)
   }
 
   /**

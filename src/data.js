@@ -1,12 +1,27 @@
+import bach from 'bach-cljs'
 import { Beat } from './elements'
 import { Note } from './note'
-import validate from './validate'
+import { valid } from './validate'
 import {
   scale as teoriaScale,
   chord as teoriaChord,
   Scale as TeoriaScale,
   Chord as TeoriaChord
 } from 'teoria'
+
+// Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
+// Main entry point for integrating with core bach ClojureScript library.
+export const compose = source => {
+  if (typeof source === 'string') {
+    return bach(source)
+  }
+
+  if (typeof source === 'object') {
+    return valid(source)
+  }
+
+  throw TypeError(`Unsupported Bach.JSON data type (${typeof source}). Must be a bach.json object or raw bach string.`)
+}
 
 // Creates Bach.JSON beat elements from minimal data.
 // WARN: Now dup'd in rebach
@@ -18,15 +33,11 @@ export const atomize = (kind, value) => ({
 // Consumes bach.json source data and parses/normalizes each beat.
 // Light-weight alternative to using Track constructor.
 export const normalize = source => {
-  if (validate(source)) {
-    return Object.assign({}, source, {
-      data: source.data.map(Beat.from)
-    })
-  }
+  const bach = compose(source)
 
-  console.error(validate.errors)
-
-  throw TypeError('Invalid Bach.JSON data')
+  return Object.assign({}, bach, {
+    data: bach.data.map(Beat.from)
+  })
 }
 
 // Converts a parsed Track's `data` back into its serialized form (vanilla bach.json).
