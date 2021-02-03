@@ -7,6 +7,7 @@ export class Track {
   // TODO:
   // constructor ({ source, tempo })
   constructor (source) {
+    this.origin = source
     this.source = compose(source)
   }
 
