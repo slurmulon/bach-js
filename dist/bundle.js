@@ -547,6 +547,7 @@ var Track = function () {
   function Track(source) {
     classCallCheck(this, Track);
 
+    this.origin = source;
     this.source = compose(source);
   }
 
