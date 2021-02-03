@@ -5,6 +5,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
 var teoria$1 = require('teoria');
+var bach = _interopDefault(require('bach-cljs'));
 var schema = _interopDefault(require('bach-json-schema'));
 var Ajv = _interopDefault(require('ajv'));
 
@@ -222,20 +223,34 @@ ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
 
 var validate = ajv.compile(schema);
 
-var valid = function valid(bach) {
-  if (!validate(bach)) {
+var valid = function valid(bach$$1) {
+  if (!validate(bach$$1)) {
     var message = 'Invalid Bach.JSON source data';
     var pretty = function pretty(json) {
       return JSON.stringify(json, null, 2);
     };
 
-    console.error(message, pretty(bach));
+    console.error(message, pretty(bach$$1));
     console.error(pretty(validate.errors));
 
     throw TypeError('Invalid Bach.JSON source data');
   }
 
-  return bach;
+  return bach$$1;
+};
+
+// Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
+// Main entry point for integrating with core bach ClojureScript library.
+var compose = function compose(source) {
+  if (typeof source === 'string') {
+    return bach(source);
+  }
+
+  if ((typeof source === 'undefined' ? 'undefined' : _typeof(source)) === 'object') {
+    return valid(source);
+  }
+
+  throw TypeError('Unsupported Bach.JSON data type (' + (typeof source === 'undefined' ? 'undefined' : _typeof(source)) + '). Must be a bach.json object or raw bach string.');
 };
 
 // Creates Bach.JSON beat elements from minimal data.
@@ -250,15 +265,11 @@ var atomize = function atomize(kind, value) {
 // Consumes bach.json source data and parses/normalizes each beat.
 // Light-weight alternative to using Track constructor.
 var normalize = function normalize(source) {
-  if (validate(source)) {
-    return Object.assign({}, source, {
-      data: source.data.map(Beat.from)
-    });
-  }
+  var bach$$1 = compose(source);
 
-  console.error(validate.errors);
-
-  throw TypeError('Invalid Bach.JSON data');
+  return Object.assign({}, bach$$1, {
+    data: bach$$1.data.map(Beat.from)
+  });
 };
 
 // Converts a parsed Track's `data` back into its serialized form (vanilla bach.json).
@@ -536,7 +547,8 @@ var Track = function () {
   function Track(source) {
     classCallCheck(this, Track);
 
-    this.source = valid(source);
+    this.origin = source;
+    this.source = compose(source);
   }
 
   /**
@@ -664,7 +676,7 @@ var Sections = function () {
   function Sections(source) {
     classCallCheck(this, Sections);
 
-    this.source = normalize(valid(source));
+    this.source = normalize(source);
     this.data = sectionize(this.source);
   }
 
@@ -720,6 +732,7 @@ exports.Note = Note$1;
 exports.Sections = Sections;
 exports.validate = validate;
 exports.valid = valid;
+exports.compose = compose;
 exports.atomize = atomize;
 exports.normalize = normalize;
 exports.serialize = serialize;

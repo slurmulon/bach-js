@@ -1,11 +1,10 @@
 import { Note } from './note'
-import { valid } from './validate'
 import { sectionize, normalize, notesIn } from './data'
 
 export class Sections {
 
   constructor (source) {
-    this.source = normalize(valid(source))
+    this.source = normalize(source)
     this.data = sectionize(this.source)
   }
 
@@ -38,4 +37,5 @@ export class Sections {
 
     return Object.assign(section, { parts })
   }
+
 }
