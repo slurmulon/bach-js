@@ -1,5 +1,4 @@
 import { Note } from './note'
-// import { valid } from './validate'
 import { sectionize, normalize, notesIn } from './data'
 
 export class Sections {
@@ -38,4 +37,5 @@ export class Sections {
 
     return Object.assign(section, { parts })
   }
+
 }
