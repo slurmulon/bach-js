@@ -1,6 +1,6 @@
 {
   "name": "bach-js",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Bach music notation parser for JS",
   "main": "dist/bundle.js",
   "scripts": {
@@ -27,6 +27,7 @@
   "homepage": "https://github.com/slurmulon/bach-js#readme",
   "dependencies": {
     "ajv": "^6.4.0",
+    "bach-cljs": "1.0.3",
     "bach-json-schema": "github:slurmulon/bach-json-schema",
     "teoria": "^2.5.0"
   },
