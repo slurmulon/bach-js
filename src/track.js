@@ -29,22 +29,29 @@ export class Track {
     return this.source.headers
   }
 
+  get tempo () {
+    return this.headers.tempo
+  }
+
+  get meter () {
+    return this.headers.meter
+  }
+
   /**
    * Finds all Beat elements matching a kind
    *
    * @returns {Array<Object>}
    */
   all (kind = 'note') {
-    return this.data.map(beats => {
-      return beats
-        .filter(beat => {
-          if (beat.data) {
-            return beat.items.some(item => {
-              return item && item.kind === kind
-            })
-          }
-        })
-    }).flat()
+    return this.data.map(beats =>
+      beats.filter(beat => {
+        if (beat.data) {
+          return beat.items.some(item =>
+            item && item.kind === kind
+          )
+        }
+      })
+    ).flat()
   }
 
   /**
