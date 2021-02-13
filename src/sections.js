@@ -12,6 +12,26 @@ export class Sections {
     return this.data.map(section => this.expand(section))
   }
 
+  get length () {
+    return this.all.length
+  }
+
+  get duration () {
+    return this.all.reduce((total, { duration }) => total + duration, 0)
+  }
+
+  get shortest () {
+    return this.all.sort((left, right) => left.duration - right.duration)[0]
+  }
+
+  get longest () {
+    return this.all.sort((left, right) => right.duration - left.duration)[0]
+  }
+
+  ratio (duration) {
+    return duration / this.duration
+  }
+
   clamp (index) {
     const { length } = this.data
     const key = index >= 0 ? index : length + index
