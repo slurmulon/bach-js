@@ -2,6 +2,8 @@ import { Beat } from './elements'
 import { compose } from './data'
 
 // TODO: Possibly rename to Bach, Track will just be a Gig construct
+// TODO: Consider adding `sections` getter here to better centralize logic
+//  - Or, instead, create a mixin between Sections and Track called Bach, containing shared logic like headers, tempo, durations, etc.
 export class Track {
 
   // TODO:
@@ -29,10 +31,20 @@ export class Track {
     return this.source.headers
   }
 
+  /**
+   * Provide the tempo header of the track, fundamental in all time/duration calcs
+   *
+   * @returns {Number}
+   */
   get tempo () {
     return this.headers.tempo
   }
 
+  /**
+   * Provide the meter header of the track, fundamental in all time/duration calcs
+   *
+   * @returns {Number}
+   */
   get meter () {
     return this.headers.meter
   }
@@ -59,6 +71,8 @@ export class Track {
    *
    * @returns {number}
    */
+  // FIXME: Need to add `tempo` as a constructor param in order for this to work
+  //  - Before we do that, we need to figure out how to react to tempo and re-calc all durations via `bach`
   get interval () {
     const header = this.headers.tempo
     const tempos = {

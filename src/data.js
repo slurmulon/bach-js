@@ -136,11 +136,26 @@ export function notesInScale (value) {
 }
 
 export function notesIn (kind, value) {
-  return value
-    ? kind === 'chord'
-      ? notesInChord(value)
-      : notesInScale(value)
-    : []
+  const notes = notesOf[kind]
+
+  if (notes) {
+    return notes(value)
+  }
+
+  return []
+
+  // return value
+  //   ? kind === 'chord'
+  //     ? notesInChord(value)
+  //     : notesInScale(value)
+  //   : []
+}
+
+export const notesOf = {
+  note:  value => value,
+  chord: value => notesInChord(value),
+  scale: value => notesInScale(value),
+  penta: value => notesInScale(value)
 }
 
 // TODO: Use empty-schema (or another approach) to return default bach.json ehaders instead of empty object

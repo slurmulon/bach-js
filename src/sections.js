@@ -1,6 +1,8 @@
 import { Note } from './note'
 import { sectionize, normalize, notesIn } from './data'
 
+export const MUSICAL_ELEMENTS = ['note', 'chord', 'scale']
+
 export class Sections {
 
   constructor (source) {
@@ -26,6 +28,12 @@ export class Sections {
 
   get longest () {
     return this.all.sort((left, right) => right.duration - left.duration)[0]
+  }
+
+  get musical () {
+    return this.data.every(section => {
+      return Object.keys(section.parts).some(part => MUSICAL_ELEMENTS.includes(part))
+    })
   }
 
   ratio (duration) {
