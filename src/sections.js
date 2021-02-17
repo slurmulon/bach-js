@@ -1,8 +1,6 @@
 import { Note } from './note'
 import { sectionize, normalize, notesIn } from './data'
 
-export const MUSICAL_ELEMENTS = ['note', 'chord', 'scale']
-
 export class Sections {
 
   constructor (source) {
@@ -33,6 +31,13 @@ export class Sections {
   get musical () {
     return this.data.every(section => {
       return Object.keys(section.parts).some(part => MUSICAL_ELEMENTS.includes(part))
+    })
+  }
+
+  get permanents () {
+    return this.all.map(({ notes }) => {
+      // TODO: Reduce int a list of notes that are unchanged across each section
+      //  - Just use Note.unify across all section parts
     })
   }
 
@@ -67,3 +72,6 @@ export class Sections {
   }
 
 }
+
+
+export const MUSICAL_ELEMENTS = ['note', 'chord', 'scale']

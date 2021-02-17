@@ -33,7 +33,7 @@ export const atomize = (kind, value) => ({
 // Consumes bach.json source data and parses/normalizes each beat.
 // Light-weight alternative to using Track constructor.
 export const normalize = source => {
-  const bach = compose(source)
+  const bach = typeof source === 'string' ? compose(source) : source
 
   return Object.assign({}, bach, {
     data: bach.data.map(Beat.from)
@@ -158,6 +158,11 @@ export const notesOf = {
   penta: value => notesInScale(value)
 }
 
+// TODO: Note.valueOf
+export function notesIntersect (left, right) {
+ return left.filter(note => right.includes(note))
+}
+
 // TODO: Use empty-schema (or another approach) to return default bach.json ehaders instead of empty object
 export const headersOf = source => (source && source.headers) || {}
 
@@ -171,6 +176,10 @@ export const unitsOf = source => ({
 export const barsOf = source => ({
   beat: headersOf(source)['beat-units-per-measure'] || 4,
   pulse: headersOf(source)['pulse-beats-per-measure'] || 4
+})
+
+export const durationsOf = source => ({
+
 })
 
 export default {
