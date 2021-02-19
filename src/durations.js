@@ -1,4 +1,4 @@
-import { normalize, unitsOf, barsOf, timesOf } from './data'
+import { normalize, unitsOf, barsOf, timesOf, intervalsOf } from './data'
 
 export class Durations {
 
@@ -44,7 +44,7 @@ export class Durations {
   }
 
   get interval () {
-    return this.headers['ms-per-pulse-beat']
+    return intervalsOf(this.source).pulse
   }
 
   cast (duration, { is = 'pulse', as = 'ms' } = {}) {
@@ -59,20 +59,19 @@ export class Durations {
     return this.ratio(duration, is) * 100
   }
 
+  // TODO: Either replace or improve via inspiration with this:
+  // @see: https://tonejs.github.io/docs/r13/Time#quantize
   rhythmic ({
-    time,
+    duration,
     is = 'ms',
     units = ['eight', 'quarter'],
     calc = 'abs',
     size = 'min'
   }) {
-    const durations = units.map(unit => {
-      const duration = this.at(time, { is, as: unit })
-
-      return Math[calc](duration)
-    })
-    .sort((a, b) => Math.abs(time - a) - Math.abs(time - b))
-    .filter(_ => _)
+    const durations = units
+      .map(unit => Math[calc](this.cast(duration, { is, as: unit })))
+      .sort((a, b) => Math.abs(time - a) - Math.abs(time - b))
+      .filter(_ => _)
 
     return Math[size](...durations)
   }
