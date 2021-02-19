@@ -16,6 +16,10 @@ export class Sections {
     return this.all.length
   }
 
+  get measures () {
+    return this.source.data
+  }
+
   // TODO: Move most of these into Durations and then just add a utility getter here (or not, can just do sections.duration.total)
   get duration () {
     return this.all.reduce((total, { duration }) => total + duration, 0)
