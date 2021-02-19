@@ -31,15 +31,12 @@ export class Durations {
     return this.all.sort((left, right) => right- left)[0]
   }
 
-  get unit () {
-    return unitsOf(this.source)
-  }
-
+  // TODO: Probably just remove
   get bar () {
     return barsOf(this.source)
   }
 
-  get time () {
+  get unit () {
     return timesOf(this.source)
   }
 
@@ -48,7 +45,7 @@ export class Durations {
   }
 
   cast (duration, { is = 'pulse', as = 'ms' } = {}) {
-    return duration / (this.time[as] / this.time[is])
+    return duration / (this.unit[as] / this.unit[is])
   }
 
   ratio (duration, is = 'pulse') {
