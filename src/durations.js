@@ -51,6 +51,14 @@ export class Durations {
     return time / (this.time[as] / this.time[is])
   }
 
+  ratio (duration, is = 'pulse') {
+    return this.cast(duration, { is, as: 'pulse' }) / this.total
+  }
+
+  percentage (duration, is = 'pulse') {
+    return this.ratio(duration, is) * 100
+  }
+
   rhythmic ({
     time,
     is = 'ms',
