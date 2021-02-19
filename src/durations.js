@@ -16,7 +16,7 @@ export class Durations {
   }
 
   get steps () {
-    return this.data.flatMap(({ duration }, index) => Array(duration).fill(index))
+    return this.all.flatMap(({ duration }, index) => Array(duration).fill(index))
   }
 
   get total () {

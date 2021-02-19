@@ -54,7 +54,7 @@ export class Sections {
 
   at (time, is = 'ms') {
     const all = this.data.flatMap(({ duration }, index) => Array(duration).fill(index))
-    const duration = this.durations.at({ is, as: 'pulse' })
+    const duration = this.durations.at(time, { is, as: 'pulse' })
     const ratio = this.durations.ratio(duration)
 
     return steps(ratio, all)
