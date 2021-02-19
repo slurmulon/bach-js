@@ -56,7 +56,7 @@ export class Sections {
 
   at (time, is = 'ms') {
     const all = this.durations.steps
-    const duration = this.durations.at(time, { is, as: 'pulse' })
+    const duration = this.durations.cast(time, { is, as: 'pulse' })
     const ratio = this.durations.ratio(duration)
 
     return steps(ratio, all)

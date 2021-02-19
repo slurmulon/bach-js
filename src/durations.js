@@ -47,12 +47,8 @@ export class Durations {
     return this.headers['ms-per-pulse-beat']
   }
 
-  cast (duration, { is = 'pulse', as = 'beat' } = {}) {
-    return duration / (this.unit[as] / this.unit[is])
-  }
-
-  at (time, { is = 'ms', as = 'beat' } = {}) {
-    return time / (this.time[as] / this.time[is])
+  cast (duration, { is = 'pulse', as = 'ms' } = {}) {
+    return duration / (this.time[as] / this.time[is])
   }
 
   ratio (duration, is = 'pulse') {

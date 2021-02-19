@@ -186,6 +186,9 @@ export const timesOf = source => {
   const bars = barsOf(source)
   const bar = bars.pulse * intervals.pulse
 
+  // TODO: Probably move most if not all of these into unitsOf, and then just modify here post-calc
+  //  - Could have `unitsOf` accept an option `scale` prop (defaulting to 1) that determiens the reference unit
+  //  - UPDATE: Can just replace unitsOf with this (rename timesOf to unitsOf)
   return {
     ms: 1,
     second: 1000,
