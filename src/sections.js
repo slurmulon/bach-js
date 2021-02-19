@@ -27,13 +27,16 @@ export class Sections {
 
   // TODO: Move most of these into Durations and then just add a utility getter here (or not, can just do sections.duration.total)
   get duration () {
-    return this.all.reduce((total, { duration }) => total + duration, 0)
+    // return this.all.reduce((total, { duration }) => total + duration, 0)
+    return this.durations.total
   }
 
+  // TODO: Probably just remove (can do sections.durations.shortest)
   get shortest () {
     return this.all.sort((left, right) => left.duration - right.duration)[0]
   }
 
+  // TODO: Probably just remove (can do sections.durations.longest)
   get longest () {
     return this.all.sort((left, right) => right.duration - left.duration)[0]
   }
@@ -53,7 +56,7 @@ export class Sections {
   }
 
   at (time, is = 'ms') {
-    const all = this.data.flatMap(({ duration }, index) => Array(duration).fill(index))
+    const all = this.durations.steps
     const duration = this.durations.at(time, { is, as: 'pulse' })
     const ratio = this.durations.ratio(duration)
 
