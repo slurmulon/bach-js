@@ -151,6 +151,8 @@ export function notesIn (kind, value) {
   //   : []
 }
 
+// TODO: Allow custom note resolvers to be registered globally or locally so people can easily define their own semantics
+//  - Could call this `itemsOf` to be more generic and flexible
 export const notesOf = {
   note:  value => value,
   chord: value => notesInChord(value),
@@ -166,6 +168,11 @@ export function notesIntersect (left, right) {
 // TODO: Use empty-schema (or another approach) to return default bach.json ehaders instead of empty object
 export const headersOf = source => (source && source.headers) || {}
 
+export const intervalsOf = source => ({
+  pulse: headersOf(source)['ms-per-pulse-beat'],
+  beat: headersOf(source)['ms-per-beat-unit']
+})
+
 export const unitsOf = source => ({
   beat: headersOf(source)['beat-unit'] || 1/4,
   pulse: headersOf(source)['pulse-beat'] || 1/4,
@@ -175,12 +182,32 @@ export const unitsOf = source => ({
 
 export const barsOf = source => ({
   beat: headersOf(source)['beat-units-per-measure'] || 4,
-  pulse: headersOf(source)['pulse-beats-per-measure'] || 4
+  pulse: headersOf(source)['pulse-beats-per-measure'] || 4,
+  bar: 1,
+  measure: 1
 })
 
-export const durationsOf = source => ({
+// export const durationsOf = (source) => {
+export const timesOf = (source) => {
+  const intervals = intervalsOf(source)
+  const bars = barsOf(source)
+  const bar = bars.pulse * intervals.pulse
 
-})
+  return {
+    ms: 1,
+    second: 1000,
+    pulse: intervals.pulse,
+    beat: intervals.beat,
+    bar,
+    measure: bar,
+    half: bar / 2,
+    quarter: bar / 4,
+    eight: bar / 8,
+    sixteen: bar / 16,
+    upbeat: bar - (bar / 4),
+    upeight: bar - (bar / 8)
+  }
+}
 
 export default {
   atomize,

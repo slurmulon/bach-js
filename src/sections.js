@@ -16,6 +16,7 @@ export class Sections {
     return this.all.length
   }
 
+  // TODO: Move most of these into Durations and then just add a utility getter here (or not, can just do sections.duration.total)
   get duration () {
     return this.all.reduce((total, { duration }) => total + duration, 0)
   }
@@ -34,11 +35,12 @@ export class Sections {
     })
   }
 
-  get permanents () {
-    return this.all.map(({ notes }) => {
-      // TODO: Reduce int a list of notes that are unchanged across each section
-      //  - Just use Note.unify across all section parts
-    })
+  get notes () {
+    return Note.unite(
+      this.all
+        .flat()
+        .map(({ notes }) => notes)
+    )
   }
 
   ratio (duration) {
@@ -72,6 +74,5 @@ export class Sections {
   }
 
 }
-
 
 export const MUSICAL_ELEMENTS = ['note', 'chord', 'scale']
