@@ -189,7 +189,7 @@ export const timesOf = source => {
   // TODO: Probably move most if not all of these into unitsOf, and then just modify here post-calc
   //  - Could have `unitsOf` accept an option `scale` prop (defaulting to 1) that determiens the reference unit
   //  - UPDATE: Can just replace unitsOf with this (rename timesOf to unitsOf)
-  return {
+  const units = {
     ms: 1,
     second: 1000,
     pulse: intervals.pulse,
@@ -203,6 +203,20 @@ export const timesOf = source => {
     upbeat: bar - (bar / 4),
     upeight: bar - (bar / 8)
   }
+
+  // TODO: After we replace teoria with tone, this can be done more dynamically (standardize around their notation duration format)
+  const aliases = {
+    'b': units.beat,
+    'p': units.pulse,
+    '1m': units.bar,
+    '4n': units.quarter,
+    '8n': units.eight,
+    '16n': units.sixteen,
+    '32n': bar / 32,
+    '64n': bar / 64
+  }
+
+  return Object.assign(units, aliases)
 }
 
 export const steps = (ratio, all) => {
