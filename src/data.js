@@ -209,6 +209,14 @@ export const timesOf = (source) => {
   }
 }
 
+export const steps = (ratio, all) => {
+  ratio %= 1
+
+  if (ratio < 0) ratio += 1
+
+  return all[Math.floor(ratio * all.length)]
+}
+
 export default {
   atomize,
   normalize,

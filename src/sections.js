@@ -1,5 +1,6 @@
 import { Note } from './note'
-import { sectionize, normalize, notesIn } from './data'
+import { Durations } from './durations'
+import { sectionize, normalize, notesIn, steps } from './data'
 
 export class Sections {
 
@@ -18,6 +19,10 @@ export class Sections {
 
   get measures () {
     return this.source.data
+  }
+
+  get durations () {
+    return new Durations(this.source)
   }
 
   // TODO: Move most of these into Durations and then just add a utility getter here (or not, can just do sections.duration.total)
@@ -45,6 +50,14 @@ export class Sections {
         .flat()
         .map(({ notes }) => notes)
     )
+  }
+
+  at (time, is = 'ms') {
+    const all = this.data.flatMap(({ duration }, index) => Array(duration).fill(index))
+    const duration = this.durations.at({ is, as: 'pulse' })
+    const ratio = this.durations.ratio(duration)
+
+    return steps(ratio, all)
   }
 
   ratio (duration) {

@@ -15,6 +15,10 @@ export class Durations {
     return this.data.flat().map(beat => beat.duration)
   }
 
+  get steps () {
+    return this.data.flatMap(({ duration }, index) => Array(duration).fill(index))
+  }
+
   get total () {
     return this.all.reduce((total, duration) => total + duration, 0)
   }
