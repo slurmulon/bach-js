@@ -143,12 +143,6 @@ export function notesIn (kind, value) {
   }
 
   return []
-
-  // return value
-  //   ? kind === 'chord'
-  //     ? notesInChord(value)
-  //     : notesInScale(value)
-  //   : []
 }
 
 // TODO: Allow custom note resolvers to be registered globally or locally so people can easily define their own semantics
@@ -187,8 +181,7 @@ export const barsOf = source => ({
   measure: 1
 })
 
-// export const durationsOf = (source) => {
-export const timesOf = (source) => {
+export const timesOf = source => {
   const intervals = intervalsOf(source)
   const bars = barsOf(source)
   const bar = bars.pulse * intervals.pulse
@@ -217,6 +210,7 @@ export const steps = (ratio, all) => {
   return all[Math.floor(ratio * all.length)]
 }
 
+// TODO: Just remove, pointless
 export default {
   atomize,
   normalize,

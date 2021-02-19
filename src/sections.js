@@ -27,18 +27,17 @@ export class Sections {
 
   // TODO: Move most of these into Durations and then just add a utility getter here (or not, can just do sections.duration.total)
   get duration () {
-    // return this.all.reduce((total, { duration }) => total + duration, 0)
     return this.durations.total
   }
 
   // TODO: Probably just remove (can do sections.durations.shortest)
   get shortest () {
-    return this.all.sort((left, right) => left.duration - right.duration)[0]
+    return this.durations.shortest
   }
 
   // TODO: Probably just remove (can do sections.durations.longest)
   get longest () {
-    return this.all.sort((left, right) => right.duration - left.duration)[0]
+    return this.durations.longest
   }
 
   get musical () {
@@ -49,9 +48,9 @@ export class Sections {
 
   get notes () {
     return Note.unite(
-      this.all
-        .flat()
-        .map(({ notes }) => notes)
+      this.all.flatMap(section =>
+        Object.values(section.parts).flatMap(({ notes }) => notes)
+      )
     )
   }
 
@@ -95,4 +94,5 @@ export class Sections {
 
 }
 
+// TODO: Move to elements module
 export const MUSICAL_ELEMENTS = ['note', 'chord', 'scale']
