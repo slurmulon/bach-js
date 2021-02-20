@@ -33,7 +33,7 @@ export const atomize = (kind, value) => ({
 // Consumes bach.json source data and parses/normalizes each beat.
 // Light-weight alternative to using Track constructor.
 export const normalize = source => {
-  const bach = compose(source)
+  const bach = typeof source === 'string' ? compose(source) : source
 
   return Object.assign({}, bach, {
     data: bach.data.map(Beat.from)
@@ -136,15 +136,36 @@ export function notesInScale (value) {
 }
 
 export function notesIn (kind, value) {
-  return value
-    ? kind === 'chord'
-      ? notesInChord(value)
-      : notesInScale(value)
-    : []
+  const notes = notesOf[kind]
+
+  if (notes) {
+    return notes(value)
+  }
+
+  return []
+}
+
+// TODO: Allow custom note resolvers to be registered globally or locally so people can easily define their own semantics
+//  - Could call this `itemsOf` to be more generic and flexible
+export const notesOf = {
+  note:  value => value,
+  chord: value => notesInChord(value),
+  scale: value => notesInScale(value),
+  penta: value => notesInScale(value)
+}
+
+// TODO: Note.valueOf
+export function notesIntersect (left, right) {
+ return left.filter(note => right.includes(note))
 }
 
 // TODO: Use empty-schema (or another approach) to return default bach.json ehaders instead of empty object
 export const headersOf = source => (source && source.headers) || {}
+
+export const intervalsOf = source => ({
+  pulse: headersOf(source)['ms-per-pulse-beat'],
+  beat: headersOf(source)['ms-per-beat-unit']
+})
 
 export const unitsOf = source => ({
   beat: headersOf(source)['beat-unit'] || 1/4,
@@ -155,9 +176,58 @@ export const unitsOf = source => ({
 
 export const barsOf = source => ({
   beat: headersOf(source)['beat-units-per-measure'] || 4,
-  pulse: headersOf(source)['pulse-beats-per-measure'] || 4
+  pulse: headersOf(source)['pulse-beats-per-measure'] || 4,
+  bar: 1,
+  measure: 1
 })
 
+export const timesOf = source => {
+  const intervals = intervalsOf(source)
+  const bars = barsOf(source)
+  const bar = bars.pulse * intervals.pulse
+
+  // TODO: Probably move most if not all of these into unitsOf, and then just modify here post-calc
+  //  - Could have `unitsOf` accept an option `scale` prop (defaulting to 1) that determiens the reference unit
+  //  - UPDATE: Can just replace unitsOf with this (rename timesOf to unitsOf)
+  const units = {
+    ms: 1,
+    second: 1000,
+    pulse: intervals.pulse,
+    beat: intervals.beat,
+    bar,
+    measure: bar,
+    half: bar / 2,
+    quarter: bar / 4,
+    eight: bar / 8,
+    sixteen: bar / 16,
+    upbeat: bar - (bar / 4),
+    upeight: bar - (bar / 8)
+  }
+
+  // TODO: After we replace teoria with tone, this can be done more dynamically (standardize around their notation duration format)
+  const aliases = {
+    'b': units.beat,
+    'p': units.pulse,
+    '1m': units.bar,
+    '4n': units.quarter,
+    '8n': units.eight,
+    '16n': units.sixteen,
+    '32n': bar / 32,
+    '64n': bar / 64
+  }
+
+  return Object.assign(units, aliases)
+}
+
+export const steps = (ratio, all) => {
+  ratio %= 1
+
+  if (ratio < 0) ratio += 1
+
+  return all[Math.floor(ratio * all.length)]
+}
+
+// TODO: Just remove, pointless
 export default {
   atomize,
   normalize,

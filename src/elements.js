@@ -29,6 +29,10 @@ export class Element {
     return notesIn(this.kind, this.value)
   }
 
+  get musical () {
+    return MUSICAL_ELEMENTS.includes(this.kind)
+  }
+
   // TODO: Refactor to use data/scaleify and data/chordify
   identify () {
     try {
@@ -100,6 +104,10 @@ export class Beat {
     return !this.empty
   }
 
+  get musical () {
+    return this.items.every(item => item.musical)
+  }
+
   first (kind) {
     return this.items.find(item => kind == item.kind)
   }
@@ -113,3 +121,5 @@ export class Beat {
   }
 
 }
+
+export const MUSICAL_ELEMENTS = ['note', 'chord', 'scale']
