@@ -1,5 +1,6 @@
 import { Note } from './note'
 import { Durations } from './durations'
+import { MUSICAL_ELEMENTS } from './elements'
 import { sectionize, normalize, notesIn, steps } from './data'
 
 export class Sections {
@@ -25,19 +26,16 @@ export class Sections {
     return new Durations(this.source)
   }
 
-  // TODO: Move most of these into Durations and then just add a utility getter here (or not, can just do sections.duration.total)
   get duration () {
     return this.durations.total
   }
 
-  // TODO: Probably just remove (can do sections.durations.shortest)
   get shortest () {
-    return this.durations.shortest
+    return this.all.sort((left, right) => left.duration - right.duration)[0]
   }
 
-  // TODO: Probably just remove (can do sections.durations.longest)
   get longest () {
-    return this.durations.longest
+    return this.all.sort((left, right) => right.duration - left.duration)[0]
   }
 
   get musical () {
@@ -93,6 +91,3 @@ export class Sections {
   }
 
 }
-
-// TODO: Move to elements module
-export const MUSICAL_ELEMENTS = ['note', 'chord', 'scale']
