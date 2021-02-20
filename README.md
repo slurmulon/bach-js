@@ -1,5 +1,5 @@
 # bach-js
-> :musical_score: Bach music notation parser for JS
+> :musical_score: Bach music notation library for JS
 ---
 
 `bach` is a notation for representing musical tracks with a focus on human readability.
