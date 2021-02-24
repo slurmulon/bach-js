@@ -52,7 +52,7 @@ export class Durations {
     return duration / (this.time[as] / this.time[is])
   }
 
-  unitize (duration, { is = 'pulse', as = 'beat' }) {
+  unitize (duration, { is = 'pulse', as = 'beat' } = {}) {
     return duration / (this.unit[as] / this.unit[is])
   }
 
