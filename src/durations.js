@@ -37,6 +37,10 @@ export class Durations {
   }
 
   get unit () {
+    return unitsOf(this.source)
+  }
+
+  get time () {
     return timesOf(this.source)
   }
 
@@ -45,6 +49,10 @@ export class Durations {
   }
 
   cast (duration, { is = 'pulse', as = 'ms' } = {}) {
+    return duration / (this.time[as] / this.time[is])
+  }
+
+  unitize (duration, { is = 'pulse', as = 'beat' }) {
     return duration / (this.unit[as] / this.unit[is])
   }
 
