@@ -20,7 +20,8 @@ export class Durations {
   }
 
   get total () {
-    return this.all.reduce((total, duration) => total + duration, 0)
+    // return this.all.reduce((total, duration) => total + duration, 0)
+    return this.source.headers['total-pulse-beats']
   }
 
   get shortest () {
