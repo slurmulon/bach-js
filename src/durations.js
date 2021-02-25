@@ -19,11 +19,6 @@ export class Durations {
     return this.all.flatMap((duration, index) => Array(duration).fill(index))
   }
 
-  get total () {
-    // return this.all.reduce((total, duration) => total + duration, 0)
-    return this.source.headers['total-pulse-beats']
-  }
-
   get shortest () {
     return this.all.sort((left, right) => left - right)[0]
   }
@@ -32,7 +27,10 @@ export class Durations {
     return this.all.sort((left, right) => right- left)[0]
   }
 
-  // TODO: Probably just remove
+  get total () {
+    return this.source.headers['total-pulse-beats']
+  }
+
   get bar () {
     return barsOf(this.source)
   }
@@ -63,6 +61,19 @@ export class Durations {
 
   percentage (duration, is = 'pulse') {
     return this.ratio(duration, is) * 100
+  }
+
+  clamp (duration, { is = 'pulse', min = 0, max } = {}) {
+    const total = max || this.cast(duration, { is, as: 'pulse' })
+
+    return Math.min(total, Math.max(min, duration))
+  }
+
+  interpolate (ratio, { is = 'pulse', min = 0, max } = {}) {
+    const x = this.cast(min || 0, { is, as: 'pulse' })
+    const y = this.cast(max || duration, { is, as: 'pulse' })
+
+    return (x * (1 - ratio)) + (y * ratio)
   }
 
   // TODO: Either replace or improve via inspiration with this:
