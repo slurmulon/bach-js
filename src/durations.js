@@ -55,6 +55,13 @@ export class Durations {
     return duration / (this.unit[as] / this.unit[is])
   }
 
+  metronize (duration, { is = 'pulse', as = 'beat' }) {
+    const index = this.cast(duration, { is, as })
+    const bar = this.cast(this.bar.pulse, { as })
+
+    return Math.floor(index % bar)
+  }
+
   ratio (duration, is = 'pulse') {
     return this.cast(duration, { is, as: 'pulse' }) / this.total
   }
