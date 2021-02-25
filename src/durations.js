@@ -1,10 +1,10 @@
-import { normalize, unitsOf, barsOf, timesOf, intervalsOf, gcd, clamp, lerp } from './data'
+import { normalize, unitsOf, barsOf, timesOf, intervalsOf } from './data'
+import { gcd, clamp, lerp } from './math'
 
 export class Durations {
 
   constructor (source) {
     this.source = normalize(source)
-    // this.unit = 'pulse'
   }
 
   get data () {

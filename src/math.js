@@ -56,7 +56,7 @@ export function invlerp (value, x, y) {
  * @param {float} ratio
  * @param {Array} all
  */
-export function steps (ratio, all) => {
+export function steps (ratio, all) {
   ratio %= 1
 
   if (ratio < 0) ratio += 1
