@@ -1,4 +1,4 @@
-import { normalize, unitsOf, barsOf, timesOf, intervalsOf } from './data'
+import { normalize, unitsOf, barsOf, timesOf, intervalsOf, gcd, clamp, lerp } from './data'
 
 export class Durations {
 
@@ -64,16 +64,16 @@ export class Durations {
   }
 
   clamp (duration, { is = 'pulse', min = 0, max } = {}) {
-    const total = max || this.cast(duration, { is, as: 'pulse' })
+    const total = this.cast(duration, { is, as: 'pulse' })
 
-    return Math.min(total, Math.max(min, duration))
+    return clamp(duration, min, max || total)
   }
 
   interpolate (ratio, { is = 'pulse', min = 0, max } = {}) {
     const x = this.cast(min || 0, { is, as: 'pulse' })
     const y = this.cast(max || duration, { is, as: 'pulse' })
 
-    return (x * (1 - ratio)) + (y * ratio)
+    return lerp(ratio, x, y)
   }
 
   // TODO: Either replace or improve via inspiration with this:
