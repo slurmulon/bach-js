@@ -109,6 +109,11 @@ export class Track {
     return { measures, beats }
   }
 
+  /**
+   * Provides a usable duration-specific API that can convert between units and more.
+   *
+   * @returns {Durations}
+   */
   get durations () {
     return new Durations(this.source)
   }
