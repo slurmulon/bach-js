@@ -638,6 +638,236 @@ var Beat = function () {
 
 var MUSICAL_ELEMENTS = ['note', 'chord', 'scale'];
 
+/**
+ * Recursively calculates the greatest common denominator (GCD) between two values
+ *
+ * @param {Number} a
+ * @param {Number} b
+ * @returns {Number}
+ */
+
+
+/**
+ * Modifies a value so that it is always between the provided min and max
+ *
+ * @param {Number} value
+ * @param {Number} min
+ * @param {Number} max
+ * @returns {Number}
+ */
+function clamp(value) {
+  var min = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  var max = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+
+  return Math.min(max, Math.max(min, value));
+}
+
+/**
+ * Interpolation function returning the value between x and y at a specific ratio
+ *
+ * @param {Number} value
+ * @param {Number} x
+ * @param {Number} y
+ * @returns {Number}
+ */
+function lerp(ratio, x, y) {
+  return x * (1 - ratio) + y * ratio;
+}
+
+/**
+ * Interpolation function returning the ratio of a value clamped between x and y
+ *
+ * @param {Number} value
+ * @param {Number} x
+ * @param {Number} y
+ * @returns {Number}
+ */
+
+
+
+/**
+ * Determines the element found in an array at a given ratio
+ *
+ * @param {Float} ratio
+ * @param {Array} all
+ */
+
+var Durations = function () {
+  function Durations(source) {
+    classCallCheck(this, Durations);
+
+    this.source = normalize(source);
+  }
+
+  createClass(Durations, [{
+    key: 'cast',
+    value: function cast(duration) {
+      var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref$is = _ref.is,
+          is = _ref$is === undefined ? 'pulse' : _ref$is,
+          _ref$as = _ref.as,
+          as = _ref$as === undefined ? 'ms' : _ref$as;
+
+      return duration / (this.time[as] / this.time[is]);
+    }
+  }, {
+    key: 'unitize',
+    value: function unitize(duration) {
+      var _ref2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref2$is = _ref2.is,
+          is = _ref2$is === undefined ? 'pulse' : _ref2$is,
+          _ref2$as = _ref2.as,
+          as = _ref2$as === undefined ? 'beat' : _ref2$as;
+
+      return duration / (this.unit[as] / this.unit[is]);
+    }
+  }, {
+    key: 'metronize',
+    value: function metronize(duration, _ref3) {
+      var _ref3$is = _ref3.is,
+          is = _ref3$is === undefined ? 'pulse' : _ref3$is,
+          _ref3$as = _ref3.as,
+          as = _ref3$as === undefined ? 'beat' : _ref3$as;
+
+      var index = this.cast(duration, { is: is, as: as });
+      var bar = this.cast(this.bar.pulse, { as: as });
+
+      return Math.floor(index % bar);
+    }
+  }, {
+    key: 'ratio',
+    value: function ratio(duration) {
+      var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'pulse';
+
+      return this.cast(duration, { is: is, as: 'pulse' }) / this.total;
+    }
+  }, {
+    key: 'percentage',
+    value: function percentage(duration) {
+      var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'pulse';
+
+      return this.ratio(duration, is) * 100;
+    }
+  }, {
+    key: 'clamp',
+    value: function clamp$$1(duration) {
+      var _ref4 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref4$is = _ref4.is,
+          is = _ref4$is === undefined ? 'pulse' : _ref4$is,
+          _ref4$min = _ref4.min,
+          min = _ref4$min === undefined ? 0 : _ref4$min,
+          max = _ref4.max;
+
+      var total = this.cast(duration, { is: is, as: 'pulse' });
+
+      return clamp(duration, min, max || total);
+    }
+  }, {
+    key: 'interpolate',
+    value: function interpolate(ratio) {
+      var _ref5 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref5$is = _ref5.is,
+          is = _ref5$is === undefined ? 'pulse' : _ref5$is,
+          _ref5$min = _ref5.min,
+          min = _ref5$min === undefined ? 0 : _ref5$min,
+          max = _ref5.max;
+
+      var x = this.cast(min || 0, { is: is, as: 'pulse' });
+      var y = this.cast(max || duration, { is: is, as: 'pulse' });
+
+      return lerp(ratio, x, y);
+    }
+
+    // TODO: Either replace or improve via inspiration with this:
+    // @see: https://tonejs.github.io/docs/r13/Time#quantize
+
+  }, {
+    key: 'rhythmic',
+    value: function rhythmic(_ref6) {
+      var _this = this;
+
+      var duration = _ref6.duration,
+          _ref6$is = _ref6.is,
+          is = _ref6$is === undefined ? 'ms' : _ref6$is,
+          _ref6$units = _ref6.units,
+          units = _ref6$units === undefined ? ['eight', 'quarter'] : _ref6$units,
+          _ref6$calc = _ref6.calc,
+          calc = _ref6$calc === undefined ? 'abs' : _ref6$calc,
+          _ref6$size = _ref6.size,
+          size = _ref6$size === undefined ? 'min' : _ref6$size;
+
+      var durations = units.map(function (unit) {
+        return Math[calc](_this.cast(duration, { is: is, as: unit }));
+      }).sort(function (a, b) {
+        return Math.abs(time - a) - Math.abs(time - b);
+      }).filter(function (_) {
+        return _;
+      });
+
+      return Math[size].apply(Math, toConsumableArray(durations));
+    }
+  }, {
+    key: 'data',
+    get: function get$$1() {
+      return this.source.data;
+    }
+  }, {
+    key: 'all',
+    get: function get$$1() {
+      return this.data.flat().map(function (beat) {
+        return beat.duration;
+      });
+    }
+  }, {
+    key: 'steps',
+    get: function get$$1() {
+      return this.all.flatMap(function (duration, index) {
+        return Array(duration).fill(index);
+      });
+    }
+  }, {
+    key: 'shortest',
+    get: function get$$1() {
+      return this.all.sort(function (left, right) {
+        return left - right;
+      })[0];
+    }
+  }, {
+    key: 'longest',
+    get: function get$$1() {
+      return this.all.sort(function (left, right) {
+        return right - left;
+      })[0];
+    }
+  }, {
+    key: 'total',
+    get: function get$$1() {
+      return this.source.headers['total-pulse-beats'];
+    }
+  }, {
+    key: 'bar',
+    get: function get$$1() {
+      return barsOf(this.source);
+    }
+  }, {
+    key: 'unit',
+    get: function get$$1() {
+      return unitsOf(this.source);
+    }
+  }, {
+    key: 'time',
+    get: function get$$1() {
+      return timesOf(this.source);
+    }
+  }, {
+    key: 'interval',
+    get: function get$$1() {
+      return intervalsOf(this.source).pulse;
+    }
+  }]);
+  return Durations;
+}();
+
 // TODO: Possibly rename to Bach, Track will just be a Gig construct
 // TODO: Consider adding `sections` getter here to better centralize logic
 //  - Or, instead, create a mixin between Sections and Track called Bach, containing shared logic like headers, tempo, durations, etc.
@@ -795,132 +1025,20 @@ var Track = function () {
 
       return { measures: measures, beats: beats };
     }
+
+    /**
+     * Provides a usable duration-specific API that can convert between units and more.
+     *
+     * @returns {Durations}
+     */
+
+  }, {
+    key: 'durations',
+    get: function get$$1() {
+      return new Durations(this.source);
+    }
   }]);
   return Track;
-}();
-
-var Durations = function () {
-  function Durations(source) {
-    classCallCheck(this, Durations);
-
-    this.source = normalize(source);
-    // this.unit = 'pulse'
-  }
-
-  createClass(Durations, [{
-    key: 'cast',
-    value: function cast(duration) {
-      var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref$is = _ref.is,
-          is = _ref$is === undefined ? 'pulse' : _ref$is,
-          _ref$as = _ref.as,
-          as = _ref$as === undefined ? 'ms' : _ref$as;
-
-      return duration / (this.unit[as] / this.unit[is]);
-    }
-  }, {
-    key: 'ratio',
-    value: function ratio(duration) {
-      var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'pulse';
-
-      return this.cast(duration, { is: is, as: 'pulse' }) / this.total;
-    }
-  }, {
-    key: 'percentage',
-    value: function percentage(duration) {
-      var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'pulse';
-
-      return this.ratio(duration, is) * 100;
-    }
-
-    // TODO: Either replace or improve via inspiration with this:
-    // @see: https://tonejs.github.io/docs/r13/Time#quantize
-
-  }, {
-    key: 'rhythmic',
-    value: function rhythmic(_ref2) {
-      var _this = this;
-
-      var duration = _ref2.duration,
-          _ref2$is = _ref2.is,
-          is = _ref2$is === undefined ? 'ms' : _ref2$is,
-          _ref2$units = _ref2.units,
-          units = _ref2$units === undefined ? ['eight', 'quarter'] : _ref2$units,
-          _ref2$calc = _ref2.calc,
-          calc = _ref2$calc === undefined ? 'abs' : _ref2$calc,
-          _ref2$size = _ref2.size,
-          size = _ref2$size === undefined ? 'min' : _ref2$size;
-
-      var durations = units.map(function (unit) {
-        return Math[calc](_this.cast(duration, { is: is, as: unit }));
-      }).sort(function (a, b) {
-        return Math.abs(time - a) - Math.abs(time - b);
-      }).filter(function (_) {
-        return _;
-      });
-
-      return Math[size].apply(Math, toConsumableArray(durations));
-    }
-  }, {
-    key: 'data',
-    get: function get$$1() {
-      return this.source.data;
-    }
-  }, {
-    key: 'all',
-    get: function get$$1() {
-      return this.data.flat().map(function (beat) {
-        return beat.duration;
-      });
-    }
-  }, {
-    key: 'steps',
-    get: function get$$1() {
-      return this.all.flatMap(function (duration, index) {
-        return Array(duration).fill(index);
-      });
-    }
-  }, {
-    key: 'total',
-    get: function get$$1() {
-      return this.all.reduce(function (total, duration) {
-        return total + duration;
-      }, 0);
-    }
-  }, {
-    key: 'shortest',
-    get: function get$$1() {
-      return this.all.sort(function (left, right) {
-        return left - right;
-      })[0];
-    }
-  }, {
-    key: 'longest',
-    get: function get$$1() {
-      return this.all.sort(function (left, right) {
-        return right - left;
-      })[0];
-    }
-
-    // TODO: Probably just remove
-
-  }, {
-    key: 'bar',
-    get: function get$$1() {
-      return barsOf(this.source);
-    }
-  }, {
-    key: 'unit',
-    get: function get$$1() {
-      return timesOf(this.source);
-    }
-  }, {
-    key: 'interval',
-    get: function get$$1() {
-      return intervalsOf(this.source).pulse;
-    }
-  }]);
-  return Durations;
 }();
 
 var Sections = function () {
