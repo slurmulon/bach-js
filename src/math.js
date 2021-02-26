@@ -1,9 +1,9 @@
 /**
- * Determines the greatest common denominator between two values
+ * Recursively calculates the greatest common denominator (GCD) between two values
  *
- * @param {number} a
- * @param {number} b
- * @returns {number}
+ * @param {Number} a
+ * @param {Number} b
+ * @returns {Number}
  */
 export function gcd (a, b) {
   if (b == 0) {
@@ -16,10 +16,10 @@ export function gcd (a, b) {
 /**
  * Modifies a value so that it is always between the provided min and max
  *
- * @param {number} value
- * @param {number} min
- * @param {number} max
- * @returns {number}
+ * @param {Number} value
+ * @param {Number} min
+ * @param {Number} max
+ * @returns {Number}
  */
 export function clamp (value, min = 0, max = 1) {
   return Math.min(max, Math.max(min, value))
@@ -28,10 +28,10 @@ export function clamp (value, min = 0, max = 1) {
 /**
  * Interpolation function returning the value between x and y at a specific ratio
  *
- * @param {number} value
- * @param {number} min
- * @param {number} max
- * @returns {number}
+ * @param {Number} value
+ * @param {Number} x
+ * @param {Number} y
+ * @returns {Number}
  */
 export function lerp (ratio, x, y) {
   return (x * (1 - ratio)) + (y * ratio)
@@ -40,10 +40,10 @@ export function lerp (ratio, x, y) {
 /**
  * Interpolation function returning the ratio of a value clamped between x and y
  *
- * @param {number} value
- * @param {number} min
- * @param {number} max
- * @returns {number}
+ * @param {Number} value
+ * @param {Number} x
+ * @param {Number} y
+ * @returns {Number}
  */
 
 export function invlerp (value, x, y) {
@@ -53,7 +53,7 @@ export function invlerp (value, x, y) {
 /**
  * Determines the element found in an array at a given ratio
  *
- * @param {float} ratio
+ * @param {Float} ratio
  * @param {Array} all
  */
 export function steps (ratio, all) {
