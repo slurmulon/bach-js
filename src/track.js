@@ -1,4 +1,5 @@
 import { Beat } from './elements'
+import { Durations } from './durations'
 import { compose } from './data'
 
 // TODO: Possibly rename to Bach, Track will just be a Gig construct
@@ -106,6 +107,15 @@ export class Track {
     const beats = this.data.reduce((acc, measure) => acc + measure.length, 0)
 
     return { measures, beats }
+  }
+
+  /**
+   * Provides a usable duration-specific API that can convert between units and more.
+   *
+   * @returns {Durations}
+   */
+  get durations () {
+    return new Durations(this.source)
   }
 
   /**
