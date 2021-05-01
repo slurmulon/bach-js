@@ -162,29 +162,34 @@ export function notesIntersect (left, right) {
 // TODO: Use empty-schema (or another approach) to return default bach.json ehaders instead of empty object
 export const headersOf = source => (source && source.headers) || {}
 
-export const intervalsOf = source => ({
-  pulse: headersOf(source)['ms-per-pulse-beat'],
-  beat: headersOf(source)['ms-per-beat-unit']
-})
+// export const intervalsOf = source => ({
+//   // pulse: headersOf(source)['ms-per-pulse-beat'],
+//   // beat: headersOf(source)['ms-per-beat-unit']
+//   step: source.units.beat.step,
+//   pulse: source.units.beat.pulse
+// })
 
 export const unitsOf = source => ({
-  beat: headersOf(source)['beat-unit'] || 1/4,
-  pulse: headersOf(source)['pulse-beat'] || 1/4,
-  second: 1,
+  // beat: headersOf(source)['beat-unit'] || 1/4,
+  // pulse: headersOf(source)['pulse-beat'] || 1/4,
+  step: source.units.beat.step,
+  pulse: source.units.beat.pulse,
   ms: 1/1000
 })
 
 export const barsOf = source => ({
   beat: headersOf(source)['beat-units-per-measure'] || 4,
   pulse: headersOf(source)['pulse-beats-per-measure'] || 4,
-  bar: 1,
-  measure: 1
+  bar: 1
+  // measure: 1
 })
 
 export const timesOf = source => {
-  const intervals = intervalsOf(source)
-  const bars = barsOf(source)
-  const bar = bars.pulse * intervals.pulse
+  // const intervals = intervalsOf(source)
+  // const beats = source.units.beat
+  // const bars = source.units.bar
+  // const bar = bars.pulse * intervals.pulse
+  const { time } = source.units
 
   // TODO: Probably move most if not all of these into unitsOf, and then just modify here post-calc
   //  - Could have `unitsOf` accept an option `scale` prop (defaulting to 1) that determiens the reference unit
@@ -192,26 +197,32 @@ export const timesOf = source => {
   const units = {
     ms: 1,
     second: 1000,
-    pulse: intervals.pulse,
-    beat: intervals.beat,
-    bar,
-    measure: bar,
-    half: bar / 2,
-    quarter: bar / 4,
-    eight: bar / 8,
-    sixteen: bar / 16,
-    upbeat: bar - (bar / 4),
-    upeight: bar - (bar / 8)
+    // pulse: intervals.pulse,
+    // beat: intervals.beat,
+    beat: time.beat,
+    pulse: time.pulse,
+    bar: time.bar,
+    // measure: bar,
+    // half: bar / 2,
+    2n: bar / 2,
+    4n: bar / 4,
+    8n: bar / 8,
+    16n: bar / 16,
+    32n: bar / 32,
+    64n: bar / 64,
+    4up: bar - (bar / 4),
+    8up: bar - (bar / 8)
   }
 
   // TODO: After we replace teoria with tone, this can be done more dynamically (standardize around their notation duration format)
   const aliases = {
-    'b': units.beat,
+    'b': units.step,
     'p': units.pulse,
-    '1m': units.bar,
-    '4n': units.quarter,
-    '8n': units.eight,
-    '16n': units.sixteen,
+    // '1m': units.bar,
+    'm': units.bar,
+    '4n': units.4n,
+    '8n': units.8n,
+    '16n': units.16n,
     '32n': bar / 32,
     '64n': bar / 64
   }
@@ -219,13 +230,14 @@ export const timesOf = source => {
   return Object.assign(units, aliases)
 }
 
-export const steps = (ratio, all) => {
-  ratio %= 1
+// TODO: Remove, can just use signals now
+// export const steps = (ratio, all) => {
+//   ratio %= 1
 
-  if (ratio < 0) ratio += 1
+//   if (ratio < 0) ratio += 1
 
-  return all[Math.floor(ratio * all.length)]
-}
+//   return all[Math.floor(ratio * all.length)]
+// }
 
 // TODO: Just remove, pointless
 export default {

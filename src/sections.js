@@ -3,6 +3,18 @@ import { Durations } from './durations'
 import { MUSICAL_ELEMENTS } from './elements'
 import { sectionize, normalize, notesIn, steps } from './data'
 
+// {
+//   "duration": 1
+//   "index": 0
+//   "items": {
+//     "chord": {
+//       "id": az3udk"
+//       "value": "Cmin"
+//       "props": []
+//      }
+//   }
+// }
+
 export class Sections {
 
   constructor (source) {
@@ -18,9 +30,9 @@ export class Sections {
     return this.all.length
   }
 
-  get measures () {
-    return this.source.data
-  }
+  // get measures () {
+  //   return this.source.data
+  // }
 
   get durations () {
     return new Durations(this.source)
@@ -30,13 +42,13 @@ export class Sections {
     return this.durations.total
   }
 
-  get shortest () {
-    return this.all.sort((left, right) => left.duration - right.duration)[0]
-  }
+  // get shortest () {
+  //   return this.all.sort((left, right) => left.duration - right.duration)[0]
+  // }
 
-  get longest () {
-    return this.all.sort((left, right) => right.duration - left.duration)[0]
-  }
+  // get longest () {
+  //   return this.all.sort((left, right) => right.duration - left.duration)[0]
+  // }
 
   get musical () {
     return this.data.every(section => {
