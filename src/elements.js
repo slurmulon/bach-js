@@ -114,7 +114,7 @@ export class Elements {
       const [kind, uid] = parts
       const elem = this.data[kind][uid]
 
-      return Object.assign({}, elem, { id: uid, kind })
+      return elem ? { ...elem, id: uid, kind } : null
     }
 
     throw TypeError('Element id must be a string in the format of "kind.hash"')
