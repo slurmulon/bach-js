@@ -167,20 +167,17 @@ export function notesIntersect (left, right) {
 // TODO: Use empty-schema (or another approach) to return default bach.json ehaders instead of empty object
 export const headersOf = source => (source && source.headers) || {}
 
-// export const intervalsOf = source => ({
-//   // pulse: headersOf(source)['ms-per-pulse-beat'],
-//   // beat: headersOf(source)['ms-per-beat-unit']
-//   step: source.units.beat.step,
-//   pulse: source.units.beat.pulse
-// })
-
 export const unitsOf = source => ({
-  // beat: headersOf(source)['beat-unit'] || 1/4,
-  // pulse: headersOf(source)['pulse-beat'] || 1/4,
   step: source.units.beat.step,
   pulse: source.units.beat.pulse,
   bar: source.units.bar.step,
-  ms: 1/1000
+  // TODO: Probably remove ms, seems to conflict with timesof (?)
+  //  - Coulodn't/should this just be `source.
+  // ms: 1/1000,
+  // ms: (1/1000) * source.units.beat.step,
+  // ms: source.units.time.step,
+  // ms: source.units.time.step * source.units.beat.step,
+  // second: source.units.time.step / 1000
 })
 
 // export const barsOf = source => ({

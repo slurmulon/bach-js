@@ -46,3 +46,53 @@ describe('cast', () => {
     expect(result).toBe(10)
   })
 })
+
+describe('time', () => {
+  it('step -> ms (default)', () => {
+    const result = durations.time(4)
+
+    expect(result).toBe(3200)
+  })
+
+  it('pulse -> ms', () => {
+    const result = durations.time(6, { is: 'pulse' })
+
+    expect(result).toBe(2400)
+  })
+
+  it('bar -> ms', () => {
+    const result = durations.time(3.5, { is: 'bar' })
+
+    expect(result).toBe(5600)
+  })
+
+  it('step -> second', () => {
+    const result = durations.time(2, { as: 'second' })
+
+    expect(result).toBe(1.6)
+  })
+
+  it('pulse -> second', () => {
+    const result = durations.time(4, { is: 'pulse', as: 'second' })
+
+    expect(result).toBe(1.6)
+  })
+
+  it('bar -> second', () => {
+    const result = durations.time(2, { is: 'bar', as: 'second' })
+
+    expect(result).toBe(3.2)
+  })
+
+  it('ms -> second', () => {
+    const result = durations.time(2000, { is: 'ms', as: 'second' })
+
+    expect(result).toBe(2)
+  })
+
+  it('second -> ms', () => {
+    const result = durations.time(4, { is: 'second', as: 'ms' })
+
+    expect(result).toBe(4000)
+  })
+})

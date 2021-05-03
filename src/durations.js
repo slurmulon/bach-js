@@ -53,12 +53,12 @@ export class Durations {
     return this.times.step
   }
 
-  // TODO: Rename to `time`
-  // cast (duration, { is = 'step', as = 'ms' } = {}) {
   time (duration, { is = 'step', as = 'ms' } = {}) {
+  // cast (duration, { is = 'step', as = 'ms' } = {}) {
     return duration / (this.times[as] / this.times[is])
   }
 
+  // TODO: Actually, can probably just remove this entirely and just use this.times
   // TODO: Rename to `cast`
   // unitize (duration, { is = 'step', as = 'pulse' } = {}) {
   cast (duration, { is = 'step', as = 'pulse' } = {}) {
