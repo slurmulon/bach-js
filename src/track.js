@@ -10,10 +10,13 @@ export class Track {
   // TODO:
   // constructor ({ source, tempo })
   constructor (source) {
-    this.origin = source
-    this.source = compose(source)
+    // this.origin = source
+    // this.source = compose(source)
+
+    this.source = source
+    this.data = compose(source)
     //
-    this.data = this.normalize(source)
+    // this.data = this.normalize(source)
     //
   }
 
@@ -22,12 +25,12 @@ export class Track {
    *
    * @returns {Object}
    */
-  normalize (source) {
-    const { beats, elements } = this
-    // signals
+  // normalize (source) {
+  //   const { beats, elements } = this
+  //   // signals
 
-    return Object.assign(source, { beats, elements })
-  }
+  //   return Object.assign(source, { beats, elements })
+  // }
   //
   // get beats
   //
@@ -81,16 +84,17 @@ export class Track {
   // get metrics
   get elements () {
     // return this.source.elements
-    const elems = Object.entires(this.source.elements)
+    return new Elements(this.data)
+    // const elems = Object.entires(this.source.elements)
 
-    return elems.reduce((acc, [kind ids]) =>
-      Object.entries(ids)
-        .reduce(([[id, elem]) =>
-          Object.assign(acc, {
-            [id]: Object.assign(elem, { id, kind })
-          })
-      , {})
-    , {})
+    // return elems.reduce((acc, [kind ids]) =>
+    //   Object.entries(ids)
+    //     .reduce(([[id, elem]) =>
+    //       Object.assign(acc, {
+    //         [id]: Object.assign(elem, { id, kind })
+    //       })
+    //   , {})
+    // , {})
 
     // return Object.entries(this.source.elements)
     //   .map(([uid, elem]) => this.resolve(`${kind}.${uid}`))

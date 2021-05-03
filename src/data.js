@@ -1,5 +1,5 @@
 import bach from 'bach-cljs'
-import { Beat } from './elements'
+import { Beat } from './beats'
 import { Note } from './note'
 import { valid } from './validate'
 import {
@@ -23,6 +23,7 @@ export const compose = source => {
   throw TypeError(`Unsupported Bach.JSON data type (${typeof source}). Must be a bach.json object or raw bach string.`)
 }
 
+// REMOVE
 // Creates Bach.JSON beat elements from minimal data.
 // WARN: Now dup'd in rebach
 export const atomize = (kind, value) => ({
@@ -30,6 +31,7 @@ export const atomize = (kind, value) => ({
   arguments: [value]
 })
 
+// REMOVE
 // Consumes bach.json source data and parses/normalizes each beat.
 // Light-weight alternative to using Track constructor.
 export const normalize = source => {
@@ -52,6 +54,7 @@ export const serialize = track => {
   return Object.assign({}, track, { data })
 }
 
+// REMOVE
 // Creates a reduced and simplified version of the track with only populated sections.
 // Ideal data format for high-level iteration and/or cursor tracing in bach engines.
 export const sectionize = source => source.data
@@ -177,12 +180,12 @@ export const unitsOf = source => ({
   ms: 1/1000
 })
 
-export const barsOf = source => ({
-  beat: headersOf(source)['beat-units-per-measure'] || 4,
-  pulse: headersOf(source)['pulse-beats-per-measure'] || 4,
-  bar: 1
-  // measure: 1
-})
+// export const barsOf = source => ({
+//   // beat: headersOf(source)['beat-units-per-measure'] || 4,
+//   // pulse: headersOf(source)['pulse-beats-per-measure'] || 4,
+//   bar: 1
+//   // measure: 1
+// })
 
 export const timesOf = source => {
   // const intervals = intervalsOf(source)
@@ -204,14 +207,14 @@ export const timesOf = source => {
     bar: time.bar,
     // measure: bar,
     // half: bar / 2,
-    2n: bar / 2,
-    4n: bar / 4,
-    8n: bar / 8,
-    16n: bar / 16,
-    32n: bar / 32,
-    64n: bar / 64,
-    4up: bar - (bar / 4),
-    8up: bar - (bar / 8)
+    '2n': time.bar / 2,
+    '4n': time.bar / 4,
+    '8n': time.bar / 8,
+    '16n': time.bar / 16,
+    '32n': time.bar / 32,
+    '64n': time.bar / 64,
+    '4up': time.bar - (time.bar / 4),
+    '8up': time.bar - (time.bar / 8)
   }
 
   // TODO: After we replace teoria with tone, this can be done more dynamically (standardize around their notation duration format)
@@ -219,12 +222,12 @@ export const timesOf = source => {
     'b': units.step,
     'p': units.pulse,
     // '1m': units.bar,
-    'm': units.bar,
-    '4n': units.4n,
-    '8n': units.8n,
-    '16n': units.16n,
-    '32n': bar / 32,
-    '64n': bar / 64
+    'm': units.bar
+    // '4n': units.4n,
+    // '8n': units.8n,
+    // '16n': units.16n,
+    // '32n': bar / 32,
+    // '64n': bar / 64
   }
 
   return Object.assign(units, aliases)
@@ -253,7 +256,7 @@ export default {
   notesIn,
   headersOf,
   unitsOf,
-  barsOf,
+  // barsOf,
   simplifyBeatItem,
   partitionBeat
 }

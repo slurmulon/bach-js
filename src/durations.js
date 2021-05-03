@@ -1,4 +1,4 @@
-import { normalize, unitsOf, barsOf, timesOf, intervalsOf } from './data'
+import { normalize, unitsOf, timesOf, intervalsOf } from './data'
 import { gcd, clamp, lerp } from './math'
 
 export class Durations {
@@ -104,7 +104,7 @@ export class Durations {
     const index = this.clamp(step, 0, this.total)
 
     return Object.entries(this.steps)
-      .reduce((acc, [key steps]) => {
+      .reduce((acc, [key, steps]) => {
         return Object.assign(acc, { [key]: steps[index] })
       }, {})
   }
