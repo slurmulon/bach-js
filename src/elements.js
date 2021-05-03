@@ -84,7 +84,7 @@ export class Elements {
 
   constructor ({ source, store, cast } = {}) {
     this.source = compose(source)
-    this.cast = cast
+    this.cast = cast || (_ => _)
     this.data = store || Elements.cast(this.source.elements, cast)
   }
 
