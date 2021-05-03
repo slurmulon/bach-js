@@ -43,11 +43,33 @@ describe('class methods', () => {
   })
 
   describe('get', () => {
+    it('provides the element associated with an id', () => {
+      const elems = new Elements({ source: bach })
+      const result = elems.get('scale.LgmmD3')
 
+      expect(result).toEqual({
+        id: 'LgmmD3',
+        kind: 'scale',
+        props: [],
+        value: 'A dorian'
+      })
+    })
   })
 
   describe('resolve', () => {
+    describe('provides an element', () => {
+      it('given an id', () => {
+        const elems = new Elements({ source: bach })
+        const result = elems.resolve('chord.PznzR2')
 
+        expect(result).toEqual({
+          id: 'PznzR2',
+          kind: 'chord',
+          props: [],
+          value: 'Gm'
+        })
+      })
+    })
   })
 
   describe('kinds', () => {
