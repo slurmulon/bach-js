@@ -1,4 +1,4 @@
-import { compose, unitsOf, timesOf, intervalsOf } from './data'
+import { compose, unitsOf, timesOf } from './data'
 import { gcd, clamp, lerp } from './math'
 
 export class Durations {

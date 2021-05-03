@@ -1,5 +1,4 @@
 import bach from 'bach-cljs'
-import { Beat } from './beats'
 import { Note } from './note'
 import { valid } from './validate'
 import {
@@ -28,21 +27,21 @@ export const compose = source => {
 // REMOVE
 // Creates Bach.JSON beat elements from minimal data.
 // WARN: Now dup'd in rebach
-export const atomize = (kind, value) => ({
-  keyword: kind.toLowerCase(),
-  arguments: [value]
-})
+// export const atomize = (kind, value) => ({
+//   keyword: kind.toLowerCase(),
+//   arguments: [value]
+// })
 
 // REMOVE
 // Consumes bach.json source data and parses/normalizes each beat.
 // Light-weight alternative to using Track constructor.
-export const normalize = source => {
-  const bach = typeof source === 'string' ? compose(source) : source
+// export const normalize = source => {
+//   const bach = typeof source === 'string' ? compose(source) : source
 
-  return Object.assign({}, bach, {
-    data: bach.data.map(Beat.from)
-  })
-}
+//   return Object.assign({}, bach, {
+//     data: bach.data.map(Beat.from)
+//   })
+// }
 
 // Converts a parsed Track's `data` back into its serialized form (vanilla bach.json).
 export const serialize = track => {
@@ -247,8 +246,8 @@ export const timesOf = source => {
 
 // TODO: Just remove, pointless
 export default {
-  atomize,
-  normalize,
+  // atomize,
+  // normalize,
   serialize,
   sectionize,
   scaleify,
