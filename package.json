@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rollup -c",
     "prepublish": "npm run build",
-    "test": "npm run build && mocha --compilers js:babel-core/register"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
