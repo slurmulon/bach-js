@@ -12,7 +12,6 @@ import {
 // Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
 // Main entry point for integrating with core bach ClojureScript library.
 export const compose = source => {
-  console.log('!!!!!!! bach?', bach)
   if (typeof source === 'string') {
     return bach(source)
   }

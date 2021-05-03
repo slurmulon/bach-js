@@ -11,23 +11,13 @@ export class Music {
     this.source = source
     this.data = compose(source)
     this.store = new Elements({
-      source: this.source,
+      source: this.data,
       cast: elem => ({
         ...elem,
         notes: notesIn(elem.kind, elem.value)
       })
     })
   }
-
-  // get store () {
-  //   return new Elements({
-  //     source: this.source,
-  //     cast: elem => ({
-  //       ...elem,
-  //       notes: notesIn(elem.kind, elem.value)
-  //     })
-  //   })
-  // }
 
   get elements () {
     return this.store.all
@@ -68,32 +58,6 @@ export class Music {
       stop: (cursor.stop || []).map(elem => this.store.resolve(elem))
     }
   }
-
-  // Adds notes to each element
-  // parse () {
-  // normalize () {
-  //   const { elements, beats } = this
-
-  //   return Object.assign(this.data, { elements, beats })
-  // }
-
-  // expand (beat) {
-  //   // TODO (instead) just resolve and replace beats after `normalize` has been called
-  //   const { items } = Beat.from(beat, this.elements)
-  //   // const parts = Object.entries(section.parts)
-  //   // const parts = beat.items
-  //     // .reduce((acc, [kind, value]) => {
-  //     //   return typeof value === 'string' ? Object.assign(acc, {
-  //     //     [kind]: {
-  //     //       value,
-  //     //       notes: notesIn(kind, value)
-  //     //     }
-  //     //   }) : acc
-  //     // }, section.parts)
-
-  //   return Object.assign(section, { parts })
-  // }
-
 
 
 }
