@@ -37,6 +37,14 @@ describe('class methods', () => {
           value: 'Gm'
         })
       })
+
+      it('given the same element (identity)', () => {
+        const elems = new Elements({ source })
+        const subject = elems.all[1]
+        const result = elems.resolve(subject)
+
+        expect(result).toEqual(subject)
+      })
     })
   })
 
@@ -60,6 +68,8 @@ describe('class methods', () => {
 
 describe('static methods', () => {
   describe('cast', () => {
-
+    it('provides a normalized element store, grouped by element kind and id', () => {
+      // TODO
+    })
   })
 })

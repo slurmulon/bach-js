@@ -24,6 +24,7 @@ export class Durations {
     return this.source.signals
   }
 
+  // TODO: Just conflate the next 3 into `metrics` getter`
   get min () {
     return this.source.metrics.min
   }
@@ -40,27 +41,27 @@ export class Durations {
     return this.units.bar
   }
 
-  // get units
   get units () {
     return unitsOf(this.source)
   }
 
-  // get times
   get times () {
     return timesOf(this.source)
   }
 
   get interval () {
-    // return intervalsOf(this.source).pulse
-    return this.time.step
+    return this.times.step
   }
 
-  // cast (duration, { is = 'pulse', as = 'ms' } = {}) {
-  cast (duration, { is = 'step', as = 'ms' } = {}) {
+  // TODO: Rename to `time`
+  // cast (duration, { is = 'step', as = 'ms' } = {}) {
+  time (duration, { is = 'step', as = 'ms' } = {}) {
     return duration / (this.times[as] / this.times[is])
   }
 
-  unitize (duration, { is = 'step', as = 'pulse' } = {}) {
+  // TODO: Rename to `cast`
+  // unitize (duration, { is = 'step', as = 'pulse' } = {}) {
+  cast (duration, { is = 'step', as = 'pulse' } = {}) {
     return duration / (this.units[as] / this.units[is])
   }
 
