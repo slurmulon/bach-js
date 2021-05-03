@@ -17,7 +17,9 @@ export const compose = source => {
   }
 
   if (typeof source === 'object') {
-    return valid(source)
+    // FIXME: Enable again once bach-json-schema is updated to v3
+    // return valid(source)
+    return source
   }
 
   throw TypeError(`Unsupported Bach.JSON data type (${typeof source}). Must be a bach.json object or raw bach string.`)
@@ -177,6 +179,7 @@ export const unitsOf = source => ({
   // pulse: headersOf(source)['pulse-beat'] || 1/4,
   step: source.units.beat.step,
   pulse: source.units.beat.pulse,
+  bar: source.units.bar.step,
   ms: 1/1000
 })
 
@@ -202,7 +205,7 @@ export const timesOf = source => {
     second: 1000,
     // pulse: intervals.pulse,
     // beat: intervals.beat,
-    beat: time.beat,
+    step: time.step,
     pulse: time.pulse,
     bar: time.bar,
     // measure: bar,
@@ -219,7 +222,7 @@ export const timesOf = source => {
 
   // TODO: After we replace teoria with tone, this can be done more dynamically (standardize around their notation duration format)
   const aliases = {
-    'b': units.step,
+    's': units.step,
     'p': units.pulse,
     // '1m': units.bar,
     'm': units.bar

@@ -1,16 +1,17 @@
-import { normalize, unitsOf, timesOf, intervalsOf } from './data'
+import { compose, unitsOf, timesOf, intervalsOf } from './data'
 import { gcd, clamp, lerp } from './math'
 
 export class Durations {
 
   constructor (source) {
     // this.source = normalize(source)
-    this.source = source
+    // this.source = source
+    this.source = compose(source)
   }
 
-  get data () {
-    return this.source.data
-  }
+  // get data () {
+  //   return this.source.data
+  // }
 
   // FIXME: Update to look into :items, since we now support different play and stop times
   // get all () {
@@ -23,35 +24,29 @@ export class Durations {
     return this.source.signals
   }
 
-  // get shortest () {
   get min () {
-    // return this.all.sort((left, right) => left - right)[0]
     return this.source.metrics.min
   }
 
-  // get longest () {
   get max () {
-    // return this.all.sort((left, right) => right- left)[0]
     return this.source.metrics.max
   }
 
   get total () {
-    // return this.source.headers['total-pulse-beats']
     return this.source.metrics.total
   }
 
   get bar () {
-    // return barsOf(this.source)
-    return this.unit.bar
+    return this.units.bar
   }
 
   // get units
-  get unit () {
+  get units () {
     return unitsOf(this.source)
   }
 
   // get times
-  get time () {
+  get times () {
     return timesOf(this.source)
   }
 
@@ -62,18 +57,16 @@ export class Durations {
 
   // cast (duration, { is = 'pulse', as = 'ms' } = {}) {
   cast (duration, { is = 'step', as = 'ms' } = {}) {
-    return duration / (this.time[as] / this.time[is])
+    return duration / (this.times[as] / this.times[is])
   }
 
-  // unitize (duration, { is = 'pulse', as = 'beat' } = {}) {
   unitize (duration, { is = 'step', as = 'pulse' } = {}) {
-    return duration / (this.unit[as] / this.unit[is])
+    return duration / (this.units[as] / this.units[is])
   }
 
-  // metronize (duration, { is = 'pulse', as = 'beat' }) {
   metronize (duration, { is = 'step', as = 'pulse' } = {}) {
     const index = this.cast(duration, { is, as })
-    const bar = this.cast(this.bar.step, { as })
+    const bar = this.cast(this.bar, { as })
 
     return Math.floor(index % bar)
   }
