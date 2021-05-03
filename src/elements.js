@@ -9,18 +9,18 @@ import { compose } from './data'
 export class Element {
 
   constructor (data) {
-  // constructor (data, store) {
     this.data = data
-    // this.data = this.parse(data)
-    // this.store = store
   }
 
   get id () {
-    return this.uid(this.data.id)
+    return `${this.data.kind}.${this.data.id}`
+  }
+
+  get uid () {
+    return Element.uid(this.id)
   }
 
   get value () {
-    // return this.inputs[0]
     return this.data.value
   }
 
@@ -47,22 +47,7 @@ export class Element {
     return MUSICAL_ELEMENTS.includes(this.kind)
   }
 
-  // parse (data) {
-  //   if (typeof data === 'string') {
-  //     return this.resolve(data)
-  //   }
-
-  //   // TODO: Validate with json-schema
-  //   return data
-  // }
-
-  // resolve (id) {
-  //   const [kind, uid] = id.split('.')
-  //   const elem = this.store[kind][uid]
-
-  //   return Object.assign({}, elem, { id: uid, kind })
-  // }
-
+  // TODO: Probably just remove
   // TODO: Refactor to use data/scaleify and data/chordify
   identify () {
     try {
@@ -98,42 +83,61 @@ export class Element {
 export class Elements {
 
   constructor ({ source, store, cast } = {}) {
-    this.data = compose(source)
-    this.store = store || Elements.cast(this.data.elements, cast)
+    this.source = compose(source)
+    this.cast = cast
+    this.data = store || Elements.cast(this.source.elements, cast)
   }
 
   get all () {
-    return this.kinds.map(kind => new Element(this.store[kind]))
+    return this.kinds.flatMap(kind =>
+      Object.values(this.data[kind])
+        .map(elem => new Element(elem))
+    )
   }
 
   get kinds () {
-    // return Object.keys(this.data.elements)
-    return Object.keys(this.store)
+    return Object.keys(this.data)
   }
 
   get values () {
     return this.all.map(elem => elem.value)
   }
 
-  resolve (id) {
-    const [kind, uid] = id.split('.')
-    const elem = this.store[kind][uid]
+  get ids () {
+    return this.all.map(elem => elem.id)
+  }
 
-    return Object.assign({}, elem, { id: uid, kind })
+  get (id) {
+    const parts = typeof id === 'string' ? id.split('.') : []
+
+    if (parts.length === 2) {
+      const [kind, uid] = parts
+      const elem = this.data[kind][uid]
+
+      return Object.assign({}, elem, { id: uid, kind })
+    }
+
+    throw TypeError('Element id must be a string in the format of "kind.hash"')
+  }
+
+  resolve (elem) {
+    if (elem instanceof Element) return elem
+    if (typeof elem === 'string') return this.get(elem)
+    if (typeof elem === 'object') return new Element(this.cast(elem))
+
+    throw TypeError('Failed to resolve element, unsupported data type')
   }
 
   // static normalize (elements, cast = _ => _) {
   static cast (elements, as = _ => _) {
+    // TODO: Validate element shape with JSON Schema
     return Object.entries(elements)
       .reduce((acc, [kind, ids]) => {
-        // console.log('kind, ids', kind, ids)
         const elems = Object.entries(ids)
-          .reduce((acc, [id, elem]) => {
-            // console.log(' --- id, elem', id, elem)
-            return Object.assign(acc, {
-              [id]: as({ id, kind, ...elem })
-            })
-          }, {})
+          .reduce((acc, [id, elem]) => ({
+            ...acc,
+            [id]: as({ id, kind, ...elem })
+          }), {})
 
         return { ...acc, [kind]: elems }
       }, {})

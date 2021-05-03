@@ -9,10 +9,10 @@ import { Element } from './elements'
  */
 export class Beat {
 
-  constructor (data) {
-  // constructor (data, store) {
+  // constructor (data) {
+  constructor (data, store) {
     this.data = data
-    // this.store = store
+    this.store = store
     // TODO: Consider using nanoid to generate pseudo-unique beat identifiers
     // this.id = id || nanoid()
   }
@@ -37,13 +37,11 @@ export class Beat {
   }
 
   get elements () {
-    return this.items.reduce((all, item) => {
-      return all.concat(
-        item.elements.map(elem => new Element(elem))
+    return this.items.reduce((all, item) =>
+      all.concat(
+        item.elements.map(elem => this.store.resolve(elem))
       )
-    }, [])
-    // return new Elements({ source: this.source, store: this.store })
-    // return this.store.all
+    , [])
   }
 
   get kinds () {
@@ -77,15 +75,15 @@ export class Beat {
     return this.elements.find(elem => kind == elem.kind)
   }
 
-  static from (beats) {
-  // static from (beats, store) {
+  // static from (beats) {
+  static from (beats, store) {
     if (Array.isArray(beats)) {
-      // return beats.map(beat => new Beat(beat, store))
-      return beats.map(beat => new Beat(beat))
+      return beats.map(beat => new Beat(beat, store))
+      // return beats.map(beat => new Beat(beat))
     }
 
-    // return new Beat(beats, store)
-    return new Beat(beats)
+    return new Beat(beats, store)
+    // return new Beat(beats)
   }
 
 }
