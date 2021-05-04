@@ -19,6 +19,14 @@ export class Music {
     })
   }
 
+  get metrics () {
+    return this.data.metrics
+  }
+
+  get units () {
+    return this.data.units
+  }
+
   get elements () {
     return this.store.all
   }
@@ -43,9 +51,13 @@ export class Music {
     return this.beats.every(beat => beat.musical)
   }
 
-  // get interval
+  // get interval () {
   get step () {
-    return this.data.units.beat.step
+    return this.units.beat.step
+  }
+
+  get interval () {
+    return this.units.time.step
   }
 
   at (duration, is = 'step') {
