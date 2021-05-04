@@ -112,7 +112,7 @@ describe('ratio', () => {
 })
 
 describe('clamp', () => {
-  describe('ensures duration values so always fit within a min/max range', () => {
+  describe('ensures duration fits within a min/max range', () => {
     it('max', () => {
       const result = durations.clamp(60)
 
@@ -128,7 +128,7 @@ describe('clamp', () => {
 })
 
 describe('cyclic', () => {
-  describe('ensures duration values so always cycle around a min/max range', () => {
+  describe('ensures duration cycles around a min/max range', () => {
     it('max', () => {
       const result = durations.cyclic(60)
 

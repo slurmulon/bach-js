@@ -9,18 +9,12 @@ export class Durations {
     this.source = compose(source)
   }
 
-  // get data () {
-  //   return this.source.data
-  // }
-
   // FIXME: Update to look into :items, since we now support different play and stop times
   // get all () {
   //   return this.data.flat().map(beat => beat.duration)
   // }
 
   get steps () {
-    // return this.all.flatMap((duration, index) => Array(duration).fill(index))
-    // WARN: Probably need to map duration of each beat instead of just its index
     return this.source.signals
   }
 
