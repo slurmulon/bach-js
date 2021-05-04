@@ -82,25 +82,32 @@ export class Durations {
 
   clamp (duration, { is = 'step', min = 0, max } = {}) {
     const step = this.cast(duration, { is, as: 'step' })
+    const head = this.cast(min || 0, { is, as: 'step' })
+    const tail = this.cast(max || this.total, { is, as: 'step' })
 
-    return clamp(step, min, max || this.total)
+    return clamp(step, head, tail)
+  }
+
+  cyclic (duration, { is = 'step', min = 0, max } = {}) {
+    const step = this.cast(duration, { is, as: 'step' })
+    const head = this.cast(min || 0, { is, as: 'step' })
+    const tail = this.cast(max || this.total, { is, as: 'step' })
+    const key = duration >= head ? duration : duration + tail
+
+    return key % tail
   }
 
   interpolate (ratio, { is = 'step', min = 0, max } = {}) {
-    const x = this.cast(min || 0, { is, as: 'step' })
-    const y = this.cast(max || duration, { is, as: 'step' })
+    const head = this.cast(min || 0, { is, as: 'step' })
+    const tail = this.cast(max || this.total, { is, as: 'step' })
 
-    return lerp(ratio, x, y)
+    return lerp(ratio, head, tail)
   }
 
   at (duration, is = 'step') {
     const step = this.cast(duration, { is, as: 'step' })
     // const step = this.time(duration, { is, as: 'step' })
-    // const index = this.clamp(step, 0, this.total)
-    // const index = this.clamp(step, { min: 0, max: this.total })
     const index = this.clamp(step)
-
-    console.log('@@@ clamp index', index)
 
     return Object.entries(this.steps)
       .reduce((acc, [key, steps]) => ({

@@ -127,6 +127,23 @@ describe('clamp', () => {
   })
 })
 
+describe('cyclic', () => {
+  describe('ensures duration values so always cycle around a min/max range', () => {
+    it('max', () => {
+      const result = durations.cyclic(60)
+
+      expect(result).toBe(20)
+    })
+
+    it('min', () => {
+      const result = durations.cyclic(-10)
+
+      expect(result).toBe(30)
+    })
+  })
+})
+
+
 describe('at', () => {
   describe('provides the step signals at a given duration', () => {
     it('is step', () => {
@@ -167,6 +184,42 @@ describe('at', () => {
         beat: 1,
         play: ['chord.Wzp6U0'],
         stop: ['chord.1np1h2', 'scale.LgmmD3']
+      })
+    })
+  })
+})
+
+describe('interpolate', () => {
+  describe('provides the step index at a given ratio', () => {
+    it('basic', () => {
+      const result = durations.interpolate(0.25)
+
+      expect(result).toBe(10)
+    })
+
+    describe('using', () => {
+      it('is', () => {
+        const result = durations.interpolate(0.5, { is: 'pulse', min: 0, max: 80 })
+
+        expect(result).toBe(20)
+      })
+
+      it('min', () => {
+        const result = durations.interpolate(0.5, { min: 20 })
+
+        expect(result).toBe(30)
+      })
+
+      it('max', () => {
+        const result = durations.interpolate(0.5, { max: 10 })
+
+        expect(result).toBe(5)
+      })
+
+      it('min and max', () => {
+        const result = durations.interpolate(0.5, { min: 20, max: 60 })
+
+        expect(result).toBe(40)
       })
     })
   })
