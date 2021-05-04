@@ -98,9 +98,14 @@ export class Durations {
     const index = this.clamp(step, 0, this.total)
 
     return Object.entries(this.steps)
-      .reduce((acc, [key, steps]) => {
-        return Object.assign(acc, { [key]: steps[index] })
-      }, {})
+      .reduce((acc, [key, steps]) => ({
+        ...acc,
+        [key]: steps[index]
+      }), {})
+
+      // .reduce((acc, [key, steps]) => {
+      //   return Object.assign(acc, { [key]: steps[index] })
+      // }, {})
   }
 
   // TODO: Either replace or improve via inspiration with this:

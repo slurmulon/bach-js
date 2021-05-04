@@ -96,3 +96,61 @@ describe('time', () => {
     expect(result).toBe(4000)
   })
 })
+
+describe('metronize', () => {
+  
+})
+
+describe('ratio', () => {
+  describe('provides the ratio of a duration in relation to the total', () => {
+    it('is steps', () => {
+      const result = durations.ratio(16)
+
+      expect(result).toBe(0.4)
+    })
+  })
+})
+
+describe('clamp', () => {
+
+})
+
+describe('at', () => {
+  describe('provides the step signals at a given duration', () => {
+    it('is step', () => {
+      const result = durations.at(6)
+
+      expect(result).toEqual({
+        beat: 1,
+        play: ['chord.Wzp6U0'],
+        stop: ['chord.1np1h2', 'scale.LgmmD3']
+      })
+    })
+
+    it('is pulse', () => {
+      const result = durations.at(12, 'pulse')
+
+      expect(result).toEqual({
+        beat: 1,
+        play: ['chord.Wzp6U0'],
+        stop: ['chord.1np1h2', 'scale.LgmmD3']
+      })
+    })
+
+    it('is bar', () => {
+      const result = durations.at(2.5, 'bar')
+
+      // console.log('bar steps', durations.steps)
+
+      expect(result).toEqual({
+        beat: 2,
+        play: ['chord.1np1h2', 'scale.LgmmD3'],
+        stop: ['chord.Wzp6U0']
+      })
+    })
+
+    it('is ms', () => {
+
+    })
+  })
+})
