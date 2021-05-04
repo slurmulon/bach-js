@@ -1,6 +1,6 @@
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
-import babel from '@rollup/plugin-babel'
+import babel, { getBabelOutputPlugin } from '@rollup/plugin-babel'
 import json from '@rollup/plugin-json'
 import pkg from './package.json'
 
@@ -11,7 +11,9 @@ export default [
     output: {
       name: 'bach-js',
       file: pkg.browser,
-      format: 'umd'
+      format: 'umd',
+      esModule: false,
+      // exports: 'named'
     },
     plugins: [
       json(),
@@ -20,6 +22,7 @@ export default [
       babel({
         // exclude: ['node_modules/**'],
         // babelHelpers: 'bundled'
+        exclude: '**/node_modules/**',
         babelHelpers: 'runtime'
       })
     ]
@@ -37,16 +40,30 @@ export default [
     // external: [/@babel\/runtime/, 'ajv', 'teoria'],
     // external: ['ajv', 'teoria'],
     output: [
-      { file: pkg.main, format: 'cjs' }, // exports: 'named', sourcemap: true },
-      { file: pkg.module, format: 'es' } // exports: 'named', sourcemap: true }
+      {
+        file: pkg.main,
+        format: 'cjs',
+        plugins: [getBabelOutputPlugin({
+          presets: ['@babel/preset-env'],
+          plugins: [['@babel/plugin-transform-runtime', { corejs: 3, useESModules: false }]]
+        })]
+      }, // exports: 'named', sourcemap: true },
+      {
+        file: pkg.module,
+        format: 'esm',
+        plugins: [getBabelOutputPlugin({
+          presets: ['@babel/preset-env'],
+          plugins: [['@babel/plugin-transform-runtime', { corejs: 3, useESModules: true }]]
+        })]
+      } // exports: 'named', sourcemap: true }
     ],
     plugins: [
       json(),
       resolve(),
-      babel({
-        // exclude: ['node_modules/**']
-        babelHelpers: 'runtime'
-      })
+      // babel({
+      //   exclude: ['node_modules/**'],
+      //   babelHelpers: 'runtime'
+      // })
     ]
   }
 ]
