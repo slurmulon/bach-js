@@ -28,6 +28,8 @@
   },
   "homepage": "https://github.com/slurmulon/bach-js#readme",
   "dependencies": {
+    "@babel/runtime": "^7.14.0",
+    "@babel/runtime-corejs3": "^7.14.0",
     "ajv": "^6.4.0",
     "bach-cljs": "1.0.5",
     "bach-json-schema": "github:slurmulon/bach-json-schema",
@@ -37,6 +39,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.14.0",
+    "@babel/plugin-transform-runtime": "^7.13.15",
     "@babel/preset-env": "^7.14.0",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^18.0.0",

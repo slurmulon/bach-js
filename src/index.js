@@ -1,4 +1,4 @@
-import 'core-js/features/array/flat-map'
+// import 'core-js/features/array/flat-map'
 
 // export * from './track'
 export * from './music'

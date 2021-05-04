@@ -18,8 +18,9 @@ export default [
       resolve(),
       commonjs(),
       babel({
-        exclude: ['node_modules/**'],
-        babelHelpers: 'bundled'
+        // exclude: ['node_modules/**'],
+        // babelHelpers: 'bundled'
+        babelHelpers: 'runtime'
       })
     ]
   },
@@ -32,15 +33,19 @@ export default [
   // `file` and `format` for each target)
   {
     input: 'src/index.js',
-    external: ['ajv', 'bach-cljs', 'bach-json-schema', 'teoria'],
+    external: [/@babel\/runtime/, 'ajv', 'bach-cljs', 'bach-json-schema', 'teoria'],
+    // external: [/@babel\/runtime/, 'ajv', 'teoria'],
+    // external: ['ajv', 'teoria'],
     output: [
-      { file: pkg.main, format: 'cjs' },
-      { file: pkg.module, format: 'es' }
+      { file: pkg.main, format: 'cjs' }, // exports: 'named', sourcemap: true },
+      { file: pkg.module, format: 'es' } // exports: 'named', sourcemap: true }
     ],
     plugins: [
       json(),
+      resolve(),
       babel({
-        exclude: ['node_modules/**']
+        // exclude: ['node_modules/**']
+        babelHelpers: 'runtime'
       })
     ]
   }
