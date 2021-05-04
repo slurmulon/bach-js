@@ -81,9 +81,9 @@ export class Durations {
   }
 
   clamp (duration, { is = 'step', min = 0, max } = {}) {
-    const total = this.cast(duration, { is, as: 'step' })
+    const step = this.cast(duration, { is, as: 'step' })
 
-    return clamp(duration, min, max || total)
+    return clamp(step, min, max || this.total)
   }
 
   interpolate (ratio, { is = 'step', min = 0, max } = {}) {
@@ -95,17 +95,18 @@ export class Durations {
 
   at (duration, is = 'step') {
     const step = this.cast(duration, { is, as: 'step' })
-    const index = this.clamp(step, 0, this.total)
+    // const step = this.time(duration, { is, as: 'step' })
+    // const index = this.clamp(step, 0, this.total)
+    // const index = this.clamp(step, { min: 0, max: this.total })
+    const index = this.clamp(step)
+
+    console.log('@@@ clamp index', index)
 
     return Object.entries(this.steps)
       .reduce((acc, [key, steps]) => ({
         ...acc,
         [key]: steps[index]
       }), {})
-
-      // .reduce((acc, [key, steps]) => {
-      //   return Object.assign(acc, { [key]: steps[index] })
-      // }, {})
   }
 
   // TODO: Either replace or improve via inspiration with this:

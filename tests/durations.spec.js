@@ -112,7 +112,19 @@ describe('ratio', () => {
 })
 
 describe('clamp', () => {
+  describe('ensures duration values so always fit within a min/max range', () => {
+    it('max', () => {
+      const result = durations.clamp(60)
 
+      expect(result).toBe(40)
+    })
+
+    it('min', () => {
+      const result = durations.clamp(-10)
+
+      expect(result).toBe(0)
+    })
+  })
 })
 
 describe('at', () => {
@@ -139,8 +151,7 @@ describe('at', () => {
 
     it('is bar', () => {
       const result = durations.at(2.5, 'bar')
-
-      // console.log('bar steps', durations.steps)
+      // const result = durations.at(5, 'bar')
 
       expect(result).toEqual({
         beat: 2,
@@ -150,7 +161,13 @@ describe('at', () => {
     })
 
     it('is ms', () => {
+      const result = durations.at(4800, 'ms')
 
+      expect(result).toEqual({
+        beat: 1,
+        play: ['chord.Wzp6U0'],
+        stop: ['chord.1np1h2', 'scale.LgmmD3']
+      })
     })
   })
 })

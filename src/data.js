@@ -171,13 +171,9 @@ export const unitsOf = source => ({
   step: source.units.beat.step,
   pulse: source.units.beat.pulse,
   bar: source.units.bar.step,
-  // TODO: Probably remove ms, seems to conflict with timesof (?)
-  //  - Coulodn't/should this just be `source.
-  // ms: 1/1000,
-  // ms: (1/1000) * source.units.beat.step,
-  // ms: source.units.time.step,
-  // ms: source.units.time.step * source.units.beat.step,
-  // second: source.units.time.step / 1000
+  ms: (1 / source.units.time.bar)
+  // FIXME: 100 should be 1000...? Works, but weird.
+  // sec: (100 / source.units.time.bar)
 })
 
 // export const barsOf = source => ({
