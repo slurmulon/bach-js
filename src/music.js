@@ -64,8 +64,9 @@ export class Music {
   }
 
   at (duration, is = 'step') {
-    const index = this.durations.at(duration, is)
-    const cursor = this.durations.cyclic(index)
+    const cursor = this.durations.at(duration, is)
+    // const index = this.durations.at(duration, is)
+    // const cursor = this.durations.cyclic(index)
 
     return {
       beat: this.beats[cursor.beat],
