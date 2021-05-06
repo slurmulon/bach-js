@@ -53,7 +53,8 @@ export class Durations {
   // TODO: Rename to `cast`
   // unitize (duration, { is = 'step', as = 'pulse' } = {}) {
   cast (duration, { is = 'step', as = 'pulse' } = {}) {
-    return duration / (this.units[as] / this.units[is])
+    // return duration / (this.units[as] / this.units[is])
+    return this.time(duration, { is, as })
   }
 
   metronize (duration, { is = 'ms', as = 'pulse' } = {}) {
@@ -119,11 +120,11 @@ export class Durations {
     const durations = units
       .map(unit => {
         const value = this.time(duration, { is, as: unit })
+        const result = Math[calc](value)
 
-        return this.time(Math[calc](value), { is: unit, as: is })
+        return this.time(result, { is: unit, as: is })
       })
       .sort((a, b) => Math.abs(duration - a) - Math.abs(duration - b))
-      .filter(_ => _)
 
     return Math[size](...durations)
   }

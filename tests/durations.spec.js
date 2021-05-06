@@ -25,25 +25,25 @@ describe('cast', () => {
   it('step -> bar', () => {
     const result = durations.cast(10, { as: 'bar' })
 
-    expect(result).toBe(2.5)
+    expect(result).toBe(5)
   })
 
   it('pulse -> bar', () => {
     const result = durations.cast(12, { is: 'pulse', as: 'bar' })
 
-    expect(result).toBe(1.5)
+    expect(result).toBe(3)
   })
 
   it('bar -> step', () => {
     const result = durations.cast(5, { is: 'bar', as: 'step' })
 
-    expect(result).toBe(20)
+    expect(result).toBe(10)
   })
 
   it('bar -> pulse', () => {
-    const result = durations.cast(1.25, { is: 'bar', as: 'pulse' })
+    const result = durations.cast(2, { is: 'bar', as: 'pulse' })
 
-    expect(result).toBe(10)
+    expect(result).toBe(8)
   })
 })
 
@@ -143,7 +143,6 @@ describe('cyclic', () => {
   })
 })
 
-
 describe('at', () => {
   describe('provides the step signals at a given duration', () => {
     it('is step', () => {
@@ -167,8 +166,7 @@ describe('at', () => {
     })
 
     it('is bar', () => {
-      const result = durations.at(2.5, 'bar')
-      // const result = durations.at(5, 'bar')
+      const result = durations.at(5, 'bar')
 
       expect(result).toEqual({
         beat: 2,
