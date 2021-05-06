@@ -116,8 +116,7 @@ export class Durations {
 
   // TODO: Either replace or improve via inspiration with this:
   // @see: https://tonejs.github.io/docs/r13/Time#quantize
-  rhythmic ({
-    duration,
+  rhythmic (duration, {
     is = 'ms',
     units = ['8n', '4n'],
     calc = 'floor',

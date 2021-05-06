@@ -227,32 +227,32 @@ describe('rhythmic', () => {
   describe('adjusts durations to the closest duration unit', () => {
     describe('units', () => {
       it('default', () => {
-        const result = durations.rhythmic({ duration: 3987 })
+        const result = durations.rhythmic(3987)
 
         // closest 8th note
         expect(result).toBe(3600)
       })
 
       it('is step', () => {
-        const result = durations.rhythmic({ duration: 2.25, is: 'step' })
+        const result = durations.rhythmic(2.25, { is: 'step' })
 
         expect(result).toBe(2)
       })
 
       it('is pulse', () => {
-        const result = durations.rhythmic({ duration: 2.5, is: 'pulse' })
+        const result = durations.rhythmic(2.5, { is: 'pulse' })
 
         expect(result).toBe(2)
       })
 
       it('is bar', () => {
-        const result = durations.rhythmic({ duration: 3.6, is: 'bar' })
+        const result = durations.rhythmic(3.6, { is: 'bar' })
 
         expect(result).toBe(3.5)
       })
 
       it('is second', () => {
-        const result = durations.rhythmic({ duration: 1, is: 'second' })
+        const result = durations.rhythmic(1, { is: 'second' })
 
         expect(result).toBe(0.8)
       })
@@ -263,19 +263,19 @@ describe('rhythmic', () => {
         const duration = 4987
 
         it('floor', () => {
-          const result = durations.rhythmic({ duration, calc: 'floor' })
+          const result = durations.rhythmic(duration, { calc: 'floor' })
 
           expect(result).toBe(4800)
         })
 
         it('ceil', () => {
-          const result = durations.rhythmic({ duration, calc: 'ceil' })
+          const result = durations.rhythmic(duration, { calc: 'ceil' })
 
           expect(result).toBe(5000)
         })
 
         it('abs', () => {
-          const result = durations.rhythmic({ duration, calc: 'abs' })
+          const result = durations.rhythmic(duration, { calc: 'abs' })
 
           expect(result).toBe(4987)
         })
@@ -287,13 +287,13 @@ describe('rhythmic', () => {
         const duration = 654
 
         it('min', () => {
-          const result = durations.rhythmic({ duration, size: 'min' })
+          const result = durations.rhythmic(duration, { size: 'min' })
 
           expect(result).toBe(400)
         })
 
         it('max', () => {
-          const result = durations.rhythmic({ duration, size: 'max', calc: 'ceil' })
+          const result = durations.rhythmic(duration, { size: 'max', calc: 'ceil' })
 
           expect(result).toBe(800)
         })
