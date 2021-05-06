@@ -13,15 +13,10 @@ export class Note {
     throw TypeError(`Unknown note type (${typeof value}): ${value}`)
   }
 
-  // static expand (kind, note) {
   static all (kind, note) {
-    // return notesIn(kind, note)
     try {
       return notesIn(kind, note)
     } catch (e) {
-      // console.warn(`Failed to parse notes (${kind}, ${note}). Returning empy array.`)
-      // console.error(e)
-
       return []
     }
   }
