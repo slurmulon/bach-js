@@ -120,15 +120,15 @@ export class Durations {
     duration,
     is = 'ms',
     units = ['8n', '4n'],
-    calc = 'abs',
+    calc = 'floor',
     size = 'min'
   } = {}) {
     const durations = units
       .map(unit => {
-        const value = this.time(duration, { is, as: unit })
+        const value = this.cast(duration, { is, as: unit })
         const result = Math[calc](value)
 
-        return this.time(result, { is: unit, as: is })
+        return this.cast(result, { is: unit, as: is })
       })
       .sort((a, b) => Math.abs(duration - a) - Math.abs(duration - b))
 
