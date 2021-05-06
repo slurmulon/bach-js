@@ -52,28 +52,19 @@ export class Durations {
     return this.times.step
   }
 
-  time (duration, { is = 'step', as = 'ms' } = {}) {
-  // cast (duration, { is = 'step', as = 'ms' } = {}) {
+  cast (duration, { is = 'step', as = 'pulse' } = {}) {
     return duration / (this.times[as] / this.times[is])
   }
 
-  // TODO: Actually, can probably just remove this entirely and just use this.times
-  // TODO: Rename to `cast`
-  // unitize (duration, { is = 'step', as = 'pulse' } = {}) {
-  cast (duration, { is = 'step', as = 'pulse' } = {}) {
-    // return duration / (this.units[as] / this.units[is])
-    return this.time(duration, { is, as })
-  }
-
   metronize (duration, { is = 'ms', as = 'pulse' } = {}) {
-    const index = this.time(duration, { is, as })
-    const bar = this.time(this.bar, { as })
+    const index = this.cast(duration, { is, as })
+    const bar = this.cast(this.bar, { as })
 
     return Math.floor(index % bar)
   }
 
   ratio (duration, is = 'step') {
-    return this.time(duration, { is, as: 'step' }) / this.total
+    return this.cast(duration, { is, as: 'step' }) / this.total
   }
 
   percentage (duration, is = 'step') {

@@ -10,90 +10,92 @@ describe('interval', () => {
 })
 
 describe('cast', () => {
-  it('step -> pulse (default)', () => {
-    const result = durations.cast(4)
+  describe('units', () => {
+    it('step -> pulse (default)', () => {
+      const result = durations.cast(4)
 
-    expect(result).toBe(8)
+      expect(result).toBe(8)
+    })
+
+    it('pulse -> step', () => {
+      const result = durations.cast(4, { is: 'pulse', as: 'step' })
+
+      expect(result).toBe(2)
+    })
+
+    it('step -> bar', () => {
+      const result = durations.cast(10, { as: 'bar' })
+
+      expect(result).toBe(5)
+    })
+
+    it('pulse -> bar', () => {
+      const result = durations.cast(12, { is: 'pulse', as: 'bar' })
+
+      expect(result).toBe(3)
+    })
+
+    it('bar -> step', () => {
+      const result = durations.cast(5, { is: 'bar', as: 'step' })
+
+      expect(result).toBe(10)
+    })
+
+    it('bar -> pulse', () => {
+      const result = durations.cast(2, { is: 'bar', as: 'pulse' })
+
+      expect(result).toBe(8)
+    })
   })
 
-  it('pulse -> step', () => {
-    const result = durations.cast(4, { is: 'pulse', as: 'step' })
+  describe('time', () => {
+    it('step -> ms', () => {
+      const result = durations.cast(4, { as: 'ms' })
 
-    expect(result).toBe(2)
-  })
+      expect(result).toBe(3200)
+    })
 
-  it('step -> bar', () => {
-    const result = durations.cast(10, { as: 'bar' })
+    it('pulse -> ms', () => {
+      const result = durations.cast(6, { is: 'pulse', as: 'ms' })
 
-    expect(result).toBe(5)
-  })
+      expect(result).toBe(2400)
+    })
 
-  it('pulse -> bar', () => {
-    const result = durations.cast(12, { is: 'pulse', as: 'bar' })
+    it('bar -> ms', () => {
+      const result = durations.cast(3.5, { is: 'bar', as: 'ms' })
 
-    expect(result).toBe(3)
-  })
+      expect(result).toBe(5600)
+    })
 
-  it('bar -> step', () => {
-    const result = durations.cast(5, { is: 'bar', as: 'step' })
+    it('step -> second', () => {
+      const result = durations.cast(2, { as: 'second' })
 
-    expect(result).toBe(10)
-  })
+      expect(result).toBe(1.6)
+    })
 
-  it('bar -> pulse', () => {
-    const result = durations.cast(2, { is: 'bar', as: 'pulse' })
+    it('pulse -> second', () => {
+      const result = durations.cast(4, { is: 'pulse', as: 'second' })
 
-    expect(result).toBe(8)
-  })
-})
+      expect(result).toBe(1.6)
+    })
 
-describe('time', () => {
-  it('step -> ms (default)', () => {
-    const result = durations.time(4)
+    it('bar -> second', () => {
+      const result = durations.cast(2, { is: 'bar', as: 'second' })
 
-    expect(result).toBe(3200)
-  })
+      expect(result).toBe(3.2)
+    })
 
-  it('pulse -> ms', () => {
-    const result = durations.time(6, { is: 'pulse' })
+    it('ms -> second', () => {
+      const result = durations.cast(2000, { is: 'ms', as: 'second' })
 
-    expect(result).toBe(2400)
-  })
+      expect(result).toBe(2)
+    })
 
-  it('bar -> ms', () => {
-    const result = durations.time(3.5, { is: 'bar' })
+    it('second -> ms', () => {
+      const result = durations.cast(4, { is: 'second', as: 'ms' })
 
-    expect(result).toBe(5600)
-  })
-
-  it('step -> second', () => {
-    const result = durations.time(2, { as: 'second' })
-
-    expect(result).toBe(1.6)
-  })
-
-  it('pulse -> second', () => {
-    const result = durations.time(4, { is: 'pulse', as: 'second' })
-
-    expect(result).toBe(1.6)
-  })
-
-  it('bar -> second', () => {
-    const result = durations.time(2, { is: 'bar', as: 'second' })
-
-    expect(result).toBe(3.2)
-  })
-
-  it('ms -> second', () => {
-    const result = durations.time(2000, { is: 'ms', as: 'second' })
-
-    expect(result).toBe(2)
-  })
-
-  it('second -> ms', () => {
-    const result = durations.time(4, { is: 'second', as: 'ms' })
-
-    expect(result).toBe(4000)
+      expect(result).toBe(4000)
+    })
   })
 })
 
