@@ -4,31 +4,28 @@ import { gcd, clamp, lerp } from './math'
 export class Durations {
 
   constructor (source) {
-    // this.source = normalize(source)
-    // this.source = source
     this.source = compose(source)
   }
-
-  // FIXME: Update to look into :items, since we now support different play and stop times
-  // get all () {
-  //   return this.data.flat().map(beat => beat.duration)
-  // }
 
   get steps () {
     return this.source.signals
   }
 
+  get metrics () {
+    return this.source.metrics
+  }
+
   // TODO: Just conflate the next 3 into `metrics` getter`
   get min () {
-    return this.source.metrics.min
+    return this.metrics.min
   }
 
   get max () {
-    return this.source.metrics.max
+    return this.metrics.max
   }
 
   get total () {
-    return this.source.metrics.total
+    return this.metrics.total
   }
 
   get bar () {
@@ -59,15 +56,15 @@ export class Durations {
     return duration / (this.units[as] / this.units[is])
   }
 
-  metronize (duration, { is = 'step', as = 'pulse' } = {}) {
-    const index = this.cast(duration, { is, as })
-    const bar = this.cast(this.bar, { as })
+  metronize (duration, { is = 'ms', as = 'pulse' } = {}) {
+    const index = this.time(duration, { is, as })
+    const bar = this.time(this.bar, { as })
 
     return Math.floor(index % bar)
   }
 
   ratio (duration, is = 'step') {
-    return this.cast(duration, { is, as: 'step' }) / this.total
+    return this.time(duration, { is, as: 'step' }) / this.total
   }
 
   percentage (duration, is = 'step') {
@@ -118,10 +115,14 @@ export class Durations {
     units = ['8n', '4n'],
     calc = 'abs',
     size = 'min'
-  }) {
+  } = {}) {
     const durations = units
-      .map(unit => Math[calc](this.cast(duration, { is, as: unit })))
-      .sort((a, b) => Math.abs(time - a) - Math.abs(time - b))
+      .map(unit => {
+        const value = this.time(duration, { is, as: unit })
+
+        return this.time(Math[calc](value), { is: unit, as: is })
+      })
+      .sort((a, b) => Math.abs(duration - a) - Math.abs(duration - b))
       .filter(_ => _)
 
     return Math[size](...durations)

@@ -19,6 +19,10 @@ export class Music {
     })
   }
 
+  get headers () {
+    return this.data.headers
+  }
+
   get metrics () {
     return this.data.metrics
   }
