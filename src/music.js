@@ -14,7 +14,7 @@ export class Music {
       source: this.data,
       cast: elem => ({
         ...elem,
-        notes: notesIn(elem.kind, elem.value)
+        notes: Note.all(elem.kind, elem.value)
       })
     })
   }
@@ -54,6 +54,10 @@ export class Music {
   get musical () {
     return this.beats.every(beat => beat.musical)
   }
+
+  // get playable () {
+  //   return this.elements.every(({ notes }) => !!notes.length)
+  // }
 
   get step () {
     return this.units.beat.step

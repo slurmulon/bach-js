@@ -1,4 +1,5 @@
 import { note as teoriaNote, Note as TeoriaNote } from 'teoria'
+import { notesIn } from './data'
 
 export class Note {
 
@@ -12,8 +13,17 @@ export class Note {
     throw TypeError(`Unknown note type (${typeof value}): ${value}`)
   }
 
-  static expand (kind, note) {
-    return notesIn(kind, note)
+  // static expand (kind, note) {
+  static all (kind, note) {
+    // return notesIn(kind, note)
+    try {
+      return notesIn(kind, note)
+    } catch (e) {
+      // console.warn(`Failed to parse notes (${kind}, ${note}). Returning empy array.`)
+      // console.error(e)
+
+      return []
+    }
   }
 
   static hash (note) {

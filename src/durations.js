@@ -40,6 +40,7 @@ export class Durations {
   }
 
   get units () {
+    // TODO: Remove, just return this.units
     return unitsOf(this.source)
   }
 

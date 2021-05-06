@@ -1,11 +1,10 @@
 import { note as teoriaNote } from 'teoria'
-import { notesIn } from './data'
 import { compose } from './data'
+import { Note } from './note'
 
 /**
  * Represents a single playable element (Note, Scale, Chord, Mode, Triad or Rest)
  */
-// FIXME: Support rests (~)
 export class Element {
 
   constructor (data) {
@@ -27,9 +26,6 @@ export class Element {
   get props () {
     return this.data.props
   }
-  // get inputs () {
-  //   return this.data['arguments']
-  // }
 
   get kind () {
     return this.data.kind//.toLowerCase()
@@ -40,38 +36,11 @@ export class Element {
   }
 
   get notes () {
-    return notesIn(this.kind, this.value)
+    return Note.all(this.kind, this.value)
   }
 
   get musical () {
     return MUSICAL_ELEMENTS.includes(this.kind)
-  }
-
-  // TODO: Probably just remove
-  // TODO: Refactor to use data/scaleify and data/chordify
-  identify () {
-    try {
-      teoria.note(this.value)
-
-      return 'note'
-    } catch (_) {}
-
-    try {
-      const [key, scale] = this.value.split(' ')
-
-      teoria.note(key).scale(scale.toLowerCase())
-
-      return 'scale'
-    } catch (_) {}
-
-    // FIXME: Make this support an optional octave (e.g. "Cm" and "C2m")
-    try {
-      const [key, chord] = [this.value.substring(0,2), this.value.substring(2)]
-
-      teoria.note(key).chord(chord.toLowerCase())
-
-      return 'chord'
-    } catch (_) {}
   }
 
   static uid (id) {
@@ -128,7 +97,6 @@ export class Elements {
     throw TypeError('Failed to resolve element, unsupported data type')
   }
 
-  // static normalize (elements, cast = _ => _) {
   static cast (elements, as = _ => _) {
     // TODO: Validate element shape with JSON Schema
     return Object.entries(elements)
