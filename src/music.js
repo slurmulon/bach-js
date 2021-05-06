@@ -55,7 +55,6 @@ export class Music {
     return this.beats.every(beat => beat.musical)
   }
 
-  // get interval () {
   get step () {
     return this.units.beat.step
   }
@@ -65,9 +64,9 @@ export class Music {
   }
 
   at (duration, is = 'step') {
-    const cursor = this.durations.at(duration, is)
+    const index = this.durations.at(duration, is)
+    const cursor = this.durations.cyclic(index)
 
-    // NOTE: Could instead pre-emptively expand serialized format from compose (or just, in bach.core, separate into both a serialized composition and a reoslved/expanded composition!
     return {
       beat: this.beats[cursor.beat],
       play: (cursor.play || []).map(elem => this.store.resolve(elem)),

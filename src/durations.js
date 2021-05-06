@@ -15,7 +15,6 @@ export class Durations {
     return this.source.metrics
   }
 
-  // TODO: Just conflate the next 3 into `metrics` getter`
   get min () {
     return this.metrics.min
   }
@@ -26,6 +25,14 @@ export class Durations {
 
   get total () {
     return this.metrics.total
+  }
+
+  get step () {
+    return this.units.step
+  }
+
+  get pulse () {
+    return this.units.pulse
   }
 
   get bar () {
@@ -98,7 +105,6 @@ export class Durations {
 
   at (duration, is = 'step') {
     const step = this.cast(duration, { is, as: 'step' })
-    // const step = this.time(duration, { is, as: 'step' })
     const index = this.clamp(step)
 
     return Object.entries(this.steps)
