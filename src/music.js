@@ -7,16 +7,17 @@ import { compose, notesIn } from './data'
 // NOTE: Basically Track v3. Probably just rename to Track eventually.
 export class Music {
 
+  // source, store
   constructor (source) {
     this.source = source
     this.data = compose(source)
-    this.store = new Elements({
+    this.store = this.parses ? new Elements({
       source: this.data,
       cast: elem => ({
         ...elem,
         notes: Note.all(elem.kind, elem.value)
       })
-    })
+    }) : null
   }
 
   get headers () {
@@ -29,6 +30,14 @@ export class Music {
 
   get units () {
     return this.data.units
+  }
+
+  get meter () {
+    return this.headers.meter
+  }
+
+  get tempo () {
+    return this.headers.tempo
   }
 
   get elements () {
@@ -67,6 +76,14 @@ export class Music {
     return this.units.time.step
   }
 
+  get parses () {
+    return !this.fail
+  }
+
+  get fail () {
+    return this.data.fail
+  }
+
   at (duration, is = 'step') {
     const cursor = this.durations.at(duration, is)
     // const index = this.durations.at(duration, is)
@@ -77,6 +94,10 @@ export class Music {
       play: (cursor.play || []).map(elem => this.store.resolve(elem)),
       stop: (cursor.stop || []).map(elem => this.store.resolve(elem))
     }
+  }
+
+  adjust (tempo) {
+
   }
 
 }

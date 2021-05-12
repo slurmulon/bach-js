@@ -98,6 +98,7 @@ export class Elements {
   }
 
   static cast (elements, as = _ => _) {
+    if (!elements) return null
     // TODO: Validate element shape with JSON Schema
     return Object.entries(elements)
       .reduce((acc, [kind, ids]) => {
