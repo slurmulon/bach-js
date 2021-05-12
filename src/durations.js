@@ -97,7 +97,7 @@ export class Durations {
 
   at (duration, is = 'step') {
     const step = this.cast(duration, { is, as: 'step' })
-    const index = this.clamp(step)
+    const index = this.cyclic(step)
 
     return Object.entries(this.steps)
       .reduce((acc, [key, steps]) => ({
