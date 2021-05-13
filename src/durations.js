@@ -8,7 +8,8 @@ export class Durations {
   }
 
   get steps () {
-    return this.source.signals
+    // return this.source.signals
+    return this.source.steps
   }
 
   get metrics () {
@@ -103,7 +104,7 @@ export class Durations {
       .reduce((acc, [key, steps]) => ({
         ...acc,
         [key]: steps[index]
-      }), {})
+      }), { index })
   }
 
   // TODO: Either replace or improve via inspiration with this:

@@ -152,6 +152,7 @@ describe('at', () => {
 
       expect(result).toEqual({
         beat: 1,
+        index: 6,
         play: ['chord.Wzp6U0'],
         stop: ['chord.1np1h2', 'scale.LgmmD3']
       })
@@ -162,6 +163,7 @@ describe('at', () => {
 
       expect(result).toEqual({
         beat: 1,
+        index: 6,
         play: ['chord.Wzp6U0'],
         stop: ['chord.1np1h2', 'scale.LgmmD3']
       })
@@ -172,6 +174,7 @@ describe('at', () => {
 
       expect(result).toEqual({
         beat: 2,
+        index: 10,
         play: ['chord.1np1h2', 'scale.LgmmD3'],
         stop: ['chord.Wzp6U0']
       })
@@ -182,6 +185,7 @@ describe('at', () => {
 
       expect(result).toEqual({
         beat: 1,
+        index: 6,
         play: ['chord.Wzp6U0'],
         stop: ['chord.1np1h2', 'scale.LgmmD3']
       })
