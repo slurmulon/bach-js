@@ -1,6 +1,6 @@
 {
   "name": "bach-js",
-  "version": "2.5.0",
+  "version": "3.0.0-alpha",
   "description": "Bach music notation library for JS",
   "main": "dist/bach-js.cjs.js",
   "module": "dist/bach-js.esm.js",
@@ -32,7 +32,7 @@
     "@babel/runtime": "^7.14.0",
     "@babel/runtime-corejs3": "^7.14.0",
     "ajv": "^6.4.0",
-    "bach-cljs": "1.0.5",
+    "bach-cljs": "git+ssh://git@github.com:slurmulon/bach.git#v3.0-alpha",
     "bach-json-schema": "github:slurmulon/bach-json-schema",
     "core-js": "^3.11.2",
     "teoria": "^2.5.0",
