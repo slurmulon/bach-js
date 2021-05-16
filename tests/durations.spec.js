@@ -146,7 +146,7 @@ describe('cyclic', () => {
 })
 
 describe('at', () => {
-  describe('provides the step signals at a given duration', () => {
+  describe('provides the step state at a given duration', () => {
     it('is step', () => {
       const result = durations.at(6)
 

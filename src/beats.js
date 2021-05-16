@@ -9,7 +9,6 @@ import { Element } from './elements'
  */
 export class Beat {
 
-  // constructor (data) {
   constructor (data, store) {
     this.data = data
     this.store = store
@@ -24,13 +23,6 @@ export class Beat {
   get duration () {
     return this.data.duration
   }
-
-  // TODO: Probably replace with `get elements`
-  // get items () {
-  //   // if (this.empty) return []
-
-  //   return this.data.items.map(item => new Element(item, store))
-  // }
 
   get items () {
     return this.data.items

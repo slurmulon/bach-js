@@ -7,7 +7,6 @@ import { compose, notesIn } from './data'
 // NOTE: Basically Track v3. Probably just rename to Track eventually.
 export class Music {
 
-  // source, store
   constructor (source) {
     this.source = source
     this.data = compose(source)
@@ -77,17 +76,11 @@ export class Music {
   }
 
   get parses () {
-    return !this.fail
-  }
-
-  get fail () {
-    return this.data.fail
+    return !this.data.fail
   }
 
   at (duration, is = 'step') {
     const cursor = this.durations.at(duration, is)
-    // const index = this.durations.at(duration, is)
-    // const cursor = this.durations.cyclic(index)
 
     return {
       beat: this.beats[cursor.beat],
