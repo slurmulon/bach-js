@@ -7,6 +7,7 @@
   "browser": "dist/bach-js.umd.js",
   "scripts": {
     "build": "rollup -c",
+    "dev": "npm link bach-cljs && npm run build && npm link",
     "prepublish": "npm run build",
     "test": "jest"
   },
