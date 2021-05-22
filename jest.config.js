@@ -1,3 +1,5 @@
+const {defaults} = require('jest-config');
+
 /*
  * For a detailed explanation regarding each configuration property, visit:
  * https://jestjs.io/docs/en/configuration.html
@@ -61,6 +63,10 @@ module.exports = {
 
   // A set of global variables that need to be available in all test environments
   // globals: {},
+  globals: {
+    ...defaults.globals,
+    crypto: require('crypto')
+  },
 
   // The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
   // maxWorkers: "50%",
