@@ -5,6 +5,7 @@ import _Object$getOwnPropertyDescriptors from "@babel/runtime-corejs3/core-js-st
 import _Object$defineProperties from "@babel/runtime-corejs3/core-js-stable/object/define-properties";
 import _Object$defineProperty from "@babel/runtime-corejs3/core-js-stable/object/define-property";
 import _defineProperty from "@babel/runtime-corejs3/helpers/esm/defineProperty";
+import _toArray from "@babel/runtime-corejs3/helpers/esm/toArray";
 import _toConsumableArray from "@babel/runtime-corejs3/helpers/esm/toConsumableArray";
 import _classCallCheck from "@babel/runtime-corejs3/helpers/esm/classCallCheck";
 import _createClass from "@babel/runtime-corejs3/helpers/esm/createClass";
@@ -13,7 +14,7 @@ import _typeof from "@babel/runtime-corejs3/helpers/esm/typeof";
 
 function ownKeys(object, enumerableOnly) { var keys = _Object$keys(object); if (_Object$getOwnPropertySymbols) { var symbols = _Object$getOwnPropertySymbols(object); if (enumerableOnly) { symbols = _filterInstanceProperty(symbols).call(symbols, function (sym) { return _Object$getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context27; _forEachInstanceProperty(_context27 = ownKeys(Object(source), true)).call(_context27, function (key) { _defineProperty(target, key, source[key]); }); } else if (_Object$getOwnPropertyDescriptors) { _Object$defineProperties(target, _Object$getOwnPropertyDescriptors(source)); } else { var _context28; _forEachInstanceProperty(_context28 = ownKeys(Object(source))).call(_context28, function (key) { _Object$defineProperty(target, key, _Object$getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context26; _forEachInstanceProperty(_context26 = ownKeys(Object(source), true)).call(_context26, function (key) { _defineProperty(target, key, source[key]); }); } else if (_Object$getOwnPropertyDescriptors) { _Object$defineProperties(target, _Object$getOwnPropertyDescriptors(source)); } else { var _context27; _forEachInstanceProperty(_context27 = ownKeys(Object(source))).call(_context27, function (key) { _Object$defineProperty(target, key, _Object$getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 import _concatInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/concat";
 import _sliceInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/slice";
@@ -21,12 +22,12 @@ import _mapInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance
 import _filterInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/filter";
 import _includesInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/includes";
 import _Set from "@babel/runtime-corejs3/core-js-stable/set";
-import _reduceInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/reduce";
-import _Object$entries from "@babel/runtime-corejs3/core-js-stable/object/entries";
 import _sortInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/sort";
 import _flatMapInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/flat-map";
 import _Object$values from "@babel/runtime-corejs3/core-js-stable/object/values";
 import _Object$keys from "@babel/runtime-corejs3/core-js-stable/object/keys";
+import _reduceInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/reduce";
+import _Object$entries from "@babel/runtime-corejs3/core-js-stable/object/entries";
 import _everyInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/every";
 import _findInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/find";
 import _Array$isArray from "@babel/runtime-corejs3/core-js-stable/array/is-array";
@@ -37,7 +38,8 @@ var ajv = new Ajv();
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
 ajv.compile(schema); // import bach from 'bach-cljs'
 
-var bach = require('bach-cljs')["default"]; // Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
+var bach = require('bach-cljs'); //.default
+// Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
 // Main entry point for integrating with core bach ClojureScript library.
 
 
@@ -499,43 +501,54 @@ var Durations = /*#__PURE__*/function () {
   }, {
     key: "at",
     value: function at(duration) {
-      var _context8;
-
       var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
       var step = this.cast(duration, {
         is: is,
         as: 'step'
       });
       var index = this.cyclic(step);
-      return _reduceInstanceProperty(_context8 = _Object$entries(this.steps)).call(_context8, function (acc, _ref6) {
-        var _ref7 = _slicedToArray(_ref6, 2),
-            key = _ref7[0],
-            steps = _ref7[1];
+      var state = this.steps[index];
+      console.log('bach state', state);
 
-        return _objectSpread(_objectSpread({}, acc), {}, _defineProperty({}, key, steps[index]));
-      }, {
+      var _state = _slicedToArray(state, 3),
+          _state$ = _toArray(_state[0]),
+          beat = _state$[0],
+          elem = _sliceInstanceProperty(_state$).call(_state$, 1),
+          play = _state[1],
+          stop = _state[2];
+
+      return {
+        beat: beat,
+        // TODO: Add once tests are updated
+        // elem,
+        play: play,
+        stop: stop,
         index: index
-      });
+      }; // return Object.entries(this.steps)
+      //   .reduce((acc, [key, steps]) => ({
+      //     ...acc,
+      //     [key]: steps[index]
+      //   }), { index })
     } // TODO: Either replace or improve via inspiration with this:
     // @see: https://tonejs.github.io/docs/r13/Time#quantize
 
   }, {
     key: "rhythmic",
     value: function rhythmic(duration) {
-      var _context9,
+      var _context8,
           _this = this;
 
-      var _ref8 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref8$is = _ref8.is,
-          is = _ref8$is === void 0 ? 'ms' : _ref8$is,
-          _ref8$units = _ref8.units,
-          units = _ref8$units === void 0 ? ['8n', '4n'] : _ref8$units,
-          _ref8$calc = _ref8.calc,
-          calc = _ref8$calc === void 0 ? 'floor' : _ref8$calc,
-          _ref8$size = _ref8.size,
-          size = _ref8$size === void 0 ? 'min' : _ref8$size;
+      var _ref6 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref6$is = _ref6.is,
+          is = _ref6$is === void 0 ? 'ms' : _ref6$is,
+          _ref6$units = _ref6.units,
+          units = _ref6$units === void 0 ? ['8n', '4n'] : _ref6$units,
+          _ref6$calc = _ref6.calc,
+          calc = _ref6$calc === void 0 ? 'floor' : _ref6$calc,
+          _ref6$size = _ref6.size,
+          size = _ref6$size === void 0 ? 'min' : _ref6$size;
 
-      var durations = _sortInstanceProperty(_context9 = _mapInstanceProperty(units).call(units, function (unit) {
+      var durations = _sortInstanceProperty(_context8 = _mapInstanceProperty(units).call(units, function (unit) {
         var value = _this.cast(duration, {
           is: is,
           as: unit
@@ -546,7 +559,7 @@ var Durations = /*#__PURE__*/function () {
           is: unit,
           as: is
         });
-      })).call(_context9, function (a, b) {
+      })).call(_context8, function (a, b) {
         return Math.abs(duration - a) - Math.abs(duration - b);
       });
 
@@ -571,9 +584,9 @@ var Element = /*#__PURE__*/function () {
   _createClass(Element, [{
     key: "id",
     get: function get() {
-      var _context10;
+      var _context9;
 
-      return _concatInstanceProperty(_context10 = "".concat(this.data.kind, ".")).call(_context10, this.data.id);
+      return _concatInstanceProperty(_context9 = "".concat(this.data.kind, ".")).call(_context9, this.data.id);
     }
   }, {
     key: "uid",
@@ -622,10 +635,10 @@ var Element = /*#__PURE__*/function () {
 
 var Elements = /*#__PURE__*/function () {
   function Elements() {
-    var _ref9 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        source = _ref9.source,
-        store = _ref9.store,
-        cast = _ref9.cast;
+    var _ref7 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        source = _ref7.source,
+        store = _ref7.store,
+        cast = _ref7.cast;
 
     _classCallCheck(this, Elements);
 
@@ -641,13 +654,13 @@ var Elements = /*#__PURE__*/function () {
   _createClass(Elements, [{
     key: "all",
     get: function get() {
-      var _context11,
+      var _context10,
           _this2 = this;
 
-      return _flatMapInstanceProperty(_context11 = this.kinds).call(_context11, function (kind) {
-        var _context12;
+      return _flatMapInstanceProperty(_context10 = this.kinds).call(_context10, function (kind) {
+        var _context11;
 
-        return _mapInstanceProperty(_context12 = _Object$values(_this2.data[kind])).call(_context12, function (elem) {
+        return _mapInstanceProperty(_context11 = _Object$values(_this2.data[kind])).call(_context11, function (elem) {
           return new Element(elem);
         });
       });
@@ -660,18 +673,18 @@ var Elements = /*#__PURE__*/function () {
   }, {
     key: "values",
     get: function get() {
-      var _context13;
+      var _context12;
 
-      return _mapInstanceProperty(_context13 = this.all).call(_context13, function (elem) {
+      return _mapInstanceProperty(_context12 = this.all).call(_context12, function (elem) {
         return elem.value;
       });
     }
   }, {
     key: "ids",
     get: function get() {
-      var _context14;
+      var _context13;
 
-      return _mapInstanceProperty(_context14 = this.all).call(_context14, function (elem) {
+      return _mapInstanceProperty(_context13 = this.all).call(_context13, function (elem) {
         return elem.id;
       });
     }
@@ -705,24 +718,24 @@ var Elements = /*#__PURE__*/function () {
   }], [{
     key: "cast",
     value: function cast(elements) {
-      var _context15;
+      var _context14;
 
       var as = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function (_) {
         return _;
       };
       if (!elements) return null; // TODO: Validate element shape with JSON Schema
 
-      return _reduceInstanceProperty(_context15 = _Object$entries(elements)).call(_context15, function (acc, _ref10) {
-        var _context16;
+      return _reduceInstanceProperty(_context14 = _Object$entries(elements)).call(_context14, function (acc, _ref8) {
+        var _context15;
 
-        var _ref11 = _slicedToArray(_ref10, 2),
-            kind = _ref11[0],
-            ids = _ref11[1];
+        var _ref9 = _slicedToArray(_ref8, 2),
+            kind = _ref9[0],
+            ids = _ref9[1];
 
-        var elems = _reduceInstanceProperty(_context16 = _Object$entries(ids)).call(_context16, function (acc, _ref12) {
-          var _ref13 = _slicedToArray(_ref12, 2),
-              id = _ref13[0],
-              elem = _ref13[1];
+        var elems = _reduceInstanceProperty(_context15 = _Object$entries(ids)).call(_context15, function (acc, _ref10) {
+          var _ref11 = _slicedToArray(_ref10, 2),
+              id = _ref11[0],
+              elem = _ref11[1];
 
           return _objectSpread(_objectSpread({}, acc), {}, _defineProperty({}, id, as(_objectSpread({
             id: id,
@@ -765,7 +778,7 @@ var Beat = /*#__PURE__*/function () {
   }, {
     key: "duration",
     get: function get() {
-      return this.data.duration;
+      return this.data.duration; // || this.data.items.reduce((acc, item) => Math.max(0, Math.min(acc, item.duration)))
     }
   }, {
     key: "items",
@@ -775,11 +788,11 @@ var Beat = /*#__PURE__*/function () {
   }, {
     key: "elements",
     get: function get() {
-      var _context17,
+      var _context16,
           _this3 = this;
 
-      return _flatMapInstanceProperty(_context17 = this.items).call(_context17, function (_ref14) {
-        var elements = _ref14.elements;
+      return _flatMapInstanceProperty(_context16 = this.items).call(_context16, function (_ref12) {
+        var elements = _ref12.elements;
         return _mapInstanceProperty(elements).call(elements, function (elem) {
           return _this3.store.resolve(elem);
         });
@@ -788,16 +801,16 @@ var Beat = /*#__PURE__*/function () {
   }, {
     key: "kinds",
     get: function get() {
-      return this.all(function (_ref15) {
-        var kind = _ref15.kind;
+      return this.all(function (_ref13) {
+        var kind = _ref13.kind;
         return kind;
       });
     }
   }, {
     key: "values",
     get: function get() {
-      return this.all(function (_ref16) {
-        var value = _ref16.value;
+      return this.all(function (_ref14) {
+        var value = _ref14.value;
         return value;
       });
     } // Provides map of elements in a beat grouped by kind.
@@ -805,37 +818,37 @@ var Beat = /*#__PURE__*/function () {
   }, {
     key: "parts",
     get: function get() {
-      var _context18;
+      var _context17;
 
-      return _reduceInstanceProperty(_context18 = this.elements).call(_context18, function (parts, elem) {
+      return _reduceInstanceProperty(_context17 = this.elements).call(_context17, function (parts, elem) {
         return _objectSpread(_objectSpread({}, parts), {}, _defineProperty({}, elem.kind, elem));
       }, {});
     }
   }, {
     key: "musical",
     get: function get() {
-      var _context19;
+      var _context18;
 
-      return _everyInstanceProperty(_context19 = this.elements).call(_context19, function (elem) {
+      return _everyInstanceProperty(_context18 = this.elements).call(_context18, function (elem) {
         return elem.musical;
       });
     }
   }, {
     key: "all",
     value: function all() {
-      var _context20;
+      var _context19;
 
       var cast = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (_) {
         return _;
       };
-      return _toConsumableArray(new _Set(_mapInstanceProperty(_context20 = this.elements).call(_context20, cast)));
+      return _toConsumableArray(new _Set(_mapInstanceProperty(_context19 = this.elements).call(_context19, cast)));
     }
   }, {
     key: "first",
     value: function first(kind) {
-      var _context21;
+      var _context20;
 
-      return _findInstanceProperty(_context21 = this.elements).call(_context21, function (elem) {
+      return _findInstanceProperty(_context20 = this.elements).call(_context20, function (elem) {
         return kind == elem.kind;
       });
     }
@@ -915,13 +928,13 @@ var Music = /*#__PURE__*/function () {
   }, {
     key: "notes",
     get: function get() {
-      var _context22;
+      var _context21;
 
-      return Note.unite(_flatMapInstanceProperty(_context22 = this.beats).call(_context22, function (beat) {
-        var _context23;
+      return Note.unite(_flatMapInstanceProperty(_context21 = this.beats).call(_context21, function (beat) {
+        var _context22;
 
-        return _flatMapInstanceProperty(_context23 = beat.elements).call(_context23, function (_ref17) {
-          var notes = _ref17.notes;
+        return _flatMapInstanceProperty(_context22 = beat.elements).call(_context22, function (_ref15) {
+          var notes = _ref15.notes;
           return notes;
         });
       }));
@@ -929,9 +942,9 @@ var Music = /*#__PURE__*/function () {
   }, {
     key: "musical",
     get: function get() {
-      var _context24;
+      var _context23;
 
-      return _everyInstanceProperty(_context24 = this.beats).call(_context24, function (beat) {
+      return _everyInstanceProperty(_context23 = this.beats).call(_context23, function (beat) {
         return beat.musical;
       });
     } // get playable () {
@@ -956,18 +969,18 @@ var Music = /*#__PURE__*/function () {
   }, {
     key: "at",
     value: function at(duration) {
-      var _context25,
+      var _context24,
           _this4 = this,
-          _context26;
+          _context25;
 
       var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
       var cursor = this.durations.at(duration, is);
       return {
         beat: this.beats[cursor.beat],
-        play: _mapInstanceProperty(_context25 = cursor.play || []).call(_context25, function (elem) {
+        play: _mapInstanceProperty(_context24 = cursor.play || []).call(_context24, function (elem) {
           return _this4.store.resolve(elem);
         }),
-        stop: _mapInstanceProperty(_context26 = cursor.stop || []).call(_context26, function (elem) {
+        stop: _mapInstanceProperty(_context25 = cursor.stop || []).call(_context25, function (elem) {
           return _this4.store.resolve(elem);
         })
       };

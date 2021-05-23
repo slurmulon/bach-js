@@ -10529,7 +10529,7 @@
 	ajv.compile(bachJsonSchema);
 
 	// import bach from 'bach-cljs'
-	const bach = require('bach-cljs').default;
+	const bach = require('bach-cljs'); //.default
 	// Main entry point for integrating with core bach ClojureScript library.
 
 	const compose = source => {
@@ -10691,121 +10691,6 @@
 
 	}
 
-	// `Array.prototype.{ reduce, reduceRight }` methods implementation
-	var createMethod$1 = function (IS_RIGHT) {
-	  return function (that, callbackfn, argumentsLength, memo) {
-	    aFunction$1(callbackfn);
-	    var O = toObject(that);
-	    var self = indexedObject(O);
-	    var length = toLength(O.length);
-	    var index = IS_RIGHT ? length - 1 : 0;
-	    var i = IS_RIGHT ? -1 : 1;
-	    if (argumentsLength < 2) while (true) {
-	      if (index in self) {
-	        memo = self[index];
-	        index += i;
-	        break;
-	      }
-	      index += i;
-	      if (IS_RIGHT ? index < 0 : length <= index) {
-	        throw TypeError('Reduce of empty array with no initial value');
-	      }
-	    }
-	    for (;IS_RIGHT ? index >= 0 : length > index; index += i) if (index in self) {
-	      memo = callbackfn(memo, self[index], index, O);
-	    }
-	    return memo;
-	  };
-	};
-
-	var arrayReduce = {
-	  // `Array.prototype.reduce` method
-	  // https://tc39.es/ecma262/#sec-array.prototype.reduce
-	  left: createMethod$1(false),
-	  // `Array.prototype.reduceRight` method
-	  // https://tc39.es/ecma262/#sec-array.prototype.reduceright
-	  right: createMethod$1(true)
-	};
-
-	var engineIsNode = classofRaw(global$1.process) == 'process';
-
-	var $reduce = arrayReduce.left;
-
-
-
-
-	var STRICT_METHOD$1 = arrayMethodIsStrict('reduce');
-	// Chrome 80-82 has a critical bug
-	// https://bugs.chromium.org/p/chromium/issues/detail?id=1049982
-	var CHROME_BUG = !engineIsNode && engineV8Version > 79 && engineV8Version < 83;
-
-	// `Array.prototype.reduce` method
-	// https://tc39.es/ecma262/#sec-array.prototype.reduce
-	_export({ target: 'Array', proto: true, forced: !STRICT_METHOD$1 || CHROME_BUG }, {
-	  reduce: function reduce(callbackfn /* , initialValue */) {
-	    return $reduce(this, callbackfn, arguments.length, arguments.length > 1 ? arguments[1] : undefined);
-	  }
-	});
-
-	var reduce$2 = entryVirtual('Array').reduce;
-
-	var ArrayPrototype$2 = Array.prototype;
-
-	var reduce_1 = function (it) {
-	  var own = it.reduce;
-	  return it === ArrayPrototype$2 || (it instanceof Array && own === ArrayPrototype$2.reduce) ? reduce$2 : own;
-	};
-
-	var reduce$1 = reduce_1;
-
-	var reduce = reduce$1;
-
-	var propertyIsEnumerable = objectPropertyIsEnumerable.f;
-
-	// `Object.{ entries, values }` methods implementation
-	var createMethod = function (TO_ENTRIES) {
-	  return function (it) {
-	    var O = toIndexedObject(it);
-	    var keys = objectKeys(O);
-	    var length = keys.length;
-	    var i = 0;
-	    var result = [];
-	    var key;
-	    while (length > i) {
-	      key = keys[i++];
-	      if (!descriptors || propertyIsEnumerable.call(O, key)) {
-	        result.push(TO_ENTRIES ? [key, O[key]] : O[key]);
-	      }
-	    }
-	    return result;
-	  };
-	};
-
-	var objectToArray = {
-	  // `Object.entries` method
-	  // https://tc39.es/ecma262/#sec-object.entries
-	  entries: createMethod(true),
-	  // `Object.values` method
-	  // https://tc39.es/ecma262/#sec-object.values
-	  values: createMethod(false)
-	};
-
-	var $entries = objectToArray.entries;
-
-	// `Object.entries` method
-	// https://tc39.es/ecma262/#sec-object.entries
-	_export({ target: 'Object', stat: true }, {
-	  entries: function entries(O) {
-	    return $entries(O);
-	  }
-	});
-
-	var entries$2 = path.Object.entries;
-
-	var entries$1 = entries$2;
-
-	var entries = entries$1;
-
 	var test = [];
 	var nativeSort = test.sort;
 
@@ -10818,9 +10703,9 @@
 	  test.sort(null);
 	});
 	// Old WebKit
-	var STRICT_METHOD = arrayMethodIsStrict('sort');
+	var STRICT_METHOD$1 = arrayMethodIsStrict('sort');
 
-	var FORCED = FAILS_ON_UNDEFINED || !FAILS_ON_NULL || !STRICT_METHOD;
+	var FORCED = FAILS_ON_UNDEFINED || !FAILS_ON_NULL || !STRICT_METHOD$1;
 
 	// `Array.prototype.sort` method
 	// https://tc39.es/ecma262/#sec-array.prototype.sort
@@ -10834,11 +10719,11 @@
 
 	var sort$2 = entryVirtual('Array').sort;
 
-	var ArrayPrototype$1 = Array.prototype;
+	var ArrayPrototype$2 = Array.prototype;
 
 	var sort_1 = function (it) {
 	  var own = it.sort;
-	  return it === ArrayPrototype$1 || (it instanceof Array && own === ArrayPrototype$1.sort) ? sort$2 : own;
+	  return it === ArrayPrototype$2 || (it instanceof Array && own === ArrayPrototype$2.sort) ? sort$2 : own;
 	};
 
 	var sort$1 = sort_1;
@@ -11049,18 +10934,26 @@
 	  }
 
 	  at(duration, is = 'step') {
-	    var _context;
-
 	    const step = this.cast(duration, {
 	      is,
 	      as: 'step'
 	    });
 	    const index = this.cyclic(step);
-	    return reduce(_context = entries(this.steps)).call(_context, (acc, [key, steps]) => ({ ...acc,
-	      [key]: steps[index]
-	    }), {
+	    const state = this.steps[index];
+	    console.log('bach state', state);
+	    const [[beat, ...elem], play, stop] = state;
+	    return {
+	      beat,
+	      // TODO: Add once tests are updated
+	      // elem,
+	      play,
+	      stop,
 	      index
-	    });
+	    }; // return Object.entries(this.steps)
+	    //   .reduce((acc, [key, steps]) => ({
+	    //     ...acc,
+	    //     [key]: steps[index]
+	    //   }), { index })
 	  } // TODO: Either replace or improve via inspiration with this:
 	  // @see: https://tonejs.github.io/docs/r13/Time#quantize
 
@@ -11071,9 +10964,9 @@
 	    calc = 'floor',
 	    size = 'min'
 	  } = {}) {
-	    var _context2;
+	    var _context;
 
-	    const durations = sort(_context2 = map(units).call(units, unit => {
+	    const durations = sort(_context = map(units).call(units, unit => {
 	      const value = this.cast(duration, {
 	        is,
 	        as: unit
@@ -11083,12 +10976,42 @@
 	        is: unit,
 	        as: is
 	      });
-	    })).call(_context2, (a, b) => Math.abs(duration - a) - Math.abs(duration - b));
+	    })).call(_context, (a, b) => Math.abs(duration - a) - Math.abs(duration - b));
 
 	    return Math[size](...durations);
 	  }
 
 	}
+
+	var propertyIsEnumerable = objectPropertyIsEnumerable.f;
+
+	// `Object.{ entries, values }` methods implementation
+	var createMethod$1 = function (TO_ENTRIES) {
+	  return function (it) {
+	    var O = toIndexedObject(it);
+	    var keys = objectKeys(O);
+	    var length = keys.length;
+	    var i = 0;
+	    var result = [];
+	    var key;
+	    while (length > i) {
+	      key = keys[i++];
+	      if (!descriptors || propertyIsEnumerable.call(O, key)) {
+	        result.push(TO_ENTRIES ? [key, O[key]] : O[key]);
+	      }
+	    }
+	    return result;
+	  };
+	};
+
+	var objectToArray = {
+	  // `Object.entries` method
+	  // https://tc39.es/ecma262/#sec-object.entries
+	  entries: createMethod$1(true),
+	  // `Object.values` method
+	  // https://tc39.es/ecma262/#sec-object.values
+	  values: createMethod$1(false)
+	};
 
 	var $values = objectToArray.values;
 
@@ -11121,6 +11044,91 @@
 	var keys$1 = keys$2;
 
 	var keys = keys$1;
+
+	// `Array.prototype.{ reduce, reduceRight }` methods implementation
+	var createMethod = function (IS_RIGHT) {
+	  return function (that, callbackfn, argumentsLength, memo) {
+	    aFunction$1(callbackfn);
+	    var O = toObject(that);
+	    var self = indexedObject(O);
+	    var length = toLength(O.length);
+	    var index = IS_RIGHT ? length - 1 : 0;
+	    var i = IS_RIGHT ? -1 : 1;
+	    if (argumentsLength < 2) while (true) {
+	      if (index in self) {
+	        memo = self[index];
+	        index += i;
+	        break;
+	      }
+	      index += i;
+	      if (IS_RIGHT ? index < 0 : length <= index) {
+	        throw TypeError('Reduce of empty array with no initial value');
+	      }
+	    }
+	    for (;IS_RIGHT ? index >= 0 : length > index; index += i) if (index in self) {
+	      memo = callbackfn(memo, self[index], index, O);
+	    }
+	    return memo;
+	  };
+	};
+
+	var arrayReduce = {
+	  // `Array.prototype.reduce` method
+	  // https://tc39.es/ecma262/#sec-array.prototype.reduce
+	  left: createMethod(false),
+	  // `Array.prototype.reduceRight` method
+	  // https://tc39.es/ecma262/#sec-array.prototype.reduceright
+	  right: createMethod(true)
+	};
+
+	var engineIsNode = classofRaw(global$1.process) == 'process';
+
+	var $reduce = arrayReduce.left;
+
+
+
+
+	var STRICT_METHOD = arrayMethodIsStrict('reduce');
+	// Chrome 80-82 has a critical bug
+	// https://bugs.chromium.org/p/chromium/issues/detail?id=1049982
+	var CHROME_BUG = !engineIsNode && engineV8Version > 79 && engineV8Version < 83;
+
+	// `Array.prototype.reduce` method
+	// https://tc39.es/ecma262/#sec-array.prototype.reduce
+	_export({ target: 'Array', proto: true, forced: !STRICT_METHOD || CHROME_BUG }, {
+	  reduce: function reduce(callbackfn /* , initialValue */) {
+	    return $reduce(this, callbackfn, arguments.length, arguments.length > 1 ? arguments[1] : undefined);
+	  }
+	});
+
+	var reduce$2 = entryVirtual('Array').reduce;
+
+	var ArrayPrototype$1 = Array.prototype;
+
+	var reduce_1 = function (it) {
+	  var own = it.reduce;
+	  return it === ArrayPrototype$1 || (it instanceof Array && own === ArrayPrototype$1.reduce) ? reduce$2 : own;
+	};
+
+	var reduce$1 = reduce_1;
+
+	var reduce = reduce$1;
+
+	var $entries = objectToArray.entries;
+
+	// `Object.entries` method
+	// https://tc39.es/ecma262/#sec-object.entries
+	_export({ target: 'Object', stat: true }, {
+	  entries: function entries(O) {
+	    return $entries(O);
+	  }
+	});
+
+	var entries$2 = path.Object.entries;
+
+	var entries$1 = entries$2;
+
+	var entries = entries$1;
 
 	/**
 	 * Represents a single playable element (Note, Scale, Chord, Mode, Triad or Rest)
@@ -11316,7 +11324,7 @@
 	  }
 
 	  get duration() {
-	    return this.data.duration;
+	    return this.data.duration; // || this.data.items.reduce((acc, item) => Math.max(0, Math.min(acc, item.duration)))
 	  }
 
 	  get items() {
