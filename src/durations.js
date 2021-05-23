@@ -99,12 +99,24 @@ export class Durations {
   at (duration, is = 'step') {
     const step = this.cast(duration, { is, as: 'step' })
     const index = this.cyclic(step)
+    const state = this.steps[index]
+    console.log('bach state', state)
+    const [[beat, ...elem], play, stop] = state
 
-    return Object.entries(this.steps)
-      .reduce((acc, [key, steps]) => ({
-        ...acc,
-        [key]: steps[index]
-      }), { index })
+    return {
+      beat,
+      // TODO: Add once tests are updated
+      // elem,
+      play,
+      stop,
+      index
+    }
+
+    // return Object.entries(this.steps)
+    //   .reduce((acc, [key, steps]) => ({
+    //     ...acc,
+    //     [key]: steps[index]
+    //   }), { index })
   }
 
   // TODO: Either replace or improve via inspiration with this:

@@ -22,6 +22,7 @@ export class Beat {
 
   get duration () {
     return this.data.duration
+      // || this.data.items.reduce((acc, item) => Math.max(0, Math.min(acc, item.duration)))
   }
 
   get items () {
