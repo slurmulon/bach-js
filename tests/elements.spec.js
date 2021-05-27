@@ -13,10 +13,10 @@ describe('class methods', () => {
   describe('get', () => {
     it('provides the element associated with an id', () => {
       const elems = new Elements({ source })
-      const result = elems.get('scale.LgmmD3')
+      const result = elems.get('scale.03Dmmg')
 
       expect(result).toEqual({
-        id: 'LgmmD3',
+        id: '03Dmmg',
         kind: 'scale',
         props: [],
         value: 'A dorian'
@@ -28,10 +28,12 @@ describe('class methods', () => {
     describe('provides an element', () => {
       it('given an id', () => {
         const elems = new Elements({ source })
-        const result = elems.resolve('chord.PznzR2')
+        const result = elems.resolve('chord.02Rznz')
+
+        console.log('elems.all', elems.all)
 
         expect(result).toEqual({
-          id: 'PznzR2',
+          id: '02Rznz',
           kind: 'chord',
           props: [],
           value: 'Gm'
@@ -61,7 +63,7 @@ describe('class methods', () => {
     it('provides a list of every element\'s id', () => {
       const elems = new Elements({ source })
 
-      expect(elems.ids).toEqual(['chord.1np1h2', 'chord.Wzp6U0', 'chord.PznzR2', 'chord.ua0AM3', 'scale.LgmmD3'])
+      expect(elems.ids).toEqual(['chord.02h1pn', 'chord.00U6pz', 'chord.02Rznz', 'chord.03MA0a', 'scale.03Dmmg'])
     })
   })
 })

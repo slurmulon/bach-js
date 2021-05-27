@@ -11,14 +11,14 @@ describe('musical', () => {
 
       expect(beat.elements).toEqual([
         {
-          id: '1np1h2',
+          id: '02h1pn',
           kind: 'chord',
           value: 'A7',
           props: [],
           notes: [ 'A', 'C#', 'E', 'G' ]
         },
         {
-          id: 'LgmmD3',
+          id: '03Dmmg',
           kind: 'scale',
           value: 'A dorian',
           props: [],
@@ -39,14 +39,14 @@ describe('musical', () => {
 
       expect(beat.parts).toEqual({
         chord: {
-          id: '1np1h2',
+          id: '02h1pn',
           kind: 'chord',
           value: 'A7',
           props: [],
           notes: [ 'A', 'C#', 'E', 'G' ]
         },
         scale: {
-          id: 'LgmmD3',
+          id: '03Dmmg',
           kind: 'scale',
           value: 'A dorian',
           props: [],

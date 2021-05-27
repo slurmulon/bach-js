@@ -153,8 +153,8 @@ describe('at', () => {
       expect(result).toEqual({
         beat: 1,
         index: 6,
-        play: ['chord.Wzp6U0'],
-        stop: ['chord.1np1h2', 'scale.LgmmD3']
+        play: ['chord.00U6pz'],
+        stop: ['chord.02h1pn', 'scale.03Dmmg']
       })
     })
 
@@ -164,8 +164,8 @@ describe('at', () => {
       expect(result).toEqual({
         beat: 1,
         index: 6,
-        play: ['chord.Wzp6U0'],
-        stop: ['chord.1np1h2', 'scale.LgmmD3']
+        play: ['chord.00U6pz'],
+        stop: ['chord.02h1pn', 'scale.03Dmmg']
       })
     })
 
@@ -175,8 +175,8 @@ describe('at', () => {
       expect(result).toEqual({
         beat: 2,
         index: 10,
-        play: ['chord.1np1h2', 'scale.LgmmD3'],
-        stop: ['chord.Wzp6U0']
+        play: ['chord.02h1pn', 'scale.03Dmmg'],
+        stop: ['chord.00U6pz']
       })
     })
 
@@ -186,8 +186,8 @@ describe('at', () => {
       expect(result).toEqual({
         beat: 1,
         index: 6,
-        play: ['chord.Wzp6U0'],
-        stop: ['chord.1np1h2', 'scale.LgmmD3']
+        play: ['chord.00U6pz'],
+        stop: ['chord.02h1pn', 'scale.03Dmmg']
       })
     })
   })
