@@ -100,7 +100,7 @@ export class Durations {
     const step = this.cast(duration, { is, as: 'step' })
     const index = this.cyclic(step)
     const state = this.steps[index]
-    console.log('bach state', state)
+    console.log('bach state', state, index)
     const [[beat, ...elem], play, stop] = state
 
     return {

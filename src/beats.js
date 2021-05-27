@@ -1,4 +1,5 @@
 import { Element } from './elements'
+import { Note } from './note'
 
 /**
  * Represents a single beat in a track.
@@ -26,11 +27,17 @@ export class Beat {
   }
 
   get items () {
-    return this.data.items
+    // return this.data.items
+    return this.data.items.map(item => {
+      const elements = item.elements.map(elem => this.store.resolve(elem))
+
+      // return Object.assign(item, { elements })
+      return { ...item, elements }
+    })
   }
 
   get elements () {
-    return this.items.flatMap(({ elements }) =>
+    return this.data.items.flatMap(({ elements }) =>
       elements.map(elem => this.store.resolve(elem))
     )
   }
@@ -41,6 +48,10 @@ export class Beat {
 
   get values () {
     return this.all(({ value }) => value)
+  }
+
+  get notes () {
+    return Note.unite(this.elements.flatMap(({ notes }) => notes))
   }
 
   // Provides map of elements in a beat grouped by kind.

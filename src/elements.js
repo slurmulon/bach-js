@@ -90,9 +90,11 @@ export class Elements {
   }
 
   resolve (elem) {
-    if (elem instanceof Element) return elem
+    // FIXME: Use json-schema validator here instead to support cross-context typing (instanceof doesn't work from workers etc.)
+    // if (elem instanceof Element) return elem
+    if (typeof elem === 'object') return elem
     if (typeof elem === 'string') return this.get(elem)
-    if (typeof elem === 'object') return new Element(this.cast(elem))
+    // if (typeof elem === 'object') return new Element(this.cast(elem))
 
     throw TypeError('Failed to resolve element, unsupported data type')
   }
