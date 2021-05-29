@@ -13,8 +13,10 @@ export class Beat {
   constructor (data, store) {
     this.data = data
     this.store = store
-    // TODO: Consider using nanoid to generate pseudo-unique beat identifiers
-    // this.id = id || nanoid()
+  }
+
+  get id () {
+    return this.data.id
   }
 
   get index () {
@@ -23,17 +25,13 @@ export class Beat {
 
   get duration () {
     return this.data.duration
-      // || this.data.items.reduce((acc, item) => Math.max(0, Math.min(acc, item.duration)))
   }
 
   get items () {
-    // return this.data.items
-    return this.data.items.map(item => {
-      const elements = item.elements.map(elem => this.store.resolve(elem))
-
-      // return Object.assign(item, { elements })
-      return { ...item, elements }
-    })
+    return this.data.items.map(item => ({
+      ...item,
+      elements: item.elements.map(elem => this.store.resolve(elem))
+    }))
   }
 
   get elements () {
@@ -55,6 +53,7 @@ export class Beat {
   }
 
   // Provides map of elements in a beat grouped by kind.
+  // FIXME: Doesn't support multiple elements of the same kind
   get parts () {
     return this.elements.reduce((parts, elem) => ({
      ...parts,
@@ -83,3 +82,28 @@ export class Beat {
   }
 
 }
+
+// export class BeatItem {
+
+//   constructor (data, beat) {
+//     this.data = data
+//     this.beat = beat
+//   }
+
+//   get duration () {
+//     return this.data.duration
+//   }
+
+//   get elements () {
+//     return this.data.elements.map(elem => this.beat.store.resolve(elem))
+//   }
+
+//   add (elem) {
+//     const record = this.beat.store.register(elem)
+
+//     this.data.elements = this.data.elements.concat(record.id)
+
+//     return this
+//   }
+
+// }

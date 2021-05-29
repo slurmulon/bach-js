@@ -1,6 +1,6 @@
 import { Note } from './note'
 import { Durations } from './durations'
-import { Elements, MUSICAL_ELEMENTS } from './elements'
+import { Element, Elements, MUSICAL_ELEMENTS } from './elements'
 import { Beat } from './beats'
 import { compose, notesIn } from './data'
 
@@ -17,6 +17,8 @@ export class Music {
         notes: Note.all(elem.kind, elem.value)
       })
     }) : null
+
+    // console.log('COMPOSED DATA (2)', this.data)
   }
 
   get headers () {
@@ -87,6 +89,24 @@ export class Music {
       play: (cursor.play || []).map(elem => this.store.resolve(elem)),
       stop: (cursor.stop || []).map(elem => this.store.resolve(elem))
     }
+  }
+
+  // add (id, elem) {
+  // insert
+  add (record) {
+    const beat = this.beats.findIndex(beat => beat.id == record.beat)
+    const elem = this.store.register(record.elem)
+
+    console.log('adding beat', record, beat, this.beats.map(({ id }) => id))
+
+    this.data
+      .beats[beat]
+      .items[record.item || 0]
+      .elements
+      .push(elem)
+
+    // return this
+    return new Element(elem)
   }
 
   adjust (tempo) {

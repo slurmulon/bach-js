@@ -2,6 +2,8 @@ import { note as teoriaNote } from 'teoria'
 import { compose } from './data'
 import { Note } from './note'
 
+import { elementize } from 'bach-cljs'
+
 /**
  * Represents a single playable element (Note, Scale, Chord, Mode, Triad or Rest)
  */
@@ -97,6 +99,20 @@ export class Elements {
     // if (typeof elem === 'object') return new Element(this.cast(elem))
 
     throw TypeError('Failed to resolve element, unsupported data type')
+  }
+
+  // craft (kind, args) {
+  register ({ kind, value, props }) {
+    // const current = this.resolve(elem)
+    const elem = elementize(kind, [value, ...props])
+    const uid = Element.uid(elem.id)
+    const record = this.cast({ ...elem, id: uid, kind })
+
+    this.data[kind] = this.data[kind] || {}
+    this.data[kind][uid] = record
+
+    // return new Element(record)
+    return record
   }
 
   static cast (elements, as = _ => _) {

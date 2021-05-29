@@ -1,5 +1,6 @@
 // import bach from 'bach-cljs'
-const bach = require('bach-cljs')//.default
+// const bach = require('bach-cljs')//.default
+const { compose: bach } = require('bach-cljs')//.default
 import { Note } from './note'
 import { valid } from './validate'
 import {
