@@ -101,9 +101,8 @@ export class Elements {
     throw TypeError('Failed to resolve element, unsupported data type')
   }
 
-  // craft (kind, args) {
+  // TODO: Rename to `insert`
   register ({ kind, value, props }) {
-    // const current = this.resolve(elem)
     const elem = elementize(kind, [value, ...props])
     const uid = Element.uid(elem.id)
     const record = this.cast({ ...elem, id: uid, kind })
@@ -111,8 +110,12 @@ export class Elements {
     this.data[kind] = this.data[kind] || {}
     this.data[kind][uid] = record
 
-    // return new Element(record)
-    return record
+    // TODO: Test, ideal
+    this.source.elements = this.data
+
+    return new Element(record)
+    // LAST
+    // return record
   }
 
   static cast (elements, as = _ => _) {
