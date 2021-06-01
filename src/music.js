@@ -93,17 +93,30 @@ export class Music {
 
   // add (id, elem) {
   // insert
+  // TODO: Probably move to `rebach` package
   add (record) {
-    const beat = this.beats.findIndex(beat => beat.id == record.beat)
+    const beat = this.beats.find(beat => beat.id == record.beat)
     const elem = this.store.register(record.elem)
 
     console.log('adding beat', record, beat, this.beats.map(({ id }) => id))
 
     this.data
-      .beats[beat]
+      .beats[beat.id]
       .items[record.item || 0]
       .elements
       .push(elem)
+
+    // const item = this.data.beats[beat].items[record.item || 0]
+    // const stop = this.durations.cyclic(beat.index + item.duration)
+
+    // beat
+    this.data.steps[beat.index][0].push(elem.id)
+    // play
+    this.data.steps[beat.index][1].push(elem.id)
+    // stop
+    this.data.steps[beat.index][2].push(elem.id)
+
+    // TODO: Add to `steps`!
 
     // return this
     return new Element(elem)

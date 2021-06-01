@@ -5,7 +5,8 @@ import { Note } from './note'
 import { elementize } from 'bach-cljs'
 
 /**
- * Represents a single playable element (Note, Scale, Chord, Mode, Triad or Rest)
+ * Represents a single and unique playable element.
+ * Uniqueness and equality are determined by `id`.
  */
 export class Element {
 
@@ -26,7 +27,7 @@ export class Element {
   }
 
   get props () {
-    return this.data.props
+    return this.data.props || []
   }
 
   get kind () {
@@ -41,6 +42,7 @@ export class Element {
     return Note.all(this.kind, this.value)
   }
 
+  // TODO: Hoist out to Music, leaky abstraction
   get musical () {
     return MUSICAL_ELEMENTS.includes(this.kind)
   }
@@ -98,11 +100,14 @@ export class Elements {
     if (typeof elem === 'string') return this.get(elem)
     // if (typeof elem === 'object') return new Element(this.cast(elem))
 
-    throw TypeError('Failed to resolve element, unsupported data type')
+    throw TypeError('Failed to resolve element due to unsupported data type')
   }
 
   // TODO: Rename to `insert`
   register ({ kind, value, props }) {
+    if (!kind || typeof kind !== 'string') throw TypeError('kind must be a non-empty string')
+    if (value == null) throw TypeError('value must be defined and non-null')
+
     const elem = elementize(kind, [value, ...props])
     const uid = Element.uid(elem.id)
     const record = this.cast({ ...elem, id: uid, kind })
@@ -110,16 +115,14 @@ export class Elements {
     this.data[kind] = this.data[kind] || {}
     this.data[kind][uid] = record
 
-    // TODO: Test, ideal
     this.source.elements = this.data
 
     return new Element(record)
-    // LAST
-    // return record
   }
 
   static cast (elements, as = _ => _) {
     if (!elements) return null
+
     // TODO: Validate element shape with JSON Schema
     return Object.entries(elements)
       .reduce((acc, [kind, ids]) => {
@@ -135,4 +138,5 @@ export class Elements {
 
 }
 
-export const MUSICAL_ELEMENTS = ['note', 'chord', 'scale'] // penta
+// TODO: Hoist out to Music, leaky abstraction
+export const MUSICAL_ELEMENTS = ['note', 'chord', 'scale', ' penta'] // triad
