@@ -69,7 +69,7 @@ export class Beat {
     return [...new Set(this.elements.map(cast))]
   }
 
-  first (kind) {
+  find (kind) {
     return this.elements.find(elem => kind == elem.kind)
   }
 
@@ -78,7 +78,8 @@ export class Beat {
       return beats.map(beat => new Beat(beat, store))
     }
 
-    return new Beat(beats, store)
+    // return new Beat(beats, store)
+    return [new Beat(beats, store)]
   }
 
 }
