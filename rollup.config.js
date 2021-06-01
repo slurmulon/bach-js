@@ -11,20 +11,37 @@ export default [
     output: {
       name: 'bach-js',
       file: pkg.browser,
-      format: 'umd',
+      // format: 'umd',
+      // format: 'iife',
+      form: 'esm',
       esModule: false,
-      // exports: 'named'
+      exports: 'named',
+      sourcemap: true,
+      // plugins: [getBabelOutputPlugin({
+      //   presets: [['@babel/preset-env', { modules: 'umd' }]],
+      //   plugins: [['@babel/plugin-transform-runtime', { corejs: 3, useESModules: false }]]
+      // })]
     },
     plugins: [
       json(),
       resolve(),
       commonjs(),
-      babel({
-        // exclude: ['node_modules/**'],
-        // babelHelpers: 'bundled'
-        exclude: '**/node_modules/**',
-        babelHelpers: 'runtime'
-      })
+      getBabelOutputPlugin({
+        // presets: ['@babel/preset-env'],
+        presets: [['@babel/preset-env', { modules: 'umd' }]],
+        plugins: [['@babel/plugin-transform-runtime', { corejs: 3 }]]
+      }),
+      // babel({
+      //   // exclude: ['node_modules/**'],
+      //   // babelHelpers: 'bundled'
+
+      //   // LAST
+      //   exclude: '**/node_modules/**',
+      //   babelHelpers: 'runtime',
+
+      //   // exclude: '**/node_modules/**',
+      //   // babelHelpers: 'bundled'
+      // })
     ]
   },
 
@@ -52,7 +69,8 @@ export default [
         file: pkg.module,
         format: 'esm',
         plugins: [getBabelOutputPlugin({
-          presets: ['@babel/preset-env'],
+          // presets: ['@babel/preset-env'],
+          presets: [['@babel/preset-env', { modules: 'umd' }]],
           plugins: [['@babel/plugin-transform-runtime', { corejs: 3, useESModules: true }]]
         })]
       } // exports: 'named', sourcemap: true }
