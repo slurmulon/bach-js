@@ -49,7 +49,8 @@ export class Beat {
   }
 
   get notes () {
-    return Note.unite(this.elements.flatMap(({ notes }) => notes))
+    // return Note.unite(this.elements.flatMap(({ notes }) => notes))
+    return this.notesOf(this.elements)
   }
 
   // Provides map of elements in a beat grouped by kind.
@@ -70,7 +71,28 @@ export class Beat {
   }
 
   find (kind) {
-    return this.elements.find(elem => kind == elem.kind)
+    return this.elements.find(elem => kind === elem.kind)
+  }
+
+  filter (kind) {
+    return this.elements.filter(elem => kind === elem.kind)
+  }
+
+  // first (kinds) {
+  either (kinds) {
+    return kinds.reduce((acc, kind) => {
+      // return acc.length ? acc : this.elements.filter(elem => kind === elem.kind)
+      return acc.length ? acc : this.filter(kind)
+    }, [])
+    // for (kind of kinds) {
+    //   const elems = item.elements.filter(elem => kind === elem.kind)
+
+    //   if (elems.length) return elems
+    // }
+  }
+
+  notesOf (elements) {
+    return Note.unite(elements.flatMap(({ notes }) => notes))
   }
 
   static from (beats, store) {

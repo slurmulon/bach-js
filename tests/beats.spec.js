@@ -61,4 +61,24 @@ describe('musical', () => {
   })
 })
 
+describe('element accessors', () => {
+  // all
+  // find
+  // filter
+  describe('either', () => {
+    const [beat] = music.beats
+    const elems = beat.either(['chord', 'scale'])
 
+    console.log('beat either elems', elems)
+
+    expect(elems).toEqual([
+      {
+        id: '02h1pn',
+        kind: 'chord',
+        value: 'A7',
+        props: [],
+        notes: ['A', 'C#', 'E', 'G']
+      }
+    ])
+  })
+})
