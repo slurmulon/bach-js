@@ -13,7 +13,11 @@ export default [
       file: pkg.browser,
       // format: 'umd',
       // format: 'iife',
-      form: 'esm',
+      // format: 'esm',
+      format: 'esm',
+      // format: 'cjs',
+      // LAST (works, but wut)
+      // form: 'esm',
       esModule: false,
       exports: 'named',
       sourcemap: true,
@@ -25,7 +29,12 @@ export default [
     plugins: [
       json(),
       resolve(),
-      commonjs(),
+      // commonjs(),
+      commonjs({
+        esmExternals: true, //['bach-cljs']
+        // esmExternals: false, //['bach-cljs']
+        requireReturnsDefault: true
+      }),
       getBabelOutputPlugin({
         // presets: ['@babel/preset-env'],
         presets: [['@babel/preset-env', { modules: 'umd' }]],

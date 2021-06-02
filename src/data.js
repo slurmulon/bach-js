@@ -1,6 +1,7 @@
 // import bach from 'bach-cljs'
-// const bach = require('bach-cljs')//.default
-const { compose: bach } = require('bach-cljs')//.default
+const bach = require('bach-cljs')//.default
+// const { compose: bach } = require('bach-cljs')//.default
+// import { compose as bach } from 'bach-cljs'
 import { Note } from './note'
 // import { valid } from './validate'
 import {
@@ -10,11 +11,14 @@ import {
   Chord as TeoriaChord
 } from 'teoria'
 
+console.log('das bach', bach)
+
 // Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
 // Main entry point for integrating with core bach ClojureScript library.
 export const compose = source => {
   if (typeof source === 'string') {
-    return bach(source)
+    // return bach(source)
+    return bach.compose(source)
   }
 
   if (typeof source === 'object') {
