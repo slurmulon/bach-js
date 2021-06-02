@@ -31,6 +31,7 @@ export default [
       resolve(),
       // commonjs(),
       commonjs({
+        ignore: ['bach-cljs'],
         esmExternals: true, //['bach-cljs']
         // esmExternals: false, //['bach-cljs']
         requireReturnsDefault: true
