@@ -58,31 +58,13 @@ var _Array$isArray = require("@babel/runtime-corejs3/core-js-stable/array/is-arr
 
 function ownKeys(object, enumerableOnly) { var keys = _Object$keys(object); if (_Object$getOwnPropertySymbols) { var symbols = _Object$getOwnPropertySymbols(object); if (enumerableOnly) { symbols = _filterInstanceProperty(symbols).call(symbols, function (sym) { return _Object$getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context26; _forEachInstanceProperty(_context26 = ownKeys(Object(source), true)).call(_context26, function (key) { _defineProperty(target, key, source[key]); }); } else if (_Object$getOwnPropertyDescriptors) { _Object$defineProperties(target, _Object$getOwnPropertyDescriptors(source)); } else { var _context27; _forEachInstanceProperty(_context27 = ownKeys(Object(source))).call(_context27, function (key) { _Object$defineProperty(target, key, _Object$getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context32; _forEachInstanceProperty(_context32 = ownKeys(Object(source), true)).call(_context32, function (key) { _defineProperty(target, key, source[key]); }); } else if (_Object$getOwnPropertyDescriptors) { _Object$defineProperties(target, _Object$getOwnPropertyDescriptors(source)); } else { var _context33; _forEachInstanceProperty(_context33 = ownKeys(Object(source))).call(_context33, function (key) { _Object$defineProperty(target, key, _Object$getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 _Object$defineProperty(exports, '__esModule', {
   value: true
 });
 
 var teoria = require('teoria');
-
-var schema = require('bach-json-schema');
-
-var Ajv = require('ajv');
-
-function _interopDefaultLegacy(e) {
-  return e && _typeof(e) === 'object' && 'default' in e ? e : {
-    'default': e
-  };
-}
-
-var schema__default = /*#__PURE__*/_interopDefaultLegacy(schema);
-
-var Ajv__default = /*#__PURE__*/_interopDefaultLegacy(Ajv);
-
-var ajv = new Ajv__default['default']();
-ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
-ajv.compile(schema__default['default']); // import bach from 'bach-cljs'
 
 var bach = require('bach-cljs'); //.default
 // Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
@@ -91,7 +73,7 @@ var bach = require('bach-cljs'); //.default
 
 var compose = function compose(source) {
   if (typeof source === 'string') {
-    return bach(source);
+    return bach.compose(source);
   }
 
   if (_typeof(source) === 'object') {
@@ -554,7 +536,6 @@ var Durations = /*#__PURE__*/function () {
       });
       var index = this.cyclic(step);
       var state = this.steps[index];
-      console.log('bach state', state);
 
       var _state = _slicedToArray(state, 3),
           _state$ = _toArray(_state[0]),
@@ -614,9 +595,14 @@ var Durations = /*#__PURE__*/function () {
   }]);
 
   return Durations;
-}();
+}(); // import { elementize } from 'bach-cljs'
+
+
+var _require = require('bach-cljs'),
+    elementize = _require.elementize;
 /**
- * Represents a single playable element (Note, Scale, Chord, Mode, Triad or Rest)
+ * Represents a single and unique playable element.
+ * Uniqueness and equality are determined by `id`.
  */
 
 
@@ -647,7 +633,7 @@ var Element = /*#__PURE__*/function () {
   }, {
     key: "props",
     get: function get() {
-      return this.data.props;
+      return this.data.props || [];
     }
   }, {
     key: "kind",
@@ -663,7 +649,8 @@ var Element = /*#__PURE__*/function () {
     key: "notes",
     get: function get() {
       return Note.all(this.kind, this.value);
-    }
+    } // TODO: Hoist out to Music, leaky abstraction
+
   }, {
     key: "musical",
     get: function get() {
@@ -756,32 +743,56 @@ var Elements = /*#__PURE__*/function () {
   }, {
     key: "resolve",
     value: function resolve(elem) {
-      if (elem instanceof Element) return elem;
-      if (typeof elem === 'string') return this.get(elem);
-      if (_typeof(elem) === 'object') return new Element(this.cast(elem));
-      throw TypeError('Failed to resolve element, unsupported data type');
+      // FIXME: Use json-schema validator here instead to support cross-context typing (instanceof doesn't work from workers etc.)
+      // if (elem instanceof Element) return elem
+      if (_typeof(elem) === 'object') return elem;
+      if (typeof elem === 'string') return this.get(elem); // if (typeof elem === 'object') return new Element(this.cast(elem))
+
+      throw TypeError('Failed to resolve element due to unsupported data type');
+    } // TODO: Rename to `insert`
+
+  }, {
+    key: "register",
+    value: function register(_ref8) {
+      var _context14;
+
+      var kind = _ref8.kind,
+          value = _ref8.value,
+          props = _ref8.props;
+      if (!kind || typeof kind !== 'string') throw TypeError('kind must be a non-empty string');
+      if (value == null) throw TypeError('value must be defined and non-null');
+      var elem = elementize(kind, _concatInstanceProperty(_context14 = [value]).call(_context14, _toConsumableArray(props)));
+      var uid = Element.uid(elem.id);
+      var record = this.cast(_objectSpread(_objectSpread({}, elem), {}, {
+        id: uid,
+        kind: kind
+      }));
+      this.data[kind] = this.data[kind] || {};
+      this.data[kind][uid] = record;
+      this.source.elements = this.data;
+      return new Element(record);
     }
   }], [{
     key: "cast",
     value: function cast(elements) {
-      var _context14;
+      var _context15;
 
       var as = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function (_) {
         return _;
       };
       if (!elements) return null; // TODO: Validate element shape with JSON Schema
 
-      return _reduceInstanceProperty(_context14 = _Object$entries(elements)).call(_context14, function (acc, _ref8) {
-        var _context15;
+      return _reduceInstanceProperty(_context15 = _Object$entries(elements)).call(_context15, function (acc, _ref9) {
+        var _context16;
 
-        var _ref9 = _slicedToArray(_ref8, 2),
-            kind = _ref9[0],
-            ids = _ref9[1];
+        var _ref10 = _slicedToArray(_ref9, 2),
+            kind = _ref10[0],
+            ids = _ref10[1];
 
-        var elems = _reduceInstanceProperty(_context15 = _Object$entries(ids)).call(_context15, function (acc, _ref10) {
-          var _ref11 = _slicedToArray(_ref10, 2),
-              id = _ref11[0],
-              elem = _ref11[1];
+        var elems = _reduceInstanceProperty(_context16 = _Object$entries(ids)).call(_context16, function (acc, _ref11) {
+          var _ref12 = _slicedToArray(_ref11, 2),
+              id = _ref12[0],
+              elem = _ref12[1];
 
           return _objectSpread(_objectSpread({}, acc), {}, _defineProperty({}, id, as(_objectSpread({
             id: id,
@@ -795,9 +806,10 @@ var Elements = /*#__PURE__*/function () {
   }]);
 
   return Elements;
-}();
+}(); // TODO: Hoist out to Music, leaky abstraction
 
-var MUSICAL_ELEMENTS = ['note', 'chord', 'scale']; // penta
+
+var MUSICAL_ELEMENTS = ['note', 'chord', 'scale', ' penta']; // triad
 
 /**
  * Represents a single beat in a track.
@@ -812,11 +824,15 @@ var Beat = /*#__PURE__*/function () {
     _classCallCheck(this, Beat);
 
     this.data = data;
-    this.store = store; // TODO: Consider using nanoid to generate pseudo-unique beat identifiers
-    // this.id = id || nanoid()
+    this.store = store;
   }
 
   _createClass(Beat, [{
+    key: "id",
+    get: function get() {
+      return this.data.id;
+    }
+  }, {
     key: "index",
     get: function get() {
       return this.data.index;
@@ -824,79 +840,128 @@ var Beat = /*#__PURE__*/function () {
   }, {
     key: "duration",
     get: function get() {
-      return this.data.duration; // || this.data.items.reduce((acc, item) => Math.max(0, Math.min(acc, item.duration)))
+      return this.data.duration;
     }
   }, {
     key: "items",
     get: function get() {
-      return this.data.items;
+      var _context17,
+          _this3 = this;
+
+      return _mapInstanceProperty(_context17 = this.data.items).call(_context17, function (item) {
+        var _context18;
+
+        return _objectSpread(_objectSpread({}, item), {}, {
+          elements: _mapInstanceProperty(_context18 = item.elements).call(_context18, function (elem) {
+            return _this3.store.resolve(elem);
+          })
+        });
+      });
     }
   }, {
     key: "elements",
     get: function get() {
-      var _context16,
-          _this3 = this;
+      var _context19,
+          _this4 = this;
 
-      return _flatMapInstanceProperty(_context16 = this.items).call(_context16, function (_ref12) {
-        var elements = _ref12.elements;
+      return _flatMapInstanceProperty(_context19 = this.data.items).call(_context19, function (_ref13) {
+        var elements = _ref13.elements;
         return _mapInstanceProperty(elements).call(elements, function (elem) {
-          return _this3.store.resolve(elem);
+          return _this4.store.resolve(elem);
         });
       });
     }
   }, {
     key: "kinds",
     get: function get() {
-      return this.all(function (_ref13) {
-        var kind = _ref13.kind;
+      return this.all(function (_ref14) {
+        var kind = _ref14.kind;
         return kind;
       });
     }
   }, {
     key: "values",
     get: function get() {
-      return this.all(function (_ref14) {
-        var value = _ref14.value;
+      return this.all(function (_ref15) {
+        var value = _ref15.value;
         return value;
       });
+    }
+  }, {
+    key: "notes",
+    get: function get() {
+      // return Note.unite(this.elements.flatMap(({ notes }) => notes))
+      return this.notesOf(this.elements);
     } // Provides map of elements in a beat grouped by kind.
+    // FIXME: Doesn't support multiple elements of the same kind
 
   }, {
     key: "parts",
     get: function get() {
-      var _context17;
+      var _context20;
 
-      return _reduceInstanceProperty(_context17 = this.elements).call(_context17, function (parts, elem) {
+      return _reduceInstanceProperty(_context20 = this.elements).call(_context20, function (parts, elem) {
         return _objectSpread(_objectSpread({}, parts), {}, _defineProperty({}, elem.kind, elem));
       }, {});
     }
   }, {
     key: "musical",
     get: function get() {
-      var _context18;
+      var _context21;
 
-      return _everyInstanceProperty(_context18 = this.elements).call(_context18, function (elem) {
+      return _everyInstanceProperty(_context21 = this.elements).call(_context21, function (elem) {
         return elem.musical;
       });
     }
   }, {
     key: "all",
     value: function all() {
-      var _context19;
+      var _context22;
 
       var cast = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (_) {
         return _;
       };
-      return _toConsumableArray(new _Set(_mapInstanceProperty(_context19 = this.elements).call(_context19, cast)));
+      return _toConsumableArray(new _Set(_mapInstanceProperty(_context22 = this.elements).call(_context22, cast)));
     }
   }, {
-    key: "first",
-    value: function first(kind) {
-      var _context20;
+    key: "find",
+    value: function find(kind) {
+      var _context23;
 
-      return _findInstanceProperty(_context20 = this.elements).call(_context20, function (elem) {
-        return kind == elem.kind;
+      return _findInstanceProperty(_context23 = this.elements).call(_context23, function (elem) {
+        return kind === elem.kind;
       });
+    }
+  }, {
+    key: "filter",
+    value: function filter(kind) {
+      var _context24;
+
+      return _filterInstanceProperty(_context24 = this.elements).call(_context24, function (elem) {
+        return kind === elem.kind;
+      });
+    } // first (kinds) {
+
+  }, {
+    key: "either",
+    value: function either(kinds) {
+      var _this5 = this;
+
+      return _reduceInstanceProperty(kinds).call(kinds, function (acc, kind) {
+        // return acc.length ? acc : this.elements.filter(elem => kind === elem.kind)
+        return acc.length ? acc : _filterInstanceProperty(_this5).call(_this5, kind);
+      }, []); // for (kind of kinds) {
+      //   const elems = item.elements.filter(elem => kind === elem.kind)
+      //   if (elems.length) return elems
+      // }
+    }
+  }, {
+    key: "notesOf",
+    value: function notesOf(elements) {
+      return Note.unite(_flatMapInstanceProperty(elements).call(elements, function (_ref16) {
+        var notes = _ref16.notes;
+        return notes;
+      }));
     }
   }], [{
     key: "from",
@@ -905,14 +970,32 @@ var Beat = /*#__PURE__*/function () {
         return _mapInstanceProperty(beats).call(beats, function (beat) {
           return new Beat(beat, store);
         });
-      }
+      } // return new Beat(beats, store)
 
-      return new Beat(beats, store);
+
+      return [new Beat(beats, store)];
     }
   }]);
 
   return Beat;
-}(); // NOTE: Basically Track v3. Probably just rename to Track eventually.
+}(); // export class BeatItem {
+//   constructor (data, beat) {
+//     this.data = data
+//     this.beat = beat
+//   }
+//   get duration () {
+//     return this.data.duration
+//   }
+//   get elements () {
+//     return this.data.elements.map(elem => this.beat.store.resolve(elem))
+//   }
+//   add (elem) {
+//     const record = this.beat.store.register(elem)
+//     this.data.elements = this.data.elements.concat(record.id)
+//     return this
+//   }
+// }
+// NOTE: Basically Track v3. Probably just rename to Track eventually.
 
 
 var Music = /*#__PURE__*/function () {
@@ -928,7 +1011,7 @@ var Music = /*#__PURE__*/function () {
           notes: Note.all(elem.kind, elem.value)
         });
       }
-    }) : null;
+    }) : null; // console.log('COMPOSED DATA (2)', this.data)
   }
 
   _createClass(Music, [{
@@ -974,13 +1057,13 @@ var Music = /*#__PURE__*/function () {
   }, {
     key: "notes",
     get: function get() {
-      var _context21;
+      var _context25;
 
-      return Note.unite(_flatMapInstanceProperty(_context21 = this.beats).call(_context21, function (beat) {
-        var _context22;
+      return Note.unite(_flatMapInstanceProperty(_context25 = this.beats).call(_context25, function (beat) {
+        var _context26;
 
-        return _flatMapInstanceProperty(_context22 = beat.elements).call(_context22, function (_ref15) {
-          var notes = _ref15.notes;
+        return _flatMapInstanceProperty(_context26 = beat.elements).call(_context26, function (_ref17) {
+          var notes = _ref17.notes;
           return notes;
         });
       }));
@@ -988,9 +1071,9 @@ var Music = /*#__PURE__*/function () {
   }, {
     key: "musical",
     get: function get() {
-      var _context23;
+      var _context27;
 
-      return _everyInstanceProperty(_context23 = this.beats).call(_context23, function (beat) {
+      return _everyInstanceProperty(_context27 = this.beats).call(_context27, function (beat) {
         return beat.musical;
       });
     } // get playable () {
@@ -1015,21 +1098,51 @@ var Music = /*#__PURE__*/function () {
   }, {
     key: "at",
     value: function at(duration) {
-      var _context24,
-          _this4 = this,
-          _context25;
+      var _context28,
+          _this6 = this,
+          _context29;
 
       var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
       var cursor = this.durations.at(duration, is);
       return {
         beat: this.beats[cursor.beat],
-        play: _mapInstanceProperty(_context24 = cursor.play || []).call(_context24, function (elem) {
-          return _this4.store.resolve(elem);
+        play: _mapInstanceProperty(_context28 = cursor.play || []).call(_context28, function (elem) {
+          return _this6.store.resolve(elem);
         }),
-        stop: _mapInstanceProperty(_context25 = cursor.stop || []).call(_context25, function (elem) {
-          return _this4.store.resolve(elem);
+        stop: _mapInstanceProperty(_context29 = cursor.stop || []).call(_context29, function (elem) {
+          return _this6.store.resolve(elem);
         })
       };
+    } // add (id, elem) {
+    // insert
+    // TODO: Probably move to `rebach` package
+
+  }, {
+    key: "add",
+    value: function add(record) {
+      var _context30, _context31;
+
+      var beat = _findInstanceProperty(_context30 = this.beats).call(_context30, function (beat) {
+        return beat.id == record.beat;
+      });
+
+      var elem = this.store.register(record.elem);
+      console.log('adding beat', record, beat, _mapInstanceProperty(_context31 = this.beats).call(_context31, function (_ref18) {
+        var id = _ref18.id;
+        return id;
+      }));
+      this.data.beats[beat.id].items[record.item || 0].elements.push(elem); // const item = this.data.beats[beat].items[record.item || 0]
+      // const stop = this.durations.cyclic(beat.index + item.duration)
+      // beat
+
+      this.data.steps[beat.index][0].push(elem.id); // play
+
+      this.data.steps[beat.index][1].push(elem.id); // stop
+
+      this.data.steps[beat.index][2].push(elem.id); // TODO: Add to `steps`!
+      // return this
+
+      return new Element(elem);
     }
   }, {
     key: "adjust",

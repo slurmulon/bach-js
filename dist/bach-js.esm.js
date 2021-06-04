@@ -1,996 +1,1192 @@
-import _Object$getOwnPropertySymbols from "@babel/runtime-corejs3/core-js-stable/object/get-own-property-symbols";
-import _Object$getOwnPropertyDescriptor from "@babel/runtime-corejs3/core-js-stable/object/get-own-property-descriptor";
-import _forEachInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/for-each";
-import _Object$getOwnPropertyDescriptors from "@babel/runtime-corejs3/core-js-stable/object/get-own-property-descriptors";
-import _Object$defineProperties from "@babel/runtime-corejs3/core-js-stable/object/define-properties";
-import _Object$defineProperty from "@babel/runtime-corejs3/core-js-stable/object/define-property";
-import _defineProperty from "@babel/runtime-corejs3/helpers/esm/defineProperty";
-import _toArray from "@babel/runtime-corejs3/helpers/esm/toArray";
-import _toConsumableArray from "@babel/runtime-corejs3/helpers/esm/toConsumableArray";
-import _classCallCheck from "@babel/runtime-corejs3/helpers/esm/classCallCheck";
-import _createClass from "@babel/runtime-corejs3/helpers/esm/createClass";
-import _slicedToArray from "@babel/runtime-corejs3/helpers/esm/slicedToArray";
-import _typeof from "@babel/runtime-corejs3/helpers/esm/typeof";
+var _concatInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/instance/concat");
 
-function ownKeys(object, enumerableOnly) { var keys = _Object$keys(object); if (_Object$getOwnPropertySymbols) { var symbols = _Object$getOwnPropertySymbols(object); if (enumerableOnly) { symbols = _filterInstanceProperty(symbols).call(symbols, function (sym) { return _Object$getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+var _sliceInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/instance/slice");
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context26; _forEachInstanceProperty(_context26 = ownKeys(Object(source), true)).call(_context26, function (key) { _defineProperty(target, key, source[key]); }); } else if (_Object$getOwnPropertyDescriptors) { _Object$defineProperties(target, _Object$getOwnPropertyDescriptors(source)); } else { var _context27; _forEachInstanceProperty(_context27 = ownKeys(Object(source))).call(_context27, function (key) { _Object$defineProperty(target, key, _Object$getOwnPropertyDescriptor(source, key)); }); } } return target; }
+var _mapInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/instance/map");
 
-import _concatInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/concat";
-import _sliceInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/slice";
-import _mapInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/map";
-import _filterInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/filter";
-import _includesInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/includes";
-import _Set from "@babel/runtime-corejs3/core-js-stable/set";
-import _sortInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/sort";
-import _flatMapInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/flat-map";
-import _Object$values from "@babel/runtime-corejs3/core-js-stable/object/values";
-import _Object$keys from "@babel/runtime-corejs3/core-js-stable/object/keys";
-import _reduceInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/reduce";
-import _Object$entries from "@babel/runtime-corejs3/core-js-stable/object/entries";
-import _everyInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/every";
-import _findInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/find";
-import _Array$isArray from "@babel/runtime-corejs3/core-js-stable/array/is-array";
-import { scale, Scale, chord, Chord, note, Note as Note$1 } from 'teoria';
-import schema from 'bach-json-schema';
-import Ajv from 'ajv';
-var ajv = new Ajv();
-ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
-ajv.compile(schema); // import bach from 'bach-cljs'
+var _filterInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/instance/filter");
 
-var bach = require('bach-cljs'); //.default
-// Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
-// Main entry point for integrating with core bach ClojureScript library.
+var _includesInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/instance/includes");
 
+var _sortInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/instance/sort");
 
-var compose = function compose(source) {
-  if (typeof source === 'string') {
-    return bach(source);
-  }
+var _flatMapInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/instance/flat-map");
 
-  if (_typeof(source) === 'object') {
-    // FIXME: Enable again once bach-json-schema is updated to v3
-    // return valid(source)
-    return source;
-  }
+var _valuesInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/values");
 
-  throw TypeError("Unsupported Bach.JSON data type (".concat(_typeof(source), "). Must be a bach.json object or raw bach string."));
-};
+var _keysInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/keys");
 
-function scaleify(value) {
-  var _context;
+var _reduceInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/instance/reduce");
 
-  if (typeof value === 'string') {
-    var _value$split = value.split(' '),
-        _value$split2 = _slicedToArray(_value$split, 2),
-        tonic = _value$split2[0],
-        type = _value$split2[1]; // TODO: Potentially use type.toLowerCase instead, to guarantee smooth interopability
+var _entriesInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/entries");
 
+var _everyInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/instance/every");
 
-    return scale(tonic, type.toLowerCase());
-  } else if (value instanceof Scale) {
-    return value;
-  }
+var _findInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/instance/find");
 
-  throw TypeError(_concatInstanceProperty(_context = "Unknown scale type (".concat(_typeof(value), "): ")).call(_context, value));
-}
+var _Object$defineProperty = require("@babel/runtime-corejs3/core-js-stable/object/define-property");
 
-function chordify(value) {
-  var _context2;
+var _Object$keys2 = require("@babel/runtime-corejs3/core-js-stable/object/keys");
 
-  if (typeof value === 'string') {
-    return chord(value);
-  } else if (value instanceof Chord) {
-    return value;
-  }
+var _Object$getOwnPropertySymbols = require("@babel/runtime-corejs3/core-js-stable/object/get-own-property-symbols");
 
-  throw TypeError(_concatInstanceProperty(_context2 = "Unknown chord type (".concat(_typeof(value), "): ")).call(_context2, value));
-}
+var _Object$getOwnPropertyDescriptor = require("@babel/runtime-corejs3/core-js-stable/object/get-own-property-descriptor");
 
-function scaleToString(scale) {
-  var _context3, _context4;
+var _forEachInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/for-each");
 
-  return _concatInstanceProperty(_context3 = "".concat(_sliceInstanceProperty(_context4 = scale.tonic.toString()).call(_context4, 0, 2), " ")).call(_context3, scale.name);
-}
+var _Object$getOwnPropertyDescriptors = require("@babel/runtime-corejs3/core-js-stable/object/get-own-property-descriptors");
 
-function notesInChord(value) {
-  var _context5;
+var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/object/define-properties");
 
-  return _mapInstanceProperty(_context5 = chordify(value).notes()).call(_context5, function (note) {
-    return Note.valueOf(note);
-  });
-}
-
-function notesInScale(value) {
-  var _context6;
-
-  return _mapInstanceProperty(_context6 = scaleify(value).notes()).call(_context6, function (note) {
-    return Note.valueOf(note);
-  });
-}
-
-function notesIn(kind, value) {
-  var notes = notesOf[kind];
-
-  if (notes) {
-    return notes(value);
-  }
-
-  return [];
-} // TODO: Allow custom note resolvers to be registered globally or locally so people can easily define their own semantics
-//  - Could call this `itemsOf` to be more generic and flexible
-
-
-var notesOf = {
-  note: function note(value) {
-    return value;
-  },
-  chord: function chord(value) {
-    return notesInChord(value);
-  },
-  scale: function scale(value) {
-    return notesInScale(value);
-  },
-  penta: function penta(value) {
-    return notesInScale(value);
-  }
-}; // TODO: Note.valueOf
-
-function notesIntersect(left, right) {
-  return _filterInstanceProperty(left).call(left, function (note) {
-    return _includesInstanceProperty(right).call(right, note);
-  });
-} // TODO: Use empty-schema (or another approach) to return default bach.json ehaders instead of empty object
-// export const headersOf = source => (source && source.headers) || {}
-// TODO: Remove
-
-
-var unitsOf = function unitsOf(source) {
-  return {
-    step: source.units.beat.step,
-    pulse: source.units.beat.pulse,
-    bar: source.units.bar.step,
-    ms: 1 / source.units.time.bar
-  };
-};
-
-var timesOf = function timesOf(source) {
-  var _source$units$time = source.units.time,
-      step = _source$units$time.step,
-      pulse = _source$units$time.pulse,
-      bar = _source$units$time.bar;
-  return {
-    ms: 1,
-    second: 1000,
-    step: step,
-    pulse: pulse,
-    bar: bar,
-    's': step,
-    'p': pulse,
-    'm': bar,
-    '2n': bar / 2,
-    '4n': bar / 4,
-    '8n': bar / 8,
-    '16n': bar / 16,
-    '32n': bar / 32,
-    '64n': bar / 64,
-    '4up': bar - bar / 4,
-    '8up': bar - bar / 8
-  };
-};
-
-var Note = /*#__PURE__*/function () {
-  function Note() {
-    _classCallCheck(this, Note);
-  }
-
-  _createClass(Note, null, [{
-    key: "parse",
-    value: function parse(value) {
-      var _context7;
-
-      if (typeof value === 'string') {
-        return note(value);
-      } else if (_typeof(value) === 'object' || value instanceof Note$1) {
-        return value;
-      }
-
-      throw TypeError(_concatInstanceProperty(_context7 = "Unknown note type (".concat(_typeof(value), "): ")).call(_context7, value));
-    }
-  }, {
-    key: "all",
-    value: function all(kind, note) {
-      try {
-        return notesIn(kind, note);
-      } catch (e) {
-        return [];
-      }
-    }
-  }, {
-    key: "hash",
-    value: function hash(note) {
-      return Note.parse(note).chroma();
-    }
-  }, {
-    key: "pitchOf",
-    value: function pitchOf(note) {
-      return Note.valueOf(note);
-    } // TODO: Consider using chroma instead
-    // TODO: Use this in nek, and anywhere else this same logic might be used
-
-  }, {
-    key: "valueOf",
-    value: function valueOf(note) {
-      return Note.parse(note).scientific() // .toLowerCase()
-      // TODO: Centralize! Replace everywhere in bach-sheet, nek, etc.
-      .replace(/[0-9]+$/, '');
-    }
-  }, {
-    key: "valuesOf",
-    value: function valuesOf(notes) {
-      return _mapInstanceProperty(notes).call(notes, Note.valueOf);
-    }
-  }, {
-    key: "generalize",
-    value: function generalize(note$1) {
-      return note(Note.valueOf(note$1));
-    }
-  }, {
-    key: "unite",
-    value: function unite() {
-      var notes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-      return _toConsumableArray(new _Set(Note.valuesOf(notes)));
-    }
-  }, {
-    key: "equals",
-    value: function equals(left, right) {
-      return Note.hash(left) == Note.hash(right);
-    }
-  }]);
-
-  return Note;
-}();
-/**
- * Recursively calculates the greatest common denominator (GCD) between two values
- *
- * @param {Number} a
- * @param {Number} b
- * @returns {Number}
- */
-
-
-function gcd(a, b) {
-  if (b == 0) {
-    return a;
-  }
-
-  return gcd(b, a % b);
-}
-/**
- * Modifies a value so that it is always between the provided min and max
- *
- * @param {Number} value
- * @param {Number} min
- * @param {Number} max
- * @returns {Number}
- */
-
-
-function _clamp(value) {
-  var min = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-  var max = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
-  return Math.min(max, Math.max(min, value));
-}
-/**
- * Interpolation function returning the value between x and y at a specific ratio
- *
- * @param {Number} value
- * @param {Number} x
- * @param {Number} y
- * @returns {Number}
- */
-
-
-function lerp(ratio, x, y) {
-  return x * (1 - ratio) + y * ratio;
-}
-/**
- * Interpolation function returning the ratio of a value clamped between x and y
- *
- * @param {Number} value
- * @param {Number} x
- * @param {Number} y
- * @returns {Number}
- */
-
-
-function invlerp(value, x, y) {
-  return _clamp((value - x) / (y - x));
-}
-/**
- * Determines the element found in an array at a given ratio
- *
- * @param {Float} ratio
- * @param {Array} all
- */
-
-
-function steps(ratio, all) {
-  ratio %= 1;
-  if (ratio < 0) ratio += 1;
-  return all[Math.floor(ratio * all.length)];
-}
-
-var Durations = /*#__PURE__*/function () {
-  function Durations(source) {
-    _classCallCheck(this, Durations);
-
-    this.source = compose(source);
-  }
-
-  _createClass(Durations, [{
-    key: "steps",
-    get: function get() {
-      // return this.source.signals
-      return this.source.steps;
-    }
-  }, {
-    key: "metrics",
-    get: function get() {
-      return this.source.metrics;
-    }
-  }, {
-    key: "min",
-    get: function get() {
-      return this.metrics.min;
-    }
-  }, {
-    key: "max",
-    get: function get() {
-      return this.metrics.max;
-    }
-  }, {
-    key: "total",
-    get: function get() {
-      return this.metrics.total;
-    }
-  }, {
-    key: "step",
-    get: function get() {
-      return this.units.step;
-    }
-  }, {
-    key: "pulse",
-    get: function get() {
-      return this.units.pulse;
-    }
-  }, {
-    key: "bar",
-    get: function get() {
-      return this.units.bar;
-    }
-  }, {
-    key: "units",
-    get: function get() {
-      // TODO: Remove, just return this.units
-      return unitsOf(this.source);
-    }
-  }, {
-    key: "times",
-    get: function get() {
-      return timesOf(this.source);
-    }
-  }, {
-    key: "interval",
-    get: function get() {
-      return this.times.step;
-    }
-  }, {
-    key: "cast",
-    value: function cast(duration) {
-      var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref$is = _ref.is,
-          is = _ref$is === void 0 ? 'step' : _ref$is,
-          _ref$as = _ref.as,
-          as = _ref$as === void 0 ? 'pulse' : _ref$as;
-
-      return duration / (this.times[as] / this.times[is]);
-    }
-  }, {
-    key: "metronize",
-    value: function metronize(duration) {
-      var _ref2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref2$is = _ref2.is,
-          is = _ref2$is === void 0 ? 'ms' : _ref2$is,
-          _ref2$as = _ref2.as,
-          as = _ref2$as === void 0 ? 'pulse' : _ref2$as;
-
-      var index = this.cast(duration, {
-        is: is,
-        as: as
-      });
-      var bar = this.cast(this.bar, {
-        as: as
-      });
-      return Math.floor(index % bar);
-    }
-  }, {
-    key: "ratio",
-    value: function ratio(duration) {
-      var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
-      return this.cast(duration, {
-        is: is,
-        as: 'step'
-      }) / this.total;
-    }
-  }, {
-    key: "percentage",
-    value: function percentage(duration) {
-      var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
-      return this.ratio(duration, is) * 100;
-    }
-  }, {
-    key: "clamp",
-    value: function clamp(duration) {
-      var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref3$is = _ref3.is,
-          is = _ref3$is === void 0 ? 'step' : _ref3$is,
-          _ref3$min = _ref3.min,
-          min = _ref3$min === void 0 ? 0 : _ref3$min,
-          max = _ref3.max;
-
-      var step = this.cast(duration, {
-        is: is,
-        as: 'step'
-      });
-      var head = this.cast(min || 0, {
-        is: is,
-        as: 'step'
-      });
-      var tail = this.cast(max || this.total, {
-        is: is,
-        as: 'step'
-      });
-      return _clamp(step, head, tail);
-    }
-  }, {
-    key: "cyclic",
-    value: function cyclic(duration) {
-      var _ref4 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref4$is = _ref4.is,
-          is = _ref4$is === void 0 ? 'step' : _ref4$is,
-          _ref4$min = _ref4.min,
-          min = _ref4$min === void 0 ? 0 : _ref4$min,
-          max = _ref4.max;
-
-      this.cast(duration, {
-        is: is,
-        as: 'step'
-      });
-      var head = this.cast(min || 0, {
-        is: is,
-        as: 'step'
-      });
-      var tail = this.cast(max || this.total, {
-        is: is,
-        as: 'step'
-      });
-      var key = duration >= head ? duration : duration + tail;
-      return key % tail;
-    }
-  }, {
-    key: "interpolate",
-    value: function interpolate(ratio) {
-      var _ref5 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref5$is = _ref5.is,
-          is = _ref5$is === void 0 ? 'step' : _ref5$is,
-          _ref5$min = _ref5.min,
-          min = _ref5$min === void 0 ? 0 : _ref5$min,
-          max = _ref5.max;
-
-      var head = this.cast(min || 0, {
-        is: is,
-        as: 'step'
-      });
-      var tail = this.cast(max || this.total, {
-        is: is,
-        as: 'step'
-      });
-      return lerp(ratio, head, tail);
-    }
-  }, {
-    key: "at",
-    value: function at(duration) {
-      var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
-      var step = this.cast(duration, {
-        is: is,
-        as: 'step'
-      });
-      var index = this.cyclic(step);
-      var state = this.steps[index];
-      console.log('bach state', state);
-
-      var _state = _slicedToArray(state, 3),
-          _state$ = _toArray(_state[0]),
-          beat = _state$[0],
-          elem = _sliceInstanceProperty(_state$).call(_state$, 1),
-          play = _state[1],
-          stop = _state[2];
-
-      return {
-        beat: beat,
-        // TODO: Add once tests are updated
-        // elem,
-        play: play,
-        stop: stop,
-        index: index
-      }; // return Object.entries(this.steps)
-      //   .reduce((acc, [key, steps]) => ({
-      //     ...acc,
-      //     [key]: steps[index]
-      //   }), { index })
-    } // TODO: Either replace or improve via inspiration with this:
-    // @see: https://tonejs.github.io/docs/r13/Time#quantize
-
-  }, {
-    key: "rhythmic",
-    value: function rhythmic(duration) {
-      var _context8,
-          _this = this;
-
-      var _ref6 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref6$is = _ref6.is,
-          is = _ref6$is === void 0 ? 'ms' : _ref6$is,
-          _ref6$units = _ref6.units,
-          units = _ref6$units === void 0 ? ['8n', '4n'] : _ref6$units,
-          _ref6$calc = _ref6.calc,
-          calc = _ref6$calc === void 0 ? 'floor' : _ref6$calc,
-          _ref6$size = _ref6.size,
-          size = _ref6$size === void 0 ? 'min' : _ref6$size;
-
-      var durations = _sortInstanceProperty(_context8 = _mapInstanceProperty(units).call(units, function (unit) {
-        var value = _this.cast(duration, {
-          is: is,
-          as: unit
-        });
-
-        var result = Math[calc](value);
-        return _this.cast(result, {
-          is: unit,
-          as: is
-        });
-      })).call(_context8, function (a, b) {
-        return Math.abs(duration - a) - Math.abs(duration - b);
-      });
-
-      return Math[size].apply(Math, _toConsumableArray(durations));
-    }
-  }]);
-
-  return Durations;
-}();
-/**
- * Represents a single playable element (Note, Scale, Chord, Mode, Triad or Rest)
- */
-
-
-var Element = /*#__PURE__*/function () {
-  function Element(data) {
-    _classCallCheck(this, Element);
-
-    this.data = data;
-  }
-
-  _createClass(Element, [{
-    key: "id",
-    get: function get() {
-      var _context9;
-
-      return _concatInstanceProperty(_context9 = "".concat(this.data.kind, ".")).call(_context9, this.data.id);
-    }
-  }, {
-    key: "uid",
-    get: function get() {
-      return Element.uid(this.id);
-    }
-  }, {
-    key: "value",
-    get: function get() {
-      return this.data.value;
-    }
-  }, {
-    key: "props",
-    get: function get() {
-      return this.data.props;
-    }
-  }, {
-    key: "kind",
-    get: function get() {
-      return this.data.kind; //.toLowerCase()
-    }
-  }, {
-    key: "duration",
-    get: function get() {
-      return this.data.duration;
-    }
-  }, {
-    key: "notes",
-    get: function get() {
-      return Note.all(this.kind, this.value);
-    }
-  }, {
-    key: "musical",
-    get: function get() {
-      return _includesInstanceProperty(MUSICAL_ELEMENTS).call(MUSICAL_ELEMENTS, this.kind);
-    }
-  }], [{
-    key: "uid",
-    value: function uid(id) {
-      return id.split('.').pop();
-    }
-  }]);
-
-  return Element;
-}();
-
-var Elements = /*#__PURE__*/function () {
-  function Elements() {
-    var _ref7 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        source = _ref7.source,
-        store = _ref7.store,
-        cast = _ref7.cast;
-
-    _classCallCheck(this, Elements);
-
-    this.source = compose(source);
-
-    this.cast = cast || function (_) {
-      return _;
+(function (global, factory) {
+  if (typeof define === "function" && define.amd) {
+    define(["exports", "@babel/runtime-corejs3/core-js-stable/instance/concat", "@babel/runtime-corejs3/core-js-stable/instance/slice", "@babel/runtime-corejs3/core-js-stable/instance/map", "@babel/runtime-corejs3/core-js-stable/instance/filter", "@babel/runtime-corejs3/core-js-stable/instance/includes", "@babel/runtime-corejs3/core-js-stable/set", "@babel/runtime-corejs3/core-js-stable/instance/sort", "@babel/runtime-corejs3/core-js-stable/instance/flat-map", "@babel/runtime-corejs3/core-js-stable/object/values", "@babel/runtime-corejs3/core-js-stable/object/keys", "@babel/runtime-corejs3/core-js-stable/instance/reduce", "@babel/runtime-corejs3/core-js-stable/object/entries", "@babel/runtime-corejs3/core-js-stable/instance/every", "@babel/runtime-corejs3/core-js-stable/instance/find", "@babel/runtime-corejs3/core-js-stable/array/is-array", "@babel/runtime-corejs3/helpers/esm/defineProperty", "@babel/runtime-corejs3/helpers/esm/toArray", "@babel/runtime-corejs3/helpers/esm/toConsumableArray", "@babel/runtime-corejs3/helpers/esm/classCallCheck", "@babel/runtime-corejs3/helpers/esm/createClass", "@babel/runtime-corejs3/helpers/esm/slicedToArray", "@babel/runtime-corejs3/helpers/esm/typeof", "teoria"], factory);
+  } else if (typeof exports !== "undefined") {
+    factory(exports, require("@babel/runtime-corejs3/core-js-stable/instance/concat"), require("@babel/runtime-corejs3/core-js-stable/instance/slice"), require("@babel/runtime-corejs3/core-js-stable/instance/map"), require("@babel/runtime-corejs3/core-js-stable/instance/filter"), require("@babel/runtime-corejs3/core-js-stable/instance/includes"), require("@babel/runtime-corejs3/core-js-stable/set"), require("@babel/runtime-corejs3/core-js-stable/instance/sort"), require("@babel/runtime-corejs3/core-js-stable/instance/flat-map"), require("@babel/runtime-corejs3/core-js-stable/object/values"), require("@babel/runtime-corejs3/core-js-stable/object/keys"), require("@babel/runtime-corejs3/core-js-stable/instance/reduce"), require("@babel/runtime-corejs3/core-js-stable/object/entries"), require("@babel/runtime-corejs3/core-js-stable/instance/every"), require("@babel/runtime-corejs3/core-js-stable/instance/find"), require("@babel/runtime-corejs3/core-js-stable/array/is-array"), require("@babel/runtime-corejs3/helpers/esm/defineProperty"), require("@babel/runtime-corejs3/helpers/esm/toArray"), require("@babel/runtime-corejs3/helpers/esm/toConsumableArray"), require("@babel/runtime-corejs3/helpers/esm/classCallCheck"), require("@babel/runtime-corejs3/helpers/esm/createClass"), require("@babel/runtime-corejs3/helpers/esm/slicedToArray"), require("@babel/runtime-corejs3/helpers/esm/typeof"), require("teoria"));
+  } else {
+    var mod = {
+      exports: {}
     };
+    factory(mod.exports, _concatInstanceProperty2(global), _sliceInstanceProperty2(global), _mapInstanceProperty2(global), _filterInstanceProperty2(global), _includesInstanceProperty2(global), global.set, _sortInstanceProperty2(global), _flatMapInstanceProperty2(global), _valuesInstanceProperty(global), _keysInstanceProperty(global), _reduceInstanceProperty2(global), _entriesInstanceProperty(global), _everyInstanceProperty2(global), _findInstanceProperty2(global), global.isArray, global.defineProperty, global.toArray, global.toConsumableArray, global.classCallCheck, global.createClass, global.slicedToArray, global._typeof, global.teoria);
+    global.unknown = mod.exports;
+  }
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _concat, _slice, _map, _filter, _includes, _set, _sort, _flatMap, _values, _keys, _reduce, _entries, _every, _find, _isArray, _defineProperty2, _toArray2, _toConsumableArray2, _classCallCheck2, _createClass2, _slicedToArray2, _typeof2, _teoria) {
+  "use strict";
 
-    this.data = store || Elements.cast(this.source.elements, cast);
+  var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
+
+  _Object$defineProperty(_exports, "__esModule", {
+    value: true
+  });
+
+  _exports.chordify = chordify;
+  _exports.clamp = _clamp;
+  _exports.gcd = gcd;
+  _exports.invlerp = invlerp;
+  _exports.lerp = lerp;
+  _exports.notesIn = notesIn;
+  _exports.notesInChord = notesInChord;
+  _exports.notesInScale = notesInScale;
+  _exports.notesIntersect = notesIntersect;
+  _exports.scaleToString = scaleToString;
+  _exports.scaleify = scaleify;
+  _exports.steps = steps;
+  _exports.unitsOf = _exports.timesOf = _exports.notesOf = _exports.compose = _exports.Note = _exports.Music = _exports.MUSICAL_ELEMENTS = _exports.Elements = _exports.Element = _exports.Durations = void 0;
+  _concat = _interopRequireDefault(_concat);
+  _slice = _interopRequireDefault(_slice);
+  _map = _interopRequireDefault(_map);
+  _filter = _interopRequireDefault(_filter);
+  _includes = _interopRequireDefault(_includes);
+  _set = _interopRequireDefault(_set);
+  _sort = _interopRequireDefault(_sort);
+  _flatMap = _interopRequireDefault(_flatMap);
+  _values = _interopRequireDefault(_values);
+  _keys = _interopRequireDefault(_keys);
+  _reduce = _interopRequireDefault(_reduce);
+  _entries = _interopRequireDefault(_entries);
+  _every = _interopRequireDefault(_every);
+  _find = _interopRequireDefault(_find);
+  _isArray = _interopRequireDefault(_isArray);
+  _defineProperty2 = _interopRequireDefault(_defineProperty2);
+  _toArray2 = _interopRequireDefault(_toArray2);
+  _toConsumableArray2 = _interopRequireDefault(_toConsumableArray2);
+  _classCallCheck2 = _interopRequireDefault(_classCallCheck2);
+  _createClass2 = _interopRequireDefault(_createClass2);
+  _slicedToArray2 = _interopRequireDefault(_slicedToArray2);
+  _typeof2 = _interopRequireDefault(_typeof2);
+
+  function ownKeys(object, enumerableOnly) { var keys = _Object$keys2(object); if (_Object$getOwnPropertySymbols) { var symbols = _Object$getOwnPropertySymbols(object); if (enumerableOnly) { symbols = _filterInstanceProperty2(symbols).call(symbols, function (sym) { return _Object$getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+  function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context32; _forEachInstanceProperty(_context32 = ownKeys(Object(source), true)).call(_context32, function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (_Object$getOwnPropertyDescriptors) { _Object$defineProperties(target, _Object$getOwnPropertyDescriptors(source)); } else { var _context33; _forEachInstanceProperty(_context33 = ownKeys(Object(source))).call(_context33, function (key) { _Object$defineProperty(target, key, _Object$getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+  var bach = require('bach-cljs'); //.default
+  // Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
+  // Main entry point for integrating with core bach ClojureScript library.
+
+
+  var compose = function compose(source) {
+    if (typeof source === 'string') {
+      return bach.compose(source);
+    }
+
+    if ((0, _typeof2["default"])(source) === 'object') {
+      // FIXME: Enable again once bach-json-schema is updated to v3
+      // return valid(source)
+      return source;
+    }
+
+    throw TypeError("Unsupported Bach.JSON data type (".concat((0, _typeof2["default"])(source), "). Must be a bach.json object or raw bach string."));
+  };
+
+  _exports.compose = compose;
+
+  function scaleify(value) {
+    var _context;
+
+    if (typeof value === 'string') {
+      var _value$split = value.split(' '),
+          _value$split2 = (0, _slicedToArray2["default"])(_value$split, 2),
+          tonic = _value$split2[0],
+          type = _value$split2[1]; // TODO: Potentially use type.toLowerCase instead, to guarantee smooth interopability
+
+
+      return (0, _teoria.scale)(tonic, type.toLowerCase());
+    } else if (value instanceof _teoria.Scale) {
+      return value;
+    }
+
+    throw TypeError((0, _concat["default"])(_context = "Unknown scale type (".concat((0, _typeof2["default"])(value), "): ")).call(_context, value));
   }
 
-  _createClass(Elements, [{
-    key: "all",
-    get: function get() {
-      var _context10,
-          _this2 = this;
+  function chordify(value) {
+    var _context2;
 
-      return _flatMapInstanceProperty(_context10 = this.kinds).call(_context10, function (kind) {
-        var _context11;
+    if (typeof value === 'string') {
+      return (0, _teoria.chord)(value);
+    } else if (value instanceof _teoria.Chord) {
+      return value;
+    }
 
-        return _mapInstanceProperty(_context11 = _Object$values(_this2.data[kind])).call(_context11, function (elem) {
-          return new Element(elem);
+    throw TypeError((0, _concat["default"])(_context2 = "Unknown chord type (".concat((0, _typeof2["default"])(value), "): ")).call(_context2, value));
+  }
+
+  function scaleToString(scale) {
+    var _context3, _context4;
+
+    return (0, _concat["default"])(_context3 = "".concat((0, _slice["default"])(_context4 = scale.tonic.toString()).call(_context4, 0, 2), " ")).call(_context3, scale.name);
+  }
+
+  function notesInChord(value) {
+    var _context5;
+
+    return (0, _map["default"])(_context5 = chordify(value).notes()).call(_context5, function (note) {
+      return Note.valueOf(note);
+    });
+  }
+
+  function notesInScale(value) {
+    var _context6;
+
+    return (0, _map["default"])(_context6 = scaleify(value).notes()).call(_context6, function (note) {
+      return Note.valueOf(note);
+    });
+  }
+
+  function notesIn(kind, value) {
+    var notes = notesOf[kind];
+
+    if (notes) {
+      return notes(value);
+    }
+
+    return [];
+  } // TODO: Allow custom note resolvers to be registered globally or locally so people can easily define their own semantics
+  //  - Could call this `itemsOf` to be more generic and flexible
+
+
+  var notesOf = {
+    note: function note(value) {
+      return value;
+    },
+    chord: function chord(value) {
+      return notesInChord(value);
+    },
+    scale: function scale(value) {
+      return notesInScale(value);
+    },
+    penta: function penta(value) {
+      return notesInScale(value);
+    }
+  }; // TODO: Note.valueOf
+
+  _exports.notesOf = notesOf;
+
+  function notesIntersect(left, right) {
+    return (0, _filter["default"])(left).call(left, function (note) {
+      return (0, _includes["default"])(right).call(right, note);
+    });
+  } // TODO: Use empty-schema (or another approach) to return default bach.json ehaders instead of empty object
+  // export const headersOf = source => (source && source.headers) || {}
+  // TODO: Remove
+
+
+  var unitsOf = function unitsOf(source) {
+    return {
+      step: source.units.beat.step,
+      pulse: source.units.beat.pulse,
+      bar: source.units.bar.step,
+      ms: 1 / source.units.time.bar
+    };
+  };
+
+  _exports.unitsOf = unitsOf;
+
+  var timesOf = function timesOf(source) {
+    var _source$units$time = source.units.time,
+        step = _source$units$time.step,
+        pulse = _source$units$time.pulse,
+        bar = _source$units$time.bar;
+    return {
+      ms: 1,
+      second: 1000,
+      step: step,
+      pulse: pulse,
+      bar: bar,
+      's': step,
+      'p': pulse,
+      'm': bar,
+      '2n': bar / 2,
+      '4n': bar / 4,
+      '8n': bar / 8,
+      '16n': bar / 16,
+      '32n': bar / 32,
+      '64n': bar / 64,
+      '4up': bar - bar / 4,
+      '8up': bar - bar / 8
+    };
+  };
+
+  _exports.timesOf = timesOf;
+
+  var Note = /*#__PURE__*/function () {
+    function Note() {
+      (0, _classCallCheck2["default"])(this, Note);
+    }
+
+    (0, _createClass2["default"])(Note, null, [{
+      key: "parse",
+      value: function parse(value) {
+        var _context7;
+
+        if (typeof value === 'string') {
+          return (0, _teoria.note)(value);
+        } else if ((0, _typeof2["default"])(value) === 'object' || value instanceof _teoria.Note) {
+          return value;
+        }
+
+        throw TypeError((0, _concat["default"])(_context7 = "Unknown note type (".concat((0, _typeof2["default"])(value), "): ")).call(_context7, value));
+      }
+    }, {
+      key: "all",
+      value: function all(kind, note) {
+        try {
+          return notesIn(kind, note);
+        } catch (e) {
+          return [];
+        }
+      }
+    }, {
+      key: "hash",
+      value: function hash(note) {
+        return Note.parse(note).chroma();
+      }
+    }, {
+      key: "pitchOf",
+      value: function pitchOf(note) {
+        return Note.valueOf(note);
+      } // TODO: Consider using chroma instead
+      // TODO: Use this in nek, and anywhere else this same logic might be used
+
+    }, {
+      key: "valueOf",
+      value: function valueOf(note) {
+        return Note.parse(note).scientific() // .toLowerCase()
+        // TODO: Centralize! Replace everywhere in bach-sheet, nek, etc.
+        .replace(/[0-9]+$/, '');
+      }
+    }, {
+      key: "valuesOf",
+      value: function valuesOf(notes) {
+        return (0, _map["default"])(notes).call(notes, Note.valueOf);
+      }
+    }, {
+      key: "generalize",
+      value: function generalize(note$1) {
+        return (0, _teoria.note)(Note.valueOf(note$1));
+      }
+    }, {
+      key: "unite",
+      value: function unite() {
+        var notes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+        return (0, _toConsumableArray2["default"])(new _set["default"](Note.valuesOf(notes)));
+      }
+    }, {
+      key: "equals",
+      value: function equals(left, right) {
+        return Note.hash(left) == Note.hash(right);
+      }
+    }]);
+    return Note;
+  }();
+  /**
+   * Recursively calculates the greatest common denominator (GCD) between two values
+   *
+   * @param {Number} a
+   * @param {Number} b
+   * @returns {Number}
+   */
+
+
+  _exports.Note = Note;
+
+  function gcd(a, b) {
+    if (b == 0) {
+      return a;
+    }
+
+    return gcd(b, a % b);
+  }
+  /**
+   * Modifies a value so that it is always between the provided min and max
+   *
+   * @param {Number} value
+   * @param {Number} min
+   * @param {Number} max
+   * @returns {Number}
+   */
+
+
+  function _clamp(value) {
+    var min = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    var max = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+    return Math.min(max, Math.max(min, value));
+  }
+  /**
+   * Interpolation function returning the value between x and y at a specific ratio
+   *
+   * @param {Number} value
+   * @param {Number} x
+   * @param {Number} y
+   * @returns {Number}
+   */
+
+
+  function lerp(ratio, x, y) {
+    return x * (1 - ratio) + y * ratio;
+  }
+  /**
+   * Interpolation function returning the ratio of a value clamped between x and y
+   *
+   * @param {Number} value
+   * @param {Number} x
+   * @param {Number} y
+   * @returns {Number}
+   */
+
+
+  function invlerp(value, x, y) {
+    return _clamp((value - x) / (y - x));
+  }
+  /**
+   * Determines the element found in an array at a given ratio
+   *
+   * @param {Float} ratio
+   * @param {Array} all
+   */
+
+
+  function steps(ratio, all) {
+    ratio %= 1;
+    if (ratio < 0) ratio += 1;
+    return all[Math.floor(ratio * all.length)];
+  }
+
+  var Durations = /*#__PURE__*/function () {
+    function Durations(source) {
+      (0, _classCallCheck2["default"])(this, Durations);
+      this.source = compose(source);
+    }
+
+    (0, _createClass2["default"])(Durations, [{
+      key: "steps",
+      get: function get() {
+        // return this.source.signals
+        return this.source.steps;
+      }
+    }, {
+      key: "metrics",
+      get: function get() {
+        return this.source.metrics;
+      }
+    }, {
+      key: "min",
+      get: function get() {
+        return this.metrics.min;
+      }
+    }, {
+      key: "max",
+      get: function get() {
+        return this.metrics.max;
+      }
+    }, {
+      key: "total",
+      get: function get() {
+        return this.metrics.total;
+      }
+    }, {
+      key: "step",
+      get: function get() {
+        return this.units.step;
+      }
+    }, {
+      key: "pulse",
+      get: function get() {
+        return this.units.pulse;
+      }
+    }, {
+      key: "bar",
+      get: function get() {
+        return this.units.bar;
+      }
+    }, {
+      key: "units",
+      get: function get() {
+        // TODO: Remove, just return this.units
+        return unitsOf(this.source);
+      }
+    }, {
+      key: "times",
+      get: function get() {
+        return timesOf(this.source);
+      }
+    }, {
+      key: "interval",
+      get: function get() {
+        return this.times.step;
+      }
+    }, {
+      key: "cast",
+      value: function cast(duration) {
+        var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+            _ref$is = _ref.is,
+            is = _ref$is === void 0 ? 'step' : _ref$is,
+            _ref$as = _ref.as,
+            as = _ref$as === void 0 ? 'pulse' : _ref$as;
+
+        return duration / (this.times[as] / this.times[is]);
+      }
+    }, {
+      key: "metronize",
+      value: function metronize(duration) {
+        var _ref2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+            _ref2$is = _ref2.is,
+            is = _ref2$is === void 0 ? 'ms' : _ref2$is,
+            _ref2$as = _ref2.as,
+            as = _ref2$as === void 0 ? 'pulse' : _ref2$as;
+
+        var index = this.cast(duration, {
+          is: is,
+          as: as
         });
-      });
-    }
-  }, {
-    key: "kinds",
-    get: function get() {
-      return _Object$keys(this.data);
-    }
-  }, {
-    key: "values",
-    get: function get() {
-      var _context12;
+        var bar = this.cast(this.bar, {
+          as: as
+        });
+        return Math.floor(index % bar);
+      }
+    }, {
+      key: "ratio",
+      value: function ratio(duration) {
+        var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
+        return this.cast(duration, {
+          is: is,
+          as: 'step'
+        }) / this.total;
+      }
+    }, {
+      key: "percentage",
+      value: function percentage(duration) {
+        var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
+        return this.ratio(duration, is) * 100;
+      }
+    }, {
+      key: "clamp",
+      value: function clamp(duration) {
+        var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+            _ref3$is = _ref3.is,
+            is = _ref3$is === void 0 ? 'step' : _ref3$is,
+            _ref3$min = _ref3.min,
+            min = _ref3$min === void 0 ? 0 : _ref3$min,
+            max = _ref3.max;
 
-      return _mapInstanceProperty(_context12 = this.all).call(_context12, function (elem) {
-        return elem.value;
-      });
+        var step = this.cast(duration, {
+          is: is,
+          as: 'step'
+        });
+        var head = this.cast(min || 0, {
+          is: is,
+          as: 'step'
+        });
+        var tail = this.cast(max || this.total, {
+          is: is,
+          as: 'step'
+        });
+        return _clamp(step, head, tail);
+      }
+    }, {
+      key: "cyclic",
+      value: function cyclic(duration) {
+        var _ref4 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+            _ref4$is = _ref4.is,
+            is = _ref4$is === void 0 ? 'step' : _ref4$is,
+            _ref4$min = _ref4.min,
+            min = _ref4$min === void 0 ? 0 : _ref4$min,
+            max = _ref4.max;
+
+        this.cast(duration, {
+          is: is,
+          as: 'step'
+        });
+        var head = this.cast(min || 0, {
+          is: is,
+          as: 'step'
+        });
+        var tail = this.cast(max || this.total, {
+          is: is,
+          as: 'step'
+        });
+        var key = duration >= head ? duration : duration + tail;
+        return key % tail;
+      }
+    }, {
+      key: "interpolate",
+      value: function interpolate(ratio) {
+        var _ref5 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+            _ref5$is = _ref5.is,
+            is = _ref5$is === void 0 ? 'step' : _ref5$is,
+            _ref5$min = _ref5.min,
+            min = _ref5$min === void 0 ? 0 : _ref5$min,
+            max = _ref5.max;
+
+        var head = this.cast(min || 0, {
+          is: is,
+          as: 'step'
+        });
+        var tail = this.cast(max || this.total, {
+          is: is,
+          as: 'step'
+        });
+        return lerp(ratio, head, tail);
+      }
+    }, {
+      key: "at",
+      value: function at(duration) {
+        var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
+        var step = this.cast(duration, {
+          is: is,
+          as: 'step'
+        });
+        var index = this.cyclic(step);
+        var state = this.steps[index];
+
+        var _state = (0, _slicedToArray2["default"])(state, 3),
+            _state$ = (0, _toArray2["default"])(_state[0]),
+            beat = _state$[0],
+            elem = (0, _slice["default"])(_state$).call(_state$, 1),
+            play = _state[1],
+            stop = _state[2];
+
+        return {
+          beat: beat,
+          // TODO: Add once tests are updated
+          // elem,
+          play: play,
+          stop: stop,
+          index: index
+        }; // return Object.entries(this.steps)
+        //   .reduce((acc, [key, steps]) => ({
+        //     ...acc,
+        //     [key]: steps[index]
+        //   }), { index })
+      } // TODO: Either replace or improve via inspiration with this:
+      // @see: https://tonejs.github.io/docs/r13/Time#quantize
+
+    }, {
+      key: "rhythmic",
+      value: function rhythmic(duration) {
+        var _context8,
+            _this = this;
+
+        var _ref6 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+            _ref6$is = _ref6.is,
+            is = _ref6$is === void 0 ? 'ms' : _ref6$is,
+            _ref6$units = _ref6.units,
+            units = _ref6$units === void 0 ? ['8n', '4n'] : _ref6$units,
+            _ref6$calc = _ref6.calc,
+            calc = _ref6$calc === void 0 ? 'floor' : _ref6$calc,
+            _ref6$size = _ref6.size,
+            size = _ref6$size === void 0 ? 'min' : _ref6$size;
+
+        var durations = (0, _sort["default"])(_context8 = (0, _map["default"])(units).call(units, function (unit) {
+          var value = _this.cast(duration, {
+            is: is,
+            as: unit
+          });
+
+          var result = Math[calc](value);
+          return _this.cast(result, {
+            is: unit,
+            as: is
+          });
+        })).call(_context8, function (a, b) {
+          return Math.abs(duration - a) - Math.abs(duration - b);
+        });
+        return Math[size].apply(Math, (0, _toConsumableArray2["default"])(durations));
+      }
+    }]);
+    return Durations;
+  }(); // import { elementize } from 'bach-cljs'
+
+
+  _exports.Durations = Durations;
+
+  var _require = require('bach-cljs'),
+      elementize = _require.elementize;
+  /**
+   * Represents a single and unique playable element.
+   * Uniqueness and equality are determined by `id`.
+   */
+
+
+  var Element = /*#__PURE__*/function () {
+    function Element(data) {
+      (0, _classCallCheck2["default"])(this, Element);
+      this.data = data;
     }
-  }, {
-    key: "ids",
-    get: function get() {
-      var _context13;
 
-      return _mapInstanceProperty(_context13 = this.all).call(_context13, function (elem) {
-        return elem.id;
-      });
+    (0, _createClass2["default"])(Element, [{
+      key: "id",
+      get: function get() {
+        var _context9;
+
+        return (0, _concat["default"])(_context9 = "".concat(this.data.kind, ".")).call(_context9, this.data.id);
+      }
+    }, {
+      key: "uid",
+      get: function get() {
+        return Element.uid(this.id);
+      }
+    }, {
+      key: "value",
+      get: function get() {
+        return this.data.value;
+      }
+    }, {
+      key: "props",
+      get: function get() {
+        return this.data.props || [];
+      }
+    }, {
+      key: "kind",
+      get: function get() {
+        return this.data.kind; //.toLowerCase()
+      }
+    }, {
+      key: "duration",
+      get: function get() {
+        return this.data.duration;
+      }
+    }, {
+      key: "notes",
+      get: function get() {
+        return Note.all(this.kind, this.value);
+      } // TODO: Hoist out to Music, leaky abstraction
+
+    }, {
+      key: "musical",
+      get: function get() {
+        return (0, _includes["default"])(MUSICAL_ELEMENTS).call(MUSICAL_ELEMENTS, this.kind);
+      }
+    }], [{
+      key: "uid",
+      value: function uid(id) {
+        return id.split('.').pop();
+      }
+    }]);
+    return Element;
+  }();
+
+  _exports.Element = Element;
+
+  var Elements = /*#__PURE__*/function () {
+    function Elements() {
+      var _ref7 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          source = _ref7.source,
+          store = _ref7.store,
+          cast = _ref7.cast;
+
+      (0, _classCallCheck2["default"])(this, Elements);
+      this.source = compose(source);
+
+      this.cast = cast || function (_) {
+        return _;
+      };
+
+      this.data = store || Elements.cast(this.source.elements, cast);
     }
-  }, {
-    key: "get",
-    value: function get(id) {
-      var parts = typeof id === 'string' ? id.split('.') : [];
 
-      if (parts.length === 2) {
-        var _parts = _slicedToArray(parts, 2),
-            kind = _parts[0],
-            uid = _parts[1];
+    (0, _createClass2["default"])(Elements, [{
+      key: "all",
+      get: function get() {
+        var _context10,
+            _this2 = this;
 
-        var elem = this.data[kind][uid];
-        return elem ? _objectSpread(_objectSpread({}, elem), {}, {
+        return (0, _flatMap["default"])(_context10 = this.kinds).call(_context10, function (kind) {
+          var _context11;
+
+          return (0, _map["default"])(_context11 = (0, _values["default"])(_this2.data[kind])).call(_context11, function (elem) {
+            return new Element(elem);
+          });
+        });
+      }
+    }, {
+      key: "kinds",
+      get: function get() {
+        return (0, _keys["default"])(this.data);
+      }
+    }, {
+      key: "values",
+      get: function get() {
+        var _context12;
+
+        return (0, _map["default"])(_context12 = this.all).call(_context12, function (elem) {
+          return elem.value;
+        });
+      }
+    }, {
+      key: "ids",
+      get: function get() {
+        var _context13;
+
+        return (0, _map["default"])(_context13 = this.all).call(_context13, function (elem) {
+          return elem.id;
+        });
+      }
+    }, {
+      key: "get",
+      value: function get(id) {
+        var parts = typeof id === 'string' ? id.split('.') : [];
+
+        if (parts.length === 2) {
+          var _parts = (0, _slicedToArray2["default"])(parts, 2),
+              kind = _parts[0],
+              uid = _parts[1];
+
+          var elem = this.data[kind][uid];
+          return elem ? _objectSpread(_objectSpread({}, elem), {}, {
+            id: uid,
+            kind: kind
+          }) : null;
+        }
+
+        throw TypeError('Element id must be a string in the format of "kind.hash"');
+      }
+    }, {
+      key: "resolve",
+      value: function resolve(elem) {
+        // FIXME: Use json-schema validator here instead to support cross-context typing (instanceof doesn't work from workers etc.)
+        // if (elem instanceof Element) return elem
+        if ((0, _typeof2["default"])(elem) === 'object') return elem;
+        if (typeof elem === 'string') return this.get(elem); // if (typeof elem === 'object') return new Element(this.cast(elem))
+
+        throw TypeError('Failed to resolve element due to unsupported data type');
+      } // TODO: Rename to `insert`
+
+    }, {
+      key: "register",
+      value: function register(_ref8) {
+        var _context14;
+
+        var kind = _ref8.kind,
+            value = _ref8.value,
+            props = _ref8.props;
+        if (!kind || typeof kind !== 'string') throw TypeError('kind must be a non-empty string');
+        if (value == null) throw TypeError('value must be defined and non-null');
+        var elem = elementize(kind, (0, _concat["default"])(_context14 = [value]).call(_context14, (0, _toConsumableArray2["default"])(props)));
+        var uid = Element.uid(elem.id);
+        var record = this.cast(_objectSpread(_objectSpread({}, elem), {}, {
           id: uid,
           kind: kind
-        }) : null;
+        }));
+        this.data[kind] = this.data[kind] || {};
+        this.data[kind][uid] = record;
+        this.source.elements = this.data;
+        return new Element(record);
       }
-
-      throw TypeError('Element id must be a string in the format of "kind.hash"');
-    }
-  }, {
-    key: "resolve",
-    value: function resolve(elem) {
-      if (elem instanceof Element) return elem;
-      if (typeof elem === 'string') return this.get(elem);
-      if (_typeof(elem) === 'object') return new Element(this.cast(elem));
-      throw TypeError('Failed to resolve element, unsupported data type');
-    }
-  }], [{
-    key: "cast",
-    value: function cast(elements) {
-      var _context14;
-
-      var as = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function (_) {
-        return _;
-      };
-      if (!elements) return null; // TODO: Validate element shape with JSON Schema
-
-      return _reduceInstanceProperty(_context14 = _Object$entries(elements)).call(_context14, function (acc, _ref8) {
+    }], [{
+      key: "cast",
+      value: function cast(elements) {
         var _context15;
 
-        var _ref9 = _slicedToArray(_ref8, 2),
-            kind = _ref9[0],
-            ids = _ref9[1];
+        var as = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function (_) {
+          return _;
+        };
+        if (!elements) return null; // TODO: Validate element shape with JSON Schema
 
-        var elems = _reduceInstanceProperty(_context15 = _Object$entries(ids)).call(_context15, function (acc, _ref10) {
-          var _ref11 = _slicedToArray(_ref10, 2),
-              id = _ref11[0],
-              elem = _ref11[1];
+        return (0, _reduce["default"])(_context15 = (0, _entries["default"])(elements)).call(_context15, function (acc, _ref9) {
+          var _context16;
 
-          return _objectSpread(_objectSpread({}, acc), {}, _defineProperty({}, id, as(_objectSpread({
-            id: id,
-            kind: kind
-          }, elem))));
+          var _ref10 = (0, _slicedToArray2["default"])(_ref9, 2),
+              kind = _ref10[0],
+              ids = _ref10[1];
+
+          var elems = (0, _reduce["default"])(_context16 = (0, _entries["default"])(ids)).call(_context16, function (acc, _ref11) {
+            var _ref12 = (0, _slicedToArray2["default"])(_ref11, 2),
+                id = _ref12[0],
+                elem = _ref12[1];
+
+            return _objectSpread(_objectSpread({}, acc), {}, (0, _defineProperty2["default"])({}, id, as(_objectSpread({
+              id: id,
+              kind: kind
+            }, elem))));
+          }, {});
+          return _objectSpread(_objectSpread({}, acc), {}, (0, _defineProperty2["default"])({}, kind, elems));
         }, {});
+      }
+    }]);
+    return Elements;
+  }(); // TODO: Hoist out to Music, leaky abstraction
 
-        return _objectSpread(_objectSpread({}, acc), {}, _defineProperty({}, kind, elems));
-      }, {});
+
+  _exports.Elements = Elements;
+  var MUSICAL_ELEMENTS = ['note', 'chord', 'scale', ' penta']; // triad
+
+  /**
+   * Represents a single beat in a track.
+   *
+   * Beats are represented as a tuple and may contain multiple elements
+   *
+   * duration -> items -> elements
+   */
+
+  _exports.MUSICAL_ELEMENTS = MUSICAL_ELEMENTS;
+
+  var Beat = /*#__PURE__*/function () {
+    function Beat(data, store) {
+      (0, _classCallCheck2["default"])(this, Beat);
+      this.data = data;
+      this.store = store;
     }
-  }]);
 
-  return Elements;
-}();
+    (0, _createClass2["default"])(Beat, [{
+      key: "id",
+      get: function get() {
+        return this.data.id;
+      }
+    }, {
+      key: "index",
+      get: function get() {
+        return this.data.index;
+      }
+    }, {
+      key: "duration",
+      get: function get() {
+        return this.data.duration;
+      }
+    }, {
+      key: "items",
+      get: function get() {
+        var _context17,
+            _this3 = this;
 
-var MUSICAL_ELEMENTS = ['note', 'chord', 'scale']; // penta
+        return (0, _map["default"])(_context17 = this.data.items).call(_context17, function (item) {
+          var _context18;
 
-/**
- * Represents a single beat in a track.
- *
- * Beats are represented as a tuple and may contain multiple elements
- *
- * duration -> items -> elements
- */
-
-var Beat = /*#__PURE__*/function () {
-  function Beat(data, store) {
-    _classCallCheck(this, Beat);
-
-    this.data = data;
-    this.store = store; // TODO: Consider using nanoid to generate pseudo-unique beat identifiers
-    // this.id = id || nanoid()
-  }
-
-  _createClass(Beat, [{
-    key: "index",
-    get: function get() {
-      return this.data.index;
-    }
-  }, {
-    key: "duration",
-    get: function get() {
-      return this.data.duration; // || this.data.items.reduce((acc, item) => Math.max(0, Math.min(acc, item.duration)))
-    }
-  }, {
-    key: "items",
-    get: function get() {
-      return this.data.items;
-    }
-  }, {
-    key: "elements",
-    get: function get() {
-      var _context16,
-          _this3 = this;
-
-      return _flatMapInstanceProperty(_context16 = this.items).call(_context16, function (_ref12) {
-        var elements = _ref12.elements;
-        return _mapInstanceProperty(elements).call(elements, function (elem) {
-          return _this3.store.resolve(elem);
-        });
-      });
-    }
-  }, {
-    key: "kinds",
-    get: function get() {
-      return this.all(function (_ref13) {
-        var kind = _ref13.kind;
-        return kind;
-      });
-    }
-  }, {
-    key: "values",
-    get: function get() {
-      return this.all(function (_ref14) {
-        var value = _ref14.value;
-        return value;
-      });
-    } // Provides map of elements in a beat grouped by kind.
-
-  }, {
-    key: "parts",
-    get: function get() {
-      var _context17;
-
-      return _reduceInstanceProperty(_context17 = this.elements).call(_context17, function (parts, elem) {
-        return _objectSpread(_objectSpread({}, parts), {}, _defineProperty({}, elem.kind, elem));
-      }, {});
-    }
-  }, {
-    key: "musical",
-    get: function get() {
-      var _context18;
-
-      return _everyInstanceProperty(_context18 = this.elements).call(_context18, function (elem) {
-        return elem.musical;
-      });
-    }
-  }, {
-    key: "all",
-    value: function all() {
-      var _context19;
-
-      var cast = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (_) {
-        return _;
-      };
-      return _toConsumableArray(new _Set(_mapInstanceProperty(_context19 = this.elements).call(_context19, cast)));
-    }
-  }, {
-    key: "first",
-    value: function first(kind) {
-      var _context20;
-
-      return _findInstanceProperty(_context20 = this.elements).call(_context20, function (elem) {
-        return kind == elem.kind;
-      });
-    }
-  }], [{
-    key: "from",
-    value: function from(beats, store) {
-      if (_Array$isArray(beats)) {
-        return _mapInstanceProperty(beats).call(beats, function (beat) {
-          return new Beat(beat, store);
+          return _objectSpread(_objectSpread({}, item), {}, {
+            elements: (0, _map["default"])(_context18 = item.elements).call(_context18, function (elem) {
+              return _this3.store.resolve(elem);
+            })
+          });
         });
       }
+    }, {
+      key: "elements",
+      get: function get() {
+        var _context19,
+            _this4 = this;
 
-      return new Beat(beats, store);
-    }
-  }]);
-
-  return Beat;
-}(); // NOTE: Basically Track v3. Probably just rename to Track eventually.
-
-
-var Music = /*#__PURE__*/function () {
-  function Music(source) {
-    _classCallCheck(this, Music);
-
-    this.source = source;
-    this.data = compose(source);
-    this.store = this.parses ? new Elements({
-      source: this.data,
-      cast: function cast(elem) {
-        return _objectSpread(_objectSpread({}, elem), {}, {
-          notes: Note.all(elem.kind, elem.value)
+        return (0, _flatMap["default"])(_context19 = this.data.items).call(_context19, function (_ref13) {
+          var elements = _ref13.elements;
+          return (0, _map["default"])(elements).call(elements, function (elem) {
+            return _this4.store.resolve(elem);
+          });
         });
       }
-    }) : null;
-  }
+    }, {
+      key: "kinds",
+      get: function get() {
+        return this.all(function (_ref14) {
+          var kind = _ref14.kind;
+          return kind;
+        });
+      }
+    }, {
+      key: "values",
+      get: function get() {
+        return this.all(function (_ref15) {
+          var value = _ref15.value;
+          return value;
+        });
+      }
+    }, {
+      key: "notes",
+      get: function get() {
+        // return Note.unite(this.elements.flatMap(({ notes }) => notes))
+        return this.notesOf(this.elements);
+      } // Provides map of elements in a beat grouped by kind.
+      // FIXME: Doesn't support multiple elements of the same kind
 
-  _createClass(Music, [{
-    key: "headers",
-    get: function get() {
-      return this.data.headers;
-    }
-  }, {
-    key: "metrics",
-    get: function get() {
-      return this.data.metrics;
-    }
-  }, {
-    key: "units",
-    get: function get() {
-      return this.data.units;
-    }
-  }, {
-    key: "meter",
-    get: function get() {
-      return this.headers.meter;
-    }
-  }, {
-    key: "tempo",
-    get: function get() {
-      return this.headers.tempo;
-    }
-  }, {
-    key: "elements",
-    get: function get() {
-      return this.store.all;
-    }
-  }, {
-    key: "beats",
-    get: function get() {
-      return Beat.from(this.data.beats, this.store);
-    }
-  }, {
-    key: "durations",
-    get: function get() {
-      return new Durations(this.data);
-    }
-  }, {
-    key: "notes",
-    get: function get() {
-      var _context21;
+    }, {
+      key: "parts",
+      get: function get() {
+        var _context20;
 
-      return Note.unite(_flatMapInstanceProperty(_context21 = this.beats).call(_context21, function (beat) {
+        return (0, _reduce["default"])(_context20 = this.elements).call(_context20, function (parts, elem) {
+          return _objectSpread(_objectSpread({}, parts), {}, (0, _defineProperty2["default"])({}, elem.kind, elem));
+        }, {});
+      }
+    }, {
+      key: "musical",
+      get: function get() {
+        var _context21;
+
+        return (0, _every["default"])(_context21 = this.elements).call(_context21, function (elem) {
+          return elem.musical;
+        });
+      }
+    }, {
+      key: "all",
+      value: function all() {
         var _context22;
 
-        return _flatMapInstanceProperty(_context22 = beat.elements).call(_context22, function (_ref15) {
-          var notes = _ref15.notes;
-          return notes;
+        var cast = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (_) {
+          return _;
+        };
+        return (0, _toConsumableArray2["default"])(new _set["default"]((0, _map["default"])(_context22 = this.elements).call(_context22, cast)));
+      }
+    }, {
+      key: "find",
+      value: function find(kind) {
+        var _context23;
+
+        return (0, _find["default"])(_context23 = this.elements).call(_context23, function (elem) {
+          return kind === elem.kind;
         });
-      }));
-    }
-  }, {
-    key: "musical",
-    get: function get() {
-      var _context23;
+      }
+    }, {
+      key: "filter",
+      value: function filter(kind) {
+        var _context24;
 
-      return _everyInstanceProperty(_context23 = this.beats).call(_context23, function (beat) {
-        return beat.musical;
-      });
-    } // get playable () {
-    //   return this.elements.every(({ notes }) => !!notes.length)
-    // }
+        return (0, _filter["default"])(_context24 = this.elements).call(_context24, function (elem) {
+          return kind === elem.kind;
+        });
+      } // first (kinds) {
 
-  }, {
-    key: "step",
-    get: function get() {
-      return this.units.beat.step;
-    }
-  }, {
-    key: "interval",
-    get: function get() {
-      return this.units.time.step;
-    }
-  }, {
-    key: "parses",
-    get: function get() {
-      return !this.data.fail;
-    }
-  }, {
-    key: "at",
-    value: function at(duration) {
-      var _context24,
-          _this4 = this,
-          _context25;
+    }, {
+      key: "either",
+      value: function either(kinds) {
+        var _this5 = this;
 
-      var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
-      var cursor = this.durations.at(duration, is);
-      return {
-        beat: this.beats[cursor.beat],
-        play: _mapInstanceProperty(_context24 = cursor.play || []).call(_context24, function (elem) {
-          return _this4.store.resolve(elem);
-        }),
-        stop: _mapInstanceProperty(_context25 = cursor.stop || []).call(_context25, function (elem) {
-          return _this4.store.resolve(elem);
-        })
-      };
+        return (0, _reduce["default"])(kinds).call(kinds, function (acc, kind) {
+          // return acc.length ? acc : this.elements.filter(elem => kind === elem.kind)
+          return acc.length ? acc : (0, _filter["default"])(_this5).call(_this5, kind);
+        }, []); // for (kind of kinds) {
+        //   const elems = item.elements.filter(elem => kind === elem.kind)
+        //   if (elems.length) return elems
+        // }
+      }
+    }, {
+      key: "notesOf",
+      value: function notesOf(elements) {
+        return Note.unite((0, _flatMap["default"])(elements).call(elements, function (_ref16) {
+          var notes = _ref16.notes;
+          return notes;
+        }));
+      }
+    }], [{
+      key: "from",
+      value: function from(beats, store) {
+        if ((0, _isArray["default"])(beats)) {
+          return (0, _map["default"])(beats).call(beats, function (beat) {
+            return new Beat(beat, store);
+          });
+        } // return new Beat(beats, store)
+
+
+        return [new Beat(beats, store)];
+      }
+    }]);
+    return Beat;
+  }(); // export class BeatItem {
+  //   constructor (data, beat) {
+  //     this.data = data
+  //     this.beat = beat
+  //   }
+  //   get duration () {
+  //     return this.data.duration
+  //   }
+  //   get elements () {
+  //     return this.data.elements.map(elem => this.beat.store.resolve(elem))
+  //   }
+  //   add (elem) {
+  //     const record = this.beat.store.register(elem)
+  //     this.data.elements = this.data.elements.concat(record.id)
+  //     return this
+  //   }
+  // }
+  // NOTE: Basically Track v3. Probably just rename to Track eventually.
+
+
+  var Music = /*#__PURE__*/function () {
+    function Music(source) {
+      (0, _classCallCheck2["default"])(this, Music);
+      this.source = source;
+      this.data = compose(source);
+      this.store = this.parses ? new Elements({
+        source: this.data,
+        cast: function cast(elem) {
+          return _objectSpread(_objectSpread({}, elem), {}, {
+            notes: Note.all(elem.kind, elem.value)
+          });
+        }
+      }) : null; // console.log('COMPOSED DATA (2)', this.data)
     }
-  }, {
-    key: "adjust",
-    value: function adjust(tempo) {}
-  }]);
 
-  return Music;
-}();
+    (0, _createClass2["default"])(Music, [{
+      key: "headers",
+      get: function get() {
+        return this.data.headers;
+      }
+    }, {
+      key: "metrics",
+      get: function get() {
+        return this.data.metrics;
+      }
+    }, {
+      key: "units",
+      get: function get() {
+        return this.data.units;
+      }
+    }, {
+      key: "meter",
+      get: function get() {
+        return this.headers.meter;
+      }
+    }, {
+      key: "tempo",
+      get: function get() {
+        return this.headers.tempo;
+      }
+    }, {
+      key: "elements",
+      get: function get() {
+        return this.store.all;
+      }
+    }, {
+      key: "beats",
+      get: function get() {
+        return Beat.from(this.data.beats, this.store);
+      }
+    }, {
+      key: "durations",
+      get: function get() {
+        return new Durations(this.data);
+      }
+    }, {
+      key: "notes",
+      get: function get() {
+        var _context25;
 
-export { Durations, Element, Elements, MUSICAL_ELEMENTS, Music, Note, chordify, _clamp as clamp, compose, gcd, invlerp, lerp, notesIn, notesInChord, notesInScale, notesIntersect, notesOf, scaleToString, scaleify, steps, timesOf, unitsOf };
+        return Note.unite((0, _flatMap["default"])(_context25 = this.beats).call(_context25, function (beat) {
+          var _context26;
+
+          return (0, _flatMap["default"])(_context26 = beat.elements).call(_context26, function (_ref17) {
+            var notes = _ref17.notes;
+            return notes;
+          });
+        }));
+      }
+    }, {
+      key: "musical",
+      get: function get() {
+        var _context27;
+
+        return (0, _every["default"])(_context27 = this.beats).call(_context27, function (beat) {
+          return beat.musical;
+        });
+      } // get playable () {
+      //   return this.elements.every(({ notes }) => !!notes.length)
+      // }
+
+    }, {
+      key: "step",
+      get: function get() {
+        return this.units.beat.step;
+      }
+    }, {
+      key: "interval",
+      get: function get() {
+        return this.units.time.step;
+      }
+    }, {
+      key: "parses",
+      get: function get() {
+        return !this.data.fail;
+      }
+    }, {
+      key: "at",
+      value: function at(duration) {
+        var _context28,
+            _this6 = this,
+            _context29;
+
+        var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
+        var cursor = this.durations.at(duration, is);
+        return {
+          beat: this.beats[cursor.beat],
+          play: (0, _map["default"])(_context28 = cursor.play || []).call(_context28, function (elem) {
+            return _this6.store.resolve(elem);
+          }),
+          stop: (0, _map["default"])(_context29 = cursor.stop || []).call(_context29, function (elem) {
+            return _this6.store.resolve(elem);
+          })
+        };
+      } // add (id, elem) {
+      // insert
+      // TODO: Probably move to `rebach` package
+
+    }, {
+      key: "add",
+      value: function add(record) {
+        var _context30, _context31;
+
+        var beat = (0, _find["default"])(_context30 = this.beats).call(_context30, function (beat) {
+          return beat.id == record.beat;
+        });
+        var elem = this.store.register(record.elem);
+        console.log('adding beat', record, beat, (0, _map["default"])(_context31 = this.beats).call(_context31, function (_ref18) {
+          var id = _ref18.id;
+          return id;
+        }));
+        this.data.beats[beat.id].items[record.item || 0].elements.push(elem); // const item = this.data.beats[beat].items[record.item || 0]
+        // const stop = this.durations.cyclic(beat.index + item.duration)
+        // beat
+
+        this.data.steps[beat.index][0].push(elem.id); // play
+
+        this.data.steps[beat.index][1].push(elem.id); // stop
+
+        this.data.steps[beat.index][2].push(elem.id); // TODO: Add to `steps`!
+        // return this
+
+        return new Element(elem);
+      }
+    }, {
+      key: "adjust",
+      value: function adjust(tempo) {}
+    }]);
+    return Music;
+  }();
+
+  _exports.Music = Music;
+});
