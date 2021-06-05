@@ -1,6 +1,6 @@
-const bach = require('bach-cljs')//.default
+const bach = require('bach-cljs')
 import { Note } from './note'
-// import { valid } from './validate'
+import { valid } from './validate'
 import {
   scale as teoriaScale,
   chord as teoriaChord,
@@ -16,9 +16,7 @@ export const compose = source => {
   }
 
   if (typeof source === 'object') {
-    // FIXME: Enable again once bach-json-schema is updated to v3
-    // return valid(source)
-    return source
+    return valid(source)
   }
 
   throw TypeError(`Unsupported Bach.JSON data type (${typeof source}). Must be a bach.json object or raw bach string.`)
