@@ -30,8 +30,6 @@ describe('class methods', () => {
         const elems = new Elements({ source })
         const result = elems.resolve('chord.02Rznz')
 
-        console.log('elems.all', elems.all)
-
         expect(result).toEqual({
           id: '02Rznz',
           kind: 'chord',

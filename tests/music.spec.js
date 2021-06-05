@@ -37,28 +37,4 @@ describe('class methods', () => {
       })
     })
   })
-
-  describe('add', () => {
-    it('pushes new element into a beat item', () => {
-      const music = new Music(source)
-
-      const elem = music.add({
-        beat: 0,
-        item: 0,
-        elem: {
-          kind: 'penta',
-          value: 'A minorpentatonic',
-          props: []
-        }
-      })
-
-      const added = music
-        .beats[0]
-        .items[0]
-        .elements
-        .find(elem => elem.kind === 'penta')
-
-      expect(added).not.toBeNull()
-    })
-  })
 })

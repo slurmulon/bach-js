@@ -69,8 +69,6 @@ describe('element accessors', () => {
     const [beat] = music.beats
     const elems = beat.either(['chord', 'scale'])
 
-    console.log('beat either elems', elems)
-
     expect(elems).toEqual([
       {
         id: '02h1pn',
