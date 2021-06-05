@@ -12,28 +12,17 @@ export default [
       name: 'bach-js',
       file: pkg.browser,
       // format: 'umd',
-      // format: 'iife',
-      // format: 'esm',
       format: 'esm',
-      // format: 'cjs',
-      // LAST (works, but wut)
-      // form: 'esm',
       esModule: false,
       exports: 'named',
-      sourcemap: true,
-      // plugins: [getBabelOutputPlugin({
-      //   presets: [['@babel/preset-env', { modules: 'umd' }]],
-      //   plugins: [['@babel/plugin-transform-runtime', { corejs: 3, useESModules: false }]]
-      // })]
+      sourcemap: true
     },
     plugins: [
       json(),
       resolve(),
-      // commonjs(),
       commonjs({
         ignore: ['bach-cljs'],
-        esmExternals: true, //['bach-cljs']
-        // esmExternals: false, //['bach-cljs']
+        esmExternals: true,
         requireReturnsDefault: true
       }),
       getBabelOutputPlugin({
