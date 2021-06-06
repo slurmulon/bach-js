@@ -1,6 +1,6 @@
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
-import babel, { getBabelOutputPlugin } from '@rollup/plugin-babel'
+import { getBabelOutputPlugin } from '@rollup/plugin-babel'
 import json from '@rollup/plugin-json'
 import pkg from './package.json'
 
@@ -26,21 +26,9 @@ export default [
         requireReturnsDefault: true
       }),
       getBabelOutputPlugin({
-        // presets: ['@babel/preset-env'],
         presets: [['@babel/preset-env', { modules: 'umd' }]],
         plugins: [['@babel/plugin-transform-runtime', { corejs: 3 }]]
       }),
-      // babel({
-      //   // exclude: ['node_modules/**'],
-      //   // babelHelpers: 'bundled'
-
-      //   // LAST
-      //   exclude: '**/node_modules/**',
-      //   babelHelpers: 'runtime',
-
-      //   // exclude: '**/node_modules/**',
-      //   // babelHelpers: 'bundled'
-      // })
     ]
   },
 
@@ -53,8 +41,6 @@ export default [
   {
     input: 'src/index.js',
     external: [/@babel\/runtime/, 'ajv', 'bach-cljs', 'bach-json-schema', 'teoria'],
-    // external: [/@babel\/runtime/, 'ajv', 'teoria'],
-    // external: ['ajv', 'teoria'],
     output: [
       {
         file: pkg.main,
@@ -63,24 +49,19 @@ export default [
           presets: ['@babel/preset-env'],
           plugins: [['@babel/plugin-transform-runtime', { corejs: 3, useESModules: false }]]
         })]
-      }, // exports: 'named', sourcemap: true },
+      },
       {
         file: pkg.module,
         format: 'esm',
         plugins: [getBabelOutputPlugin({
-          // presets: ['@babel/preset-env'],
           presets: [['@babel/preset-env', { modules: 'umd' }]],
           plugins: [['@babel/plugin-transform-runtime', { corejs: 3, useESModules: true }]]
         })]
-      } // exports: 'named', sourcemap: true }
+      }
     ],
     plugins: [
       json(),
-      resolve(),
-      // babel({
-      //   exclude: ['node_modules/**'],
-      //   babelHelpers: 'runtime'
-      // })
+      resolve()
     ]
   }
 ]
