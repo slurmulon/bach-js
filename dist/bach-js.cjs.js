@@ -105,8 +105,7 @@ var valid = function valid(bach) {
   }
 
   return bach;
-}; // const bach = require('bach-cljs')
-// Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
+}; // Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
 // Main entry point for integrating with core bach ClojureScript library.
 
 
@@ -205,9 +204,7 @@ function notesIntersect(left, right) {
   return _filterInstanceProperty(left).call(left, function (note) {
     return _includesInstanceProperty(right).call(right, note);
   });
-} // TODO: Use empty-schema (or another approach) to return default bach.json ehaders instead of empty object
-// export const headersOf = source => (source && source.headers) || {}
-// TODO: Remove
+} // TODO: Remove
 
 
 var unitsOf = function unitsOf(source) {
