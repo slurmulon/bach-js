@@ -32,7 +32,7 @@
     "@babel/runtime": "^7.14.0",
     "@babel/runtime-corejs3": "^7.14.0",
     "ajv": "^8.5.0",
-    "bach-cljs": "github:slurmulon/bach#v3.0-alpha.1",
+    "bach-cljs": "github:slurmulon/bach#v3.0-alpha.2",
     "bach-json-schema": "github:slurmulon/bach-json-schema#v3.0.0",
     "core-js": "^3.11.2",
     "teoria": "^2.5.0",

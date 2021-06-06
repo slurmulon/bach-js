@@ -1,3 +1,5 @@
+var _typeof3 = require("@babel/runtime-corejs3/helpers/typeof");
+
 var _concatInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/instance/concat");
 
 var _sliceInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/instance/slice");
@@ -26,11 +28,13 @@ var _findInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/inst
 
 var _Object$defineProperty = require("@babel/runtime-corejs3/core-js-stable/object/define-property");
 
+var _WeakMap = require("@babel/runtime-corejs3/core-js-stable/weak-map");
+
+var _Object$getOwnPropertyDescriptor = require("@babel/runtime-corejs3/core-js-stable/object/get-own-property-descriptor");
+
 var _Object$keys2 = require("@babel/runtime-corejs3/core-js-stable/object/keys");
 
 var _Object$getOwnPropertySymbols = require("@babel/runtime-corejs3/core-js-stable/object/get-own-property-symbols");
-
-var _Object$getOwnPropertyDescriptor = require("@babel/runtime-corejs3/core-js-stable/object/get-own-property-descriptor");
 
 var _forEachInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/for-each");
 
@@ -40,17 +44,17 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
 
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["exports", "@babel/runtime-corejs3/core-js-stable/instance/concat", "@babel/runtime-corejs3/core-js-stable/instance/slice", "@babel/runtime-corejs3/core-js-stable/instance/map", "@babel/runtime-corejs3/core-js-stable/instance/filter", "@babel/runtime-corejs3/core-js-stable/instance/includes", "@babel/runtime-corejs3/core-js-stable/set", "@babel/runtime-corejs3/core-js-stable/instance/sort", "@babel/runtime-corejs3/core-js-stable/instance/flat-map", "@babel/runtime-corejs3/core-js-stable/object/values", "@babel/runtime-corejs3/core-js-stable/object/keys", "@babel/runtime-corejs3/core-js-stable/instance/reduce", "@babel/runtime-corejs3/core-js-stable/object/entries", "@babel/runtime-corejs3/core-js-stable/instance/every", "@babel/runtime-corejs3/core-js-stable/instance/find", "@babel/runtime-corejs3/core-js-stable/array/is-array", "@babel/runtime-corejs3/helpers/esm/defineProperty", "@babel/runtime-corejs3/helpers/esm/toArray", "@babel/runtime-corejs3/helpers/esm/toConsumableArray", "@babel/runtime-corejs3/helpers/esm/classCallCheck", "@babel/runtime-corejs3/helpers/esm/createClass", "@babel/runtime-corejs3/helpers/esm/slicedToArray", "@babel/runtime-corejs3/helpers/esm/typeof", "teoria"], factory);
+    define(["exports", "@babel/runtime-corejs3/helpers/esm/defineProperty", "@babel/runtime-corejs3/helpers/esm/toArray", "@babel/runtime-corejs3/helpers/esm/toConsumableArray", "@babel/runtime-corejs3/helpers/esm/classCallCheck", "@babel/runtime-corejs3/helpers/esm/createClass", "@babel/runtime-corejs3/helpers/esm/slicedToArray", "@babel/runtime-corejs3/helpers/esm/typeof", "@babel/runtime-corejs3/core-js-stable/json/stringify", "@babel/runtime-corejs3/core-js-stable/instance/concat", "@babel/runtime-corejs3/core-js-stable/instance/slice", "@babel/runtime-corejs3/core-js-stable/instance/map", "@babel/runtime-corejs3/core-js-stable/instance/filter", "@babel/runtime-corejs3/core-js-stable/instance/includes", "@babel/runtime-corejs3/core-js-stable/set", "@babel/runtime-corejs3/core-js-stable/instance/sort", "@babel/runtime-corejs3/core-js-stable/instance/flat-map", "@babel/runtime-corejs3/core-js-stable/object/values", "@babel/runtime-corejs3/core-js-stable/object/keys", "@babel/runtime-corejs3/core-js-stable/instance/reduce", "@babel/runtime-corejs3/core-js-stable/object/entries", "@babel/runtime-corejs3/core-js-stable/instance/every", "@babel/runtime-corejs3/core-js-stable/instance/find", "@babel/runtime-corejs3/core-js-stable/array/is-array", "teoria", "bach-cljs", "bach-json-schema", "ajv"], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require("@babel/runtime-corejs3/core-js-stable/instance/concat"), require("@babel/runtime-corejs3/core-js-stable/instance/slice"), require("@babel/runtime-corejs3/core-js-stable/instance/map"), require("@babel/runtime-corejs3/core-js-stable/instance/filter"), require("@babel/runtime-corejs3/core-js-stable/instance/includes"), require("@babel/runtime-corejs3/core-js-stable/set"), require("@babel/runtime-corejs3/core-js-stable/instance/sort"), require("@babel/runtime-corejs3/core-js-stable/instance/flat-map"), require("@babel/runtime-corejs3/core-js-stable/object/values"), require("@babel/runtime-corejs3/core-js-stable/object/keys"), require("@babel/runtime-corejs3/core-js-stable/instance/reduce"), require("@babel/runtime-corejs3/core-js-stable/object/entries"), require("@babel/runtime-corejs3/core-js-stable/instance/every"), require("@babel/runtime-corejs3/core-js-stable/instance/find"), require("@babel/runtime-corejs3/core-js-stable/array/is-array"), require("@babel/runtime-corejs3/helpers/esm/defineProperty"), require("@babel/runtime-corejs3/helpers/esm/toArray"), require("@babel/runtime-corejs3/helpers/esm/toConsumableArray"), require("@babel/runtime-corejs3/helpers/esm/classCallCheck"), require("@babel/runtime-corejs3/helpers/esm/createClass"), require("@babel/runtime-corejs3/helpers/esm/slicedToArray"), require("@babel/runtime-corejs3/helpers/esm/typeof"), require("teoria"));
+    factory(exports, require("@babel/runtime-corejs3/helpers/esm/defineProperty"), require("@babel/runtime-corejs3/helpers/esm/toArray"), require("@babel/runtime-corejs3/helpers/esm/toConsumableArray"), require("@babel/runtime-corejs3/helpers/esm/classCallCheck"), require("@babel/runtime-corejs3/helpers/esm/createClass"), require("@babel/runtime-corejs3/helpers/esm/slicedToArray"), require("@babel/runtime-corejs3/helpers/esm/typeof"), require("@babel/runtime-corejs3/core-js-stable/json/stringify"), require("@babel/runtime-corejs3/core-js-stable/instance/concat"), require("@babel/runtime-corejs3/core-js-stable/instance/slice"), require("@babel/runtime-corejs3/core-js-stable/instance/map"), require("@babel/runtime-corejs3/core-js-stable/instance/filter"), require("@babel/runtime-corejs3/core-js-stable/instance/includes"), require("@babel/runtime-corejs3/core-js-stable/set"), require("@babel/runtime-corejs3/core-js-stable/instance/sort"), require("@babel/runtime-corejs3/core-js-stable/instance/flat-map"), require("@babel/runtime-corejs3/core-js-stable/object/values"), require("@babel/runtime-corejs3/core-js-stable/object/keys"), require("@babel/runtime-corejs3/core-js-stable/instance/reduce"), require("@babel/runtime-corejs3/core-js-stable/object/entries"), require("@babel/runtime-corejs3/core-js-stable/instance/every"), require("@babel/runtime-corejs3/core-js-stable/instance/find"), require("@babel/runtime-corejs3/core-js-stable/array/is-array"), require("teoria"), require("bach-cljs"), require("bach-json-schema"), require("ajv"));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, _concatInstanceProperty2(global), _sliceInstanceProperty2(global), _mapInstanceProperty2(global), _filterInstanceProperty2(global), _includesInstanceProperty2(global), global.set, _sortInstanceProperty2(global), _flatMapInstanceProperty2(global), _valuesInstanceProperty(global), _keysInstanceProperty(global), _reduceInstanceProperty2(global), _entriesInstanceProperty(global), _everyInstanceProperty2(global), _findInstanceProperty2(global), global.isArray, global.defineProperty, global.toArray, global.toConsumableArray, global.classCallCheck, global.createClass, global.slicedToArray, global._typeof, global.teoria);
+    factory(mod.exports, global.defineProperty, global.toArray, global.toConsumableArray, global.classCallCheck, global.createClass, global.slicedToArray, global._typeof, global.stringify, _concatInstanceProperty2(global), _sliceInstanceProperty2(global), _mapInstanceProperty2(global), _filterInstanceProperty2(global), _includesInstanceProperty2(global), global.set, _sortInstanceProperty2(global), _flatMapInstanceProperty2(global), _valuesInstanceProperty(global), _keysInstanceProperty(global), _reduceInstanceProperty2(global), _entriesInstanceProperty(global), _everyInstanceProperty2(global), _findInstanceProperty2(global), global.isArray, global.teoria, global.bachCljs, global.bachJsonSchema, global.ajv);
     global.unknown = mod.exports;
   }
-})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _concat, _slice, _map, _filter, _includes, _set, _sort, _flatMap, _values, _keys, _reduce, _entries, _every, _find, _isArray, _defineProperty2, _toArray2, _toConsumableArray2, _classCallCheck2, _createClass2, _slicedToArray2, _typeof2, _teoria) {
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _defineProperty2, _toArray2, _toConsumableArray2, _classCallCheck2, _createClass2, _slicedToArray2, _typeof2, _stringify, _concat, _slice, _map, _filter, _includes, _set, _sort, _flatMap, _values, _keys, _reduce, _entries, _every, _find, _isArray, _teoria, _bachCljs, _bachJsonSchema, _ajv) {
   "use strict";
 
   var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
@@ -71,7 +75,15 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
   _exports.scaleToString = scaleToString;
   _exports.scaleify = scaleify;
   _exports.steps = steps;
-  _exports.unitsOf = _exports.timesOf = _exports.notesOf = _exports.compose = _exports.Note = _exports.Music = _exports.MUSICAL_ELEMENTS = _exports.Elements = _exports.Element = _exports.Durations = void 0;
+  _exports.validate = _exports.valid = _exports.unitsOf = _exports.timesOf = _exports.notesOf = _exports.compose = _exports.Note = _exports.Music = _exports.MUSICAL_ELEMENTS = _exports.Elements = _exports.Element = _exports.Durations = void 0;
+  _defineProperty2 = _interopRequireDefault(_defineProperty2);
+  _toArray2 = _interopRequireDefault(_toArray2);
+  _toConsumableArray2 = _interopRequireDefault(_toConsumableArray2);
+  _classCallCheck2 = _interopRequireDefault(_classCallCheck2);
+  _createClass2 = _interopRequireDefault(_createClass2);
+  _slicedToArray2 = _interopRequireDefault(_slicedToArray2);
+  _typeof2 = _interopRequireDefault(_typeof2);
+  _stringify = _interopRequireDefault(_stringify);
   _concat = _interopRequireDefault(_concat);
   _slice = _interopRequireDefault(_slice);
   _map = _interopRequireDefault(_map);
@@ -87,32 +99,52 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
   _every = _interopRequireDefault(_every);
   _find = _interopRequireDefault(_find);
   _isArray = _interopRequireDefault(_isArray);
-  _defineProperty2 = _interopRequireDefault(_defineProperty2);
-  _toArray2 = _interopRequireDefault(_toArray2);
-  _toConsumableArray2 = _interopRequireDefault(_toConsumableArray2);
-  _classCallCheck2 = _interopRequireDefault(_classCallCheck2);
-  _createClass2 = _interopRequireDefault(_createClass2);
-  _slicedToArray2 = _interopRequireDefault(_slicedToArray2);
-  _typeof2 = _interopRequireDefault(_typeof2);
+  _bachCljs = _interopRequireWildcard(_bachCljs);
+  _bachJsonSchema = _interopRequireDefault(_bachJsonSchema);
+  _ajv = _interopRequireDefault(_ajv);
+
+  function _getRequireWildcardCache(nodeInterop) { if (typeof _WeakMap !== "function") return null; var cacheBabelInterop = new _WeakMap(); var cacheNodeInterop = new _WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+  function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof3(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = _Object$defineProperty && _Object$getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? _Object$getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { _Object$defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
   function ownKeys(object, enumerableOnly) { var keys = _Object$keys2(object); if (_Object$getOwnPropertySymbols) { var symbols = _Object$getOwnPropertySymbols(object); if (enumerableOnly) { symbols = _filterInstanceProperty2(symbols).call(symbols, function (sym) { return _Object$getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-  function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context32; _forEachInstanceProperty(_context32 = ownKeys(Object(source), true)).call(_context32, function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (_Object$getOwnPropertyDescriptors) { _Object$defineProperties(target, _Object$getOwnPropertyDescriptors(source)); } else { var _context33; _forEachInstanceProperty(_context33 = ownKeys(Object(source))).call(_context33, function (key) { _Object$defineProperty(target, key, _Object$getOwnPropertyDescriptor(source, key)); }); } } return target; }
+  function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context30; _forEachInstanceProperty(_context30 = ownKeys(Object(source), true)).call(_context30, function (key) { (0, _defineProperty2["default"])(target, key, source[key]); }); } else if (_Object$getOwnPropertyDescriptors) { _Object$defineProperties(target, _Object$getOwnPropertyDescriptors(source)); } else { var _context31; _forEachInstanceProperty(_context31 = ownKeys(Object(source))).call(_context31, function (key) { _Object$defineProperty(target, key, _Object$getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-  var bach = require('bach-cljs'); //.default
+  var ajv = new _ajv["default"]({
+    strictTuples: false
+  });
+  var validate = ajv.compile(_bachJsonSchema["default"]);
+  _exports.validate = validate;
+
+  var valid = function valid(bach) {
+    if (!validate(bach)) {
+      var message = 'Invalid Bach.JSON source data';
+
+      var pretty = function pretty(json) {
+        return (0, _stringify["default"])(json, null, 2);
+      };
+
+      console.error(message, pretty(bach));
+      console.error(pretty(validate.errors));
+      throw TypeError("Invalid Bach.JSON source data");
+    }
+
+    return bach;
+  }; // const bach = require('bach-cljs')
   // Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
   // Main entry point for integrating with core bach ClojureScript library.
 
 
+  _exports.valid = valid;
+
   var compose = function compose(source) {
     if (typeof source === 'string') {
-      return bach.compose(source);
+      return _bachCljs["default"].compose(source);
     }
 
     if ((0, _typeof2["default"])(source) === 'object') {
-      // FIXME: Enable again once bach-json-schema is updated to v3
-      // return valid(source)
-      return source;
+      return valid(source);
     }
 
     throw TypeError("Unsupported Bach.JSON data type (".concat((0, _typeof2["default"])(source), "). Must be a bach.json object or raw bach string."));
@@ -634,18 +666,14 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
       }
     }]);
     return Durations;
-  }(); // import { elementize } from 'bach-cljs'
-
-
-  _exports.Durations = Durations;
-
-  var _require = require('bach-cljs'),
-      elementize = _require.elementize;
+  }();
   /**
    * Represents a single and unique playable element.
    * Uniqueness and equality are determined by `id`.
    */
 
+
+  _exports.Durations = Durations;
 
   var Element = /*#__PURE__*/function () {
     function Element(data) {
@@ -801,7 +829,7 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
             props = _ref8.props;
         if (!kind || typeof kind !== 'string') throw TypeError('kind must be a non-empty string');
         if (value == null) throw TypeError('value must be defined and non-null');
-        var elem = elementize(kind, (0, _concat["default"])(_context14 = [value]).call(_context14, (0, _toConsumableArray2["default"])(props)));
+        var elem = (0, _bachCljs.elementize)(kind, (0, _concat["default"])(_context14 = [value]).call(_context14, (0, _toConsumableArray2["default"])(props)));
         var uid = Element.uid(elem.id);
         var record = this.cast(_objectSpread(_objectSpread({}, elem), {}, {
           id: uid,
@@ -1034,7 +1062,6 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
   //     return this
   //   }
   // }
-  // NOTE: Basically Track v3. Probably just rename to Track eventually.
 
 
   var Music = /*#__PURE__*/function () {
@@ -1049,7 +1076,7 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
             notes: Note.all(elem.kind, elem.value)
           });
         }
-      }) : null; // console.log('COMPOSED DATA (2)', this.data)
+      }) : null;
     }
 
     (0, _createClass2["default"])(Music, [{
@@ -1151,35 +1178,6 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
             return _this6.store.resolve(elem);
           })
         };
-      } // add (id, elem) {
-      // insert
-      // TODO: Probably move to `rebach` package
-
-    }, {
-      key: "add",
-      value: function add(record) {
-        var _context30, _context31;
-
-        var beat = (0, _find["default"])(_context30 = this.beats).call(_context30, function (beat) {
-          return beat.id == record.beat;
-        });
-        var elem = this.store.register(record.elem);
-        console.log('adding beat', record, beat, (0, _map["default"])(_context31 = this.beats).call(_context31, function (_ref18) {
-          var id = _ref18.id;
-          return id;
-        }));
-        this.data.beats[beat.id].items[record.item || 0].elements.push(elem); // const item = this.data.beats[beat].items[record.item || 0]
-        // const stop = this.durations.cyclic(beat.index + item.duration)
-        // beat
-
-        this.data.steps[beat.index][0].push(elem.id); // play
-
-        this.data.steps[beat.index][1].push(elem.id); // stop
-
-        this.data.steps[beat.index][2].push(elem.id); // TODO: Add to `steps`!
-        // return this
-
-        return new Element(elem);
       }
     }, {
       key: "adjust",

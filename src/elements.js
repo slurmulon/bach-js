@@ -1,9 +1,8 @@
+import { elementize } from 'bach-cljs'
 import { note as teoriaNote } from 'teoria'
+
 import { compose } from './data'
 import { Note } from './note'
-
-// import { elementize } from 'bach-cljs'
-const { elementize } = require('bach-cljs')
 
 /**
  * Represents a single and unique playable element.

@@ -1,4 +1,4 @@
-const bach = require('bach-cljs')
+import bach from 'bach-cljs'
 import { Note } from './note'
 import { valid } from './validate'
 import {
@@ -84,9 +84,6 @@ export const notesOf = {
 export function notesIntersect (left, right) {
  return left.filter(note => right.includes(note))
 }
-
-// TODO: Use empty-schema (or another approach) to return default bach.json ehaders instead of empty object
-// export const headersOf = source => (source && source.headers) || {}
 
 // TODO: Remove
 export const unitsOf = source => ({

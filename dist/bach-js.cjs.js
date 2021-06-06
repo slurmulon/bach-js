@@ -26,6 +26,8 @@ var _typeof = require("@babel/runtime-corejs3/helpers/typeof");
 
 var _Object$defineProperty = require("@babel/runtime-corejs3/core-js-stable/object/define-property");
 
+var _JSON$stringify = require("@babel/runtime-corejs3/core-js-stable/json/stringify");
+
 var _concatInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/concat");
 
 var _sliceInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/slice");
@@ -58,7 +60,7 @@ var _Array$isArray = require("@babel/runtime-corejs3/core-js-stable/array/is-arr
 
 function ownKeys(object, enumerableOnly) { var keys = _Object$keys(object); if (_Object$getOwnPropertySymbols) { var symbols = _Object$getOwnPropertySymbols(object); if (enumerableOnly) { symbols = _filterInstanceProperty(symbols).call(symbols, function (sym) { return _Object$getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context32; _forEachInstanceProperty(_context32 = ownKeys(Object(source), true)).call(_context32, function (key) { _defineProperty(target, key, source[key]); }); } else if (_Object$getOwnPropertyDescriptors) { _Object$defineProperties(target, _Object$getOwnPropertyDescriptors(source)); } else { var _context33; _forEachInstanceProperty(_context33 = ownKeys(Object(source))).call(_context33, function (key) { _Object$defineProperty(target, key, _Object$getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context30; _forEachInstanceProperty(_context30 = ownKeys(Object(source), true)).call(_context30, function (key) { _defineProperty(target, key, source[key]); }); } else if (_Object$getOwnPropertyDescriptors) { _Object$defineProperties(target, _Object$getOwnPropertyDescriptors(source)); } else { var _context31; _forEachInstanceProperty(_context31 = ownKeys(Object(source))).call(_context31, function (key) { _Object$defineProperty(target, key, _Object$getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 _Object$defineProperty(exports, '__esModule', {
   value: true
@@ -66,20 +68,55 @@ _Object$defineProperty(exports, '__esModule', {
 
 var teoria = require('teoria');
 
-var bach = require('bach-cljs'); //.default
+var bach = require('bach-cljs');
+
+var schema = require('bach-json-schema');
+
+var Ajv = require('ajv');
+
+function _interopDefaultLegacy(e) {
+  return e && _typeof(e) === 'object' && 'default' in e ? e : {
+    'default': e
+  };
+}
+
+var bach__default = /*#__PURE__*/_interopDefaultLegacy(bach);
+
+var schema__default = /*#__PURE__*/_interopDefaultLegacy(schema);
+
+var Ajv__default = /*#__PURE__*/_interopDefaultLegacy(Ajv);
+
+var ajv = new Ajv__default['default']({
+  strictTuples: false
+});
+var validate = ajv.compile(schema__default['default']);
+
+var valid = function valid(bach) {
+  if (!validate(bach)) {
+    var message = 'Invalid Bach.JSON source data';
+
+    var pretty = function pretty(json) {
+      return _JSON$stringify(json, null, 2);
+    };
+
+    console.error(message, pretty(bach));
+    console.error(pretty(validate.errors));
+    throw TypeError("Invalid Bach.JSON source data");
+  }
+
+  return bach;
+}; // const bach = require('bach-cljs')
 // Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
 // Main entry point for integrating with core bach ClojureScript library.
 
 
 var compose = function compose(source) {
   if (typeof source === 'string') {
-    return bach.compose(source);
+    return bach__default['default'].compose(source);
   }
 
   if (_typeof(source) === 'object') {
-    // FIXME: Enable again once bach-json-schema is updated to v3
-    // return valid(source)
-    return source;
+    return valid(source);
   }
 
   throw TypeError("Unsupported Bach.JSON data type (".concat(_typeof(source), "). Must be a bach.json object or raw bach string."));
@@ -595,11 +632,7 @@ var Durations = /*#__PURE__*/function () {
   }]);
 
   return Durations;
-}(); // import { elementize } from 'bach-cljs'
-
-
-var _require = require('bach-cljs'),
-    elementize = _require.elementize;
+}();
 /**
  * Represents a single and unique playable element.
  * Uniqueness and equality are determined by `id`.
@@ -761,7 +794,7 @@ var Elements = /*#__PURE__*/function () {
           props = _ref8.props;
       if (!kind || typeof kind !== 'string') throw TypeError('kind must be a non-empty string');
       if (value == null) throw TypeError('value must be defined and non-null');
-      var elem = elementize(kind, _concatInstanceProperty(_context14 = [value]).call(_context14, _toConsumableArray(props)));
+      var elem = bach.elementize(kind, _concatInstanceProperty(_context14 = [value]).call(_context14, _toConsumableArray(props)));
       var uid = Element.uid(elem.id);
       var record = this.cast(_objectSpread(_objectSpread({}, elem), {}, {
         id: uid,
@@ -995,7 +1028,6 @@ var Beat = /*#__PURE__*/function () {
 //     return this
 //   }
 // }
-// NOTE: Basically Track v3. Probably just rename to Track eventually.
 
 
 var Music = /*#__PURE__*/function () {
@@ -1011,7 +1043,7 @@ var Music = /*#__PURE__*/function () {
           notes: Note.all(elem.kind, elem.value)
         });
       }
-    }) : null; // console.log('COMPOSED DATA (2)', this.data)
+    }) : null;
   }
 
   _createClass(Music, [{
@@ -1113,36 +1145,6 @@ var Music = /*#__PURE__*/function () {
           return _this6.store.resolve(elem);
         })
       };
-    } // add (id, elem) {
-    // insert
-    // TODO: Probably move to `rebach` package
-
-  }, {
-    key: "add",
-    value: function add(record) {
-      var _context30, _context31;
-
-      var beat = _findInstanceProperty(_context30 = this.beats).call(_context30, function (beat) {
-        return beat.id == record.beat;
-      });
-
-      var elem = this.store.register(record.elem);
-      console.log('adding beat', record, beat, _mapInstanceProperty(_context31 = this.beats).call(_context31, function (_ref18) {
-        var id = _ref18.id;
-        return id;
-      }));
-      this.data.beats[beat.id].items[record.item || 0].elements.push(elem); // const item = this.data.beats[beat].items[record.item || 0]
-      // const stop = this.durations.cyclic(beat.index + item.duration)
-      // beat
-
-      this.data.steps[beat.index][0].push(elem.id); // play
-
-      this.data.steps[beat.index][1].push(elem.id); // stop
-
-      this.data.steps[beat.index][2].push(elem.id); // TODO: Add to `steps`!
-      // return this
-
-      return new Element(elem);
     }
   }, {
     key: "adjust",
@@ -1174,3 +1176,5 @@ exports.scaleify = scaleify;
 exports.steps = steps;
 exports.timesOf = timesOf;
 exports.unitsOf = unitsOf;
+exports.valid = valid;
+exports.validate = validate;
