@@ -4,7 +4,6 @@ import { Element, Elements, MUSICAL_ELEMENTS } from './elements'
 import { Beat } from './beats'
 import { compose, notesIn } from './data'
 
-// NOTE: Basically Track v3. Probably just rename to Track eventually.
 export class Music {
 
   constructor (source) {
