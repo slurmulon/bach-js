@@ -9,20 +9,12 @@ describe('class methods', () => {
       const music = new Music('bad!')
 
       expect(music.parses).toBe(false)
-
-      // const music = compose('bad!')
-
-      // expect(music.fail).toBe(true)
     })
 
     it('returns true if syntax is valid', () => {
       const music = new Music(source)
 
       expect(music.parses).toBe(true)
-      
-      // const music = compose(source)
-
-      // expect(music.fail).not.toBeDefined()
     })
   })
 

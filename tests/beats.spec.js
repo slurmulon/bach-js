@@ -1,4 +1,3 @@
-// import { Beat } from '../src/beats'
 import { Music } from '../src/music'
 import { basic as source } from './fixtures/bach'
 
