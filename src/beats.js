@@ -49,7 +49,6 @@ export class Beat {
   }
 
   get notes () {
-    // return Note.unite(this.elements.flatMap(({ notes }) => notes))
     return this.notesOf(this.elements)
   }
 
@@ -78,17 +77,8 @@ export class Beat {
     return this.elements.filter(elem => kind === elem.kind)
   }
 
-  // first (kinds) {
   either (kinds) {
-    return kinds.reduce((acc, kind) => {
-      // return acc.length ? acc : this.elements.filter(elem => kind === elem.kind)
-      return acc.length ? acc : this.filter(kind)
-    }, [])
-    // for (kind of kinds) {
-    //   const elems = item.elements.filter(elem => kind === elem.kind)
-
-    //   if (elems.length) return elems
-    // }
+    return kinds.reduce((acc, kind) => acc.length ? acc : this.filter(kind), [])
   }
 
   notesOf (elements) {
@@ -100,33 +90,7 @@ export class Beat {
       return beats.map(beat => new Beat(beat, store))
     }
 
-    // return new Beat(beats, store)
     return [new Beat(beats, store)]
   }
 
 }
-
-// export class BeatItem {
-
-//   constructor (data, beat) {
-//     this.data = data
-//     this.beat = beat
-//   }
-
-//   get duration () {
-//     return this.data.duration
-//   }
-
-//   get elements () {
-//     return this.data.elements.map(elem => this.beat.store.resolve(elem))
-//   }
-
-//   add (elem) {
-//     const record = this.beat.store.register(elem)
-
-//     this.data.elements = this.data.elements.concat(record.id)
-
-//     return this
-//   }
-
-// }

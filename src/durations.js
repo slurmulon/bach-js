@@ -8,7 +8,6 @@ export class Durations {
   }
 
   get steps () {
-    // return this.source.signals
     return this.source.steps
   }
 
@@ -100,22 +99,15 @@ export class Durations {
     const step = this.cast(duration, { is, as: 'step' })
     const index = this.cyclic(step)
     const state = this.steps[index]
-    const [[beat, ...elem], play, stop] = state
+    const [[beat, ...elems], play, stop] = state
 
     return {
       beat,
-      // TODO: Add once tests are updated
-      // elem,
+      elems,
       play,
       stop,
       index
     }
-
-    // return Object.entries(this.steps)
-    //   .reduce((acc, [key, steps]) => ({
-    //     ...acc,
-    //     [key]: steps[index]
-    //   }), { index })
   }
 
   // TODO: Either replace or improve via inspiration with this:
