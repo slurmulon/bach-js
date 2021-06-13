@@ -89,6 +89,12 @@ export class Music {
     }
   }
 
+  beat (index) {
+    const cursor = this.durations.cyclic(index, { max: this.beats.length })
+
+    return this.beats[cursor]
+  }
+
   adjust (tempo) {
 
   }
