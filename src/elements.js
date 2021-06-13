@@ -98,6 +98,8 @@ export class Elements {
     // if (elem instanceof Element) return elem
     if (typeof elem === 'object') return elem
     if (typeof elem === 'string') return this.get(elem)
+    if (Array.isArray(elem)) return elem.map(el => this.get(el))
+    if (elem == null) return null
     // if (typeof elem === 'object') return new Element(this.cast(elem))
 
     throw TypeError('Failed to resolve element due to unsupported data type')
