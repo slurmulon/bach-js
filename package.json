@@ -1,6 +1,6 @@
 {
   "name": "bach-js",
-  "version": "3.0.0-beta.2",
+  "version": "3.0.0-beta.3",
   "description": "Bach music notation library for JS",
   "main": "dist/bach-js.cjs.js",
   "module": "dist/bach-js.esm.js",
