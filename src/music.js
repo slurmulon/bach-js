@@ -83,6 +83,7 @@ export class Music {
 
     return {
       beat: this.beats[cursor.beat],
+      elems: (cursor.elems || []).map(elem => this.store.resolve(elem)),
       play: (cursor.play || []).map(elem => this.store.resolve(elem)),
       stop: (cursor.stop || []).map(elem => this.store.resolve(elem))
     }

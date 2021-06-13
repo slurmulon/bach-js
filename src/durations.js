@@ -96,14 +96,14 @@ export class Durations {
   }
 
   at (duration, is = 'step') {
-    const step = this.cast(duration, { is, as: 'step' })
+    const step = Math.floor(this.cast(duration, { is, as: 'step' }))
     const index = this.cyclic(step)
     const state = this.steps[index]
-    const [[beat, ...elems], play, stop] = state
+    const [context, play, stop] = state || []
 
     return {
-      beat,
-      elems,
+      beat: context[0],
+      elems: context.slice(1),
       play,
       stop,
       index
