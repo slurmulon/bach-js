@@ -9,10 +9,13 @@ import {
 } from 'teoria'
 
 // Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
+// Given a string, automatically upgrades source to v3 (simple replacement of !play with play!).
 // Main entry point for integrating with core bach ClojureScript library.
 export const compose = source => {
   if (typeof source === 'string') {
-    return bach.compose(source)
+    const upgraded = source.replace(/!play/i, 'play!')
+
+    return bach.compose(upgraded)
   }
 
   if (typeof source === 'object') {
