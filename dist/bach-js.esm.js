@@ -132,6 +132,7 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
 
     return bach;
   }; // Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
+  // Given a string, automatically upgrades source to v3 (simple replacement of !play with play!).
   // Main entry point for integrating with core bach ClojureScript library.
 
 
@@ -139,7 +140,8 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
 
   var compose = function compose(source) {
     if (typeof source === 'string') {
-      return _bachCljs["default"].compose(source);
+      var upgraded = source.replace(/!play/i, 'play!');
+      return _bachCljs["default"].compose(upgraded);
     }
 
     if ((0, _typeof2["default"])(source) === 'object') {
@@ -429,7 +431,6 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
     (0, _createClass2["default"])(Durations, [{
       key: "steps",
       get: function get() {
-        // return this.source.signals
         return this.source.steps;
       }
     }, {
@@ -610,22 +611,17 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
         var _state = (0, _slicedToArray2["default"])(state, 3),
             _state$ = (0, _toArray2["default"])(_state[0]),
             beat = _state$[0],
-            elem = (0, _slice["default"])(_state$).call(_state$, 1),
+            elems = (0, _slice["default"])(_state$).call(_state$, 1),
             play = _state[1],
             stop = _state[2];
 
         return {
           beat: beat,
-          // TODO: Add once tests are updated
-          // elem,
+          elems: elems,
           play: play,
           stop: stop,
           index: index
-        }; // return Object.entries(this.steps)
-        //   .reduce((acc, [key, steps]) => ({
-        //     ...acc,
-        //     [key]: steps[index]
-        //   }), { index })
+        };
       } // TODO: Either replace or improve via inspiration with this:
       // @see: https://tonejs.github.io/docs/r13/Time#quantize
 
@@ -955,7 +951,6 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
     }, {
       key: "notes",
       get: function get() {
-        // return Note.unite(this.elements.flatMap(({ notes }) => notes))
         return this.notesOf(this.elements);
       } // Provides map of elements in a beat grouped by kind.
       // FIXME: Doesn't support multiple elements of the same kind
@@ -1005,20 +1000,15 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
         return (0, _filter["default"])(_context24 = this.elements).call(_context24, function (elem) {
           return kind === elem.kind;
         });
-      } // first (kinds) {
-
+      }
     }, {
       key: "either",
       value: function either(kinds) {
         var _this5 = this;
 
         return (0, _reduce["default"])(kinds).call(kinds, function (acc, kind) {
-          // return acc.length ? acc : this.elements.filter(elem => kind === elem.kind)
           return acc.length ? acc : (0, _filter["default"])(_this5).call(_this5, kind);
-        }, []); // for (kind of kinds) {
-        //   const elems = item.elements.filter(elem => kind === elem.kind)
-        //   if (elems.length) return elems
-        // }
+        }, []);
       }
     }, {
       key: "notesOf",
@@ -1035,31 +1025,13 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
           return (0, _map["default"])(beats).call(beats, function (beat) {
             return new Beat(beat, store);
           });
-        } // return new Beat(beats, store)
-
+        }
 
         return [new Beat(beats, store)];
       }
     }]);
     return Beat;
-  }(); // export class BeatItem {
-  //   constructor (data, beat) {
-  //     this.data = data
-  //     this.beat = beat
-  //   }
-  //   get duration () {
-  //     return this.data.duration
-  //   }
-  //   get elements () {
-  //     return this.data.elements.map(elem => this.beat.store.resolve(elem))
-  //   }
-  //   add (elem) {
-  //     const record = this.beat.store.register(elem)
-  //     this.data.elements = this.data.elements.concat(record.id)
-  //     return this
-  //   }
-  // }
-
+  }();
 
   var Music = /*#__PURE__*/function () {
     function Music(source) {
