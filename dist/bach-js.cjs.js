@@ -12,8 +12,6 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
 
 var _defineProperty = require("@babel/runtime-corejs3/helpers/defineProperty");
 
-var _toArray = require("@babel/runtime-corejs3/helpers/toArray");
-
 var _toConsumableArray = require("@babel/runtime-corejs3/helpers/toConsumableArray");
 
 var _classCallCheck = require("@babel/runtime-corejs3/helpers/classCallCheck");
@@ -60,7 +58,7 @@ var _Array$isArray = require("@babel/runtime-corejs3/core-js-stable/array/is-arr
 
 function ownKeys(object, enumerableOnly) { var keys = _Object$keys(object); if (_Object$getOwnPropertySymbols) { var symbols = _Object$getOwnPropertySymbols(object); if (enumerableOnly) { symbols = _filterInstanceProperty(symbols).call(symbols, function (sym) { return _Object$getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context30; _forEachInstanceProperty(_context30 = ownKeys(Object(source), true)).call(_context30, function (key) { _defineProperty(target, key, source[key]); }); } else if (_Object$getOwnPropertyDescriptors) { _Object$defineProperties(target, _Object$getOwnPropertyDescriptors(source)); } else { var _context31; _forEachInstanceProperty(_context31 = ownKeys(Object(source))).call(_context31, function (key) { _Object$defineProperty(target, key, _Object$getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context31; _forEachInstanceProperty(_context31 = ownKeys(Object(source), true)).call(_context31, function (key) { _defineProperty(target, key, source[key]); }); } else if (_Object$getOwnPropertyDescriptors) { _Object$defineProperties(target, _Object$getOwnPropertyDescriptors(source)); } else { var _context32; _forEachInstanceProperty(_context32 = ownKeys(Object(source))).call(_context32, function (key) { _Object$defineProperty(target, key, _Object$getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 _Object$defineProperty(exports, '__esModule', {
   value: true
@@ -565,23 +563,22 @@ var Durations = /*#__PURE__*/function () {
     key: "at",
     value: function at(duration) {
       var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
-      var step = this.cast(duration, {
+      var step = Math.floor(this.cast(duration, {
         is: is,
         as: 'step'
-      });
+      }));
       var index = this.cyclic(step);
       var state = this.steps[index];
 
-      var _state = _slicedToArray(state, 3),
-          _state$ = _toArray(_state[0]),
-          beat = _state$[0],
-          elems = _sliceInstanceProperty(_state$).call(_state$, 1),
-          play = _state[1],
-          stop = _state[2];
+      var _ref6 = state || [],
+          _ref7 = _slicedToArray(_ref6, 3),
+          context = _ref7[0],
+          play = _ref7[1],
+          stop = _ref7[2];
 
       return {
-        beat: beat,
-        elems: elems,
+        beat: context[0],
+        elems: _sliceInstanceProperty(context).call(context, 1),
         play: play,
         stop: stop,
         index: index
@@ -595,15 +592,15 @@ var Durations = /*#__PURE__*/function () {
       var _context8,
           _this = this;
 
-      var _ref6 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref6$is = _ref6.is,
-          is = _ref6$is === void 0 ? 'ms' : _ref6$is,
-          _ref6$units = _ref6.units,
-          units = _ref6$units === void 0 ? ['8n', '4n'] : _ref6$units,
-          _ref6$calc = _ref6.calc,
-          calc = _ref6$calc === void 0 ? 'floor' : _ref6$calc,
-          _ref6$size = _ref6.size,
-          size = _ref6$size === void 0 ? 'min' : _ref6$size;
+      var _ref8 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref8$is = _ref8.is,
+          is = _ref8$is === void 0 ? 'ms' : _ref8$is,
+          _ref8$units = _ref8.units,
+          units = _ref8$units === void 0 ? ['8n', '4n'] : _ref8$units,
+          _ref8$calc = _ref8.calc,
+          calc = _ref8$calc === void 0 ? 'floor' : _ref8$calc,
+          _ref8$size = _ref8.size,
+          size = _ref8$size === void 0 ? 'min' : _ref8$size;
 
       var durations = _sortInstanceProperty(_context8 = _mapInstanceProperty(units).call(units, function (unit) {
         var value = _this.cast(duration, {
@@ -694,10 +691,10 @@ var Element = /*#__PURE__*/function () {
 
 var Elements = /*#__PURE__*/function () {
   function Elements() {
-    var _ref7 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        source = _ref7.source,
-        store = _ref7.store,
-        cast = _ref7.cast;
+    var _ref9 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        source = _ref9.source,
+        store = _ref9.store,
+        cast = _ref9.cast;
 
     _classCallCheck(this, Elements);
 
@@ -779,12 +776,12 @@ var Elements = /*#__PURE__*/function () {
 
   }, {
     key: "register",
-    value: function register(_ref8) {
+    value: function register(_ref10) {
       var _context14;
 
-      var kind = _ref8.kind,
-          value = _ref8.value,
-          props = _ref8.props;
+      var kind = _ref10.kind,
+          value = _ref10.value,
+          props = _ref10.props;
       if (!kind || typeof kind !== 'string') throw TypeError('kind must be a non-empty string');
       if (value == null) throw TypeError('value must be defined and non-null');
       var elem = bach.elementize(kind, _concatInstanceProperty(_context14 = [value]).call(_context14, _toConsumableArray(props)));
@@ -808,17 +805,17 @@ var Elements = /*#__PURE__*/function () {
       };
       if (!elements) return null; // TODO: Validate element shape with JSON Schema
 
-      return _reduceInstanceProperty(_context15 = _Object$entries(elements)).call(_context15, function (acc, _ref9) {
+      return _reduceInstanceProperty(_context15 = _Object$entries(elements)).call(_context15, function (acc, _ref11) {
         var _context16;
 
-        var _ref10 = _slicedToArray(_ref9, 2),
-            kind = _ref10[0],
-            ids = _ref10[1];
+        var _ref12 = _slicedToArray(_ref11, 2),
+            kind = _ref12[0],
+            ids = _ref12[1];
 
-        var elems = _reduceInstanceProperty(_context16 = _Object$entries(ids)).call(_context16, function (acc, _ref11) {
-          var _ref12 = _slicedToArray(_ref11, 2),
-              id = _ref12[0],
-              elem = _ref12[1];
+        var elems = _reduceInstanceProperty(_context16 = _Object$entries(ids)).call(_context16, function (acc, _ref13) {
+          var _ref14 = _slicedToArray(_ref13, 2),
+              id = _ref14[0],
+              elem = _ref14[1];
 
           return _objectSpread(_objectSpread({}, acc), {}, _defineProperty({}, id, as(_objectSpread({
             id: id,
@@ -890,8 +887,8 @@ var Beat = /*#__PURE__*/function () {
       var _context19,
           _this4 = this;
 
-      return _flatMapInstanceProperty(_context19 = this.data.items).call(_context19, function (_ref13) {
-        var elements = _ref13.elements;
+      return _flatMapInstanceProperty(_context19 = this.data.items).call(_context19, function (_ref15) {
+        var elements = _ref15.elements;
         return _mapInstanceProperty(elements).call(elements, function (elem) {
           return _this4.store.resolve(elem);
         });
@@ -900,16 +897,16 @@ var Beat = /*#__PURE__*/function () {
   }, {
     key: "kinds",
     get: function get() {
-      return this.all(function (_ref14) {
-        var kind = _ref14.kind;
+      return this.all(function (_ref16) {
+        var kind = _ref16.kind;
         return kind;
       });
     }
   }, {
     key: "values",
     get: function get() {
-      return this.all(function (_ref15) {
-        var value = _ref15.value;
+      return this.all(function (_ref17) {
+        var value = _ref17.value;
         return value;
       });
     }
@@ -978,8 +975,8 @@ var Beat = /*#__PURE__*/function () {
   }, {
     key: "notesOf",
     value: function notesOf(elements) {
-      return Note.unite(_flatMapInstanceProperty(elements).call(elements, function (_ref16) {
-        var notes = _ref16.notes;
+      return Note.unite(_flatMapInstanceProperty(elements).call(elements, function (_ref18) {
+        var notes = _ref18.notes;
         return notes;
       }));
     }
@@ -1063,8 +1060,8 @@ var Music = /*#__PURE__*/function () {
       return Note.unite(_flatMapInstanceProperty(_context25 = this.beats).call(_context25, function (beat) {
         var _context26;
 
-        return _flatMapInstanceProperty(_context26 = beat.elements).call(_context26, function (_ref17) {
-          var notes = _ref17.notes;
+        return _flatMapInstanceProperty(_context26 = beat.elements).call(_context26, function (_ref19) {
+          var notes = _ref19.notes;
           return notes;
         });
       }));
@@ -1101,16 +1098,20 @@ var Music = /*#__PURE__*/function () {
     value: function at(duration) {
       var _context28,
           _this6 = this,
-          _context29;
+          _context29,
+          _context30;
 
       var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
       var cursor = this.durations.at(duration, is);
       return {
         beat: this.beats[cursor.beat],
-        play: _mapInstanceProperty(_context28 = cursor.play || []).call(_context28, function (elem) {
+        elems: _mapInstanceProperty(_context28 = cursor.elems || []).call(_context28, function (elem) {
           return _this6.store.resolve(elem);
         }),
-        stop: _mapInstanceProperty(_context29 = cursor.stop || []).call(_context29, function (elem) {
+        play: _mapInstanceProperty(_context29 = cursor.play || []).call(_context29, function (elem) {
+          return _this6.store.resolve(elem);
+        }),
+        stop: _mapInstanceProperty(_context30 = cursor.stop || []).call(_context30, function (elem) {
           return _this6.store.resolve(elem);
         })
       };
