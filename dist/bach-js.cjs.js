@@ -46,6 +46,8 @@ var _Object$values = require("@babel/runtime-corejs3/core-js-stable/object/value
 
 var _Object$keys = require("@babel/runtime-corejs3/core-js-stable/object/keys");
 
+var _Array$isArray = require("@babel/runtime-corejs3/core-js-stable/array/is-array");
+
 var _reduceInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/reduce");
 
 var _Object$entries = require("@babel/runtime-corejs3/core-js-stable/object/entries");
@@ -54,11 +56,9 @@ var _everyInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/inst
 
 var _findInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/find");
 
-var _Array$isArray = require("@babel/runtime-corejs3/core-js-stable/array/is-array");
-
 function ownKeys(object, enumerableOnly) { var keys = _Object$keys(object); if (_Object$getOwnPropertySymbols) { var symbols = _Object$getOwnPropertySymbols(object); if (enumerableOnly) { symbols = _filterInstanceProperty(symbols).call(symbols, function (sym) { return _Object$getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context31; _forEachInstanceProperty(_context31 = ownKeys(Object(source), true)).call(_context31, function (key) { _defineProperty(target, key, source[key]); }); } else if (_Object$getOwnPropertyDescriptors) { _Object$defineProperties(target, _Object$getOwnPropertyDescriptors(source)); } else { var _context32; _forEachInstanceProperty(_context32 = ownKeys(Object(source))).call(_context32, function (key) { _Object$defineProperty(target, key, _Object$getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context28; _forEachInstanceProperty(_context28 = ownKeys(Object(source), true)).call(_context28, function (key) { _defineProperty(target, key, source[key]); }); } else if (_Object$getOwnPropertyDescriptors) { _Object$defineProperties(target, _Object$getOwnPropertyDescriptors(source)); } else { var _context29; _forEachInstanceProperty(_context29 = ownKeys(Object(source))).call(_context29, function (key) { _Object$defineProperty(target, key, _Object$getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 _Object$defineProperty(exports, '__esModule', {
   value: true
@@ -766,10 +766,16 @@ var Elements = /*#__PURE__*/function () {
   }, {
     key: "resolve",
     value: function resolve(elem) {
+      var _this3 = this;
+
       // FIXME: Use json-schema validator here instead to support cross-context typing (instanceof doesn't work from workers etc.)
       // if (elem instanceof Element) return elem
       if (_typeof(elem) === 'object') return elem;
-      if (typeof elem === 'string') return this.get(elem); // if (typeof elem === 'object') return new Element(this.cast(elem))
+      if (typeof elem === 'string') return this.get(elem);
+      if (_Array$isArray(elem)) return _mapInstanceProperty(elem).call(elem, function (el) {
+        return _this3.get(el);
+      });
+      if (elem == null) return null; // if (typeof elem === 'object') return new Element(this.cast(elem))
 
       throw TypeError('Failed to resolve element due to unsupported data type');
     } // TODO: Rename to `insert`
@@ -869,14 +875,14 @@ var Beat = /*#__PURE__*/function () {
     key: "items",
     get: function get() {
       var _context17,
-          _this3 = this;
+          _this4 = this;
 
       return _mapInstanceProperty(_context17 = this.data.items).call(_context17, function (item) {
         var _context18;
 
         return _objectSpread(_objectSpread({}, item), {}, {
           elements: _mapInstanceProperty(_context18 = item.elements).call(_context18, function (elem) {
-            return _this3.store.resolve(elem);
+            return _this4.store.resolve(elem);
           })
         });
       });
@@ -885,12 +891,12 @@ var Beat = /*#__PURE__*/function () {
     key: "elements",
     get: function get() {
       var _context19,
-          _this4 = this;
+          _this5 = this;
 
       return _flatMapInstanceProperty(_context19 = this.data.items).call(_context19, function (_ref15) {
         var elements = _ref15.elements;
         return _mapInstanceProperty(elements).call(elements, function (elem) {
-          return _this4.store.resolve(elem);
+          return _this5.store.resolve(elem);
         });
       });
     }
@@ -966,10 +972,10 @@ var Beat = /*#__PURE__*/function () {
   }, {
     key: "either",
     value: function either(kinds) {
-      var _this5 = this;
+      var _this6 = this;
 
       return _reduceInstanceProperty(kinds).call(kinds, function (acc, kind) {
-        return acc.length ? acc : _filterInstanceProperty(_this5).call(_this5, kind);
+        return acc.length ? acc : _filterInstanceProperty(_this6).call(_this6, kind);
       }, []);
     }
   }, {
@@ -1096,24 +1102,13 @@ var Music = /*#__PURE__*/function () {
   }, {
     key: "at",
     value: function at(duration) {
-      var _context28,
-          _this6 = this,
-          _context29,
-          _context30;
-
       var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
       var cursor = this.durations.at(duration, is);
       return {
         beat: this.beats[cursor.beat],
-        elems: _mapInstanceProperty(_context28 = cursor.elems || []).call(_context28, function (elem) {
-          return _this6.store.resolve(elem);
-        }),
-        play: _mapInstanceProperty(_context29 = cursor.play || []).call(_context29, function (elem) {
-          return _this6.store.resolve(elem);
-        }),
-        stop: _mapInstanceProperty(_context30 = cursor.stop || []).call(_context30, function (elem) {
-          return _this6.store.resolve(elem);
-        })
+        elems: this.store.resolve(cursor.elems),
+        play: this.store.resolve(cursor.play),
+        stop: this.store.resolve(cursor.stop)
       };
     }
   }, {
