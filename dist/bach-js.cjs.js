@@ -1117,6 +1117,14 @@ var Music = /*#__PURE__*/function () {
       };
     }
   }, {
+    key: "beat",
+    value: function beat(index) {
+      var cursor = this.durations.cyclic(index, {
+        max: this.beats.length
+      });
+      return this.beats[cursor];
+    }
+  }, {
     key: "adjust",
     value: function adjust(tempo) {}
   }]);

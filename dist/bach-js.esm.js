@@ -1151,6 +1151,14 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
         };
       }
     }, {
+      key: "beat",
+      value: function beat(index) {
+        var cursor = this.durations.cyclic(index, {
+          max: this.beats.length
+        });
+        return this.beats[cursor];
+      }
+    }, {
       key: "adjust",
       value: function adjust(tempo) {}
     }]);
