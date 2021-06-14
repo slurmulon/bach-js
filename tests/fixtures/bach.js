@@ -1,4 +1,5 @@
-export const basic = `@Tempo = 150
+export const basic = `
+  @tempo = 150
 
   :a = chord('A7')
   :e = chord('E6')
@@ -20,4 +21,17 @@ export const basic = `@Tempo = 150
   play! [:part-a :part-b]
 `
 
-export default { basic }
+export const compound = `
+  @meter = 6|8
+  @tempo = 120
+
+  play! [
+    2 * bar -> {
+      Scale('G dorian')
+      Chord('Gm')
+    }
+    2 * bar -> Chord('C')
+  ]
+`
+
+export default { basic, compound }

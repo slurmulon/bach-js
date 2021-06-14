@@ -1,5 +1,5 @@
 import { Durations } from '../src/durations'
-import { basic as source } from './fixtures/bach'
+import { basic as source, compound } from './fixtures/bach'
 
 const durations = new Durations(source)
 
@@ -95,6 +95,98 @@ describe('cast', () => {
       const result = durations.cast(4, { is: 'second', as: 'ms' })
 
       expect(result).toBe(4000)
+    })
+  })
+})
+
+describe('unitize', () => {
+  const durations = new Durations(compound)
+
+  describe('units', () => {
+    it('step -> pulse (default)', () => {
+      const result = durations.unitize(2)
+
+      expect(result).toBe(12)
+    })
+
+    it('pulse -> step', () => {
+      const result = durations.unitize(6, { is: 'pulse', as: 'step' })
+
+      expect(result).toBe(1)
+    })
+
+    it('step -> bar', () => {
+      const result = durations.unitize(4, { as: 'bar' })
+
+      expect(result).toBe(4)
+    })
+
+    it('pulse -> bar', () => {
+      const result = durations.unitize(18, { is: 'pulse', as: 'bar' })
+
+      expect(result).toBe(3)
+    })
+
+    it('bar -> step', () => {
+      const result = durations.unitize(4, { is: 'bar', as: 'step' })
+
+      expect(result).toBe(4)
+    })
+
+    it('bar -> pulse', () => {
+      const result = durations.unitize(2, { is: 'bar', as: 'pulse' })
+
+      expect(result).toBe(12)
+    })
+  })
+
+  describe('time', () => {
+    it('step -> ms', () => {
+      const result = durations.unitize(2, { as: 'ms' })
+
+      expect(result).toBe(6000)
+    })
+
+    it('pulse -> ms', () => {
+      const result = durations.unitize(3, { is: 'pulse', as: 'ms' })
+
+      expect(result).toBe(1500)
+    })
+
+    it('bar -> ms', () => {
+      const result = durations.unitize(2.5, { is: 'bar', as: 'ms' })
+
+      expect(result).toBe(7500)
+    })
+
+    it('step -> second', () => {
+      const result = durations.unitize(2, { as: 'second' })
+
+      expect(result).toBe(6)
+    })
+
+    it('pulse -> second', () => {
+      const result = durations.unitize(5, { is: 'pulse', as: 'second' })
+
+      expect(result).toBe(2.5)
+    })
+
+    it('bar -> second', () => {
+      const result = durations.unitize(2.5, { is: 'bar', as: 'second' })
+
+      expect(result).toBe(7.5)
+    })
+
+    it('ms -> second', () => {
+      const result = durations.unitize(2345, { is: 'ms', as: 'second' })
+
+      expect(result).toBe(2.345)
+    })
+
+    it('second -> ms', () => {
+      const result = durations.unitize(4.567, { is: 'second', as: 'ms' })
+
+      expect(result).toBe(4567)
     })
   })
 })
