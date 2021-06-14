@@ -62,10 +62,6 @@ export class Music {
     return this.beats.every(beat => beat.musical)
   }
 
-  // get playable () {
-  //   return this.elements.every(({ notes }) => !!notes.length)
-  // }
-
   get step () {
     return this.units.beat.step
   }
@@ -93,10 +89,6 @@ export class Music {
     const cursor = this.durations.cyclic(index, { max: this.beats.length })
 
     return this.beats[cursor]
-  }
-
-  adjust (tempo) {
-
   }
 
 }
