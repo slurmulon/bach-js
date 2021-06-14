@@ -46,17 +46,17 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
 
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["exports", "@babel/runtime-corejs3/helpers/esm/defineProperty", "@babel/runtime-corejs3/helpers/esm/toConsumableArray", "@babel/runtime-corejs3/helpers/esm/classCallCheck", "@babel/runtime-corejs3/helpers/esm/createClass", "@babel/runtime-corejs3/helpers/esm/slicedToArray", "@babel/runtime-corejs3/helpers/esm/typeof", "@babel/runtime-corejs3/core-js-stable/json/stringify", "@babel/runtime-corejs3/core-js-stable/instance/concat", "@babel/runtime-corejs3/core-js-stable/instance/slice", "@babel/runtime-corejs3/core-js-stable/instance/map", "@babel/runtime-corejs3/core-js-stable/instance/filter", "@babel/runtime-corejs3/core-js-stable/instance/includes", "@babel/runtime-corejs3/core-js-stable/set", "@babel/runtime-corejs3/core-js-stable/instance/sort", "@babel/runtime-corejs3/core-js-stable/instance/flat-map", "@babel/runtime-corejs3/core-js-stable/instance/every", "@babel/runtime-corejs3/core-js-stable/object/keys", "@babel/runtime-corejs3/core-js-stable/object/values", "@babel/runtime-corejs3/core-js-stable/array/is-array", "@babel/runtime-corejs3/core-js-stable/instance/reduce", "@babel/runtime-corejs3/core-js-stable/object/entries", "@babel/runtime-corejs3/core-js-stable/instance/find", "@babel/runtime-corejs3/core-js-stable/instance/reverse", "teoria", "bach-cljs", "bach-json-schema", "ajv"], factory);
+    define(["exports", "@babel/runtime-corejs3/helpers/esm/toConsumableArray", "@babel/runtime-corejs3/helpers/esm/classCallCheck", "@babel/runtime-corejs3/helpers/esm/createClass", "@babel/runtime-corejs3/helpers/esm/defineProperty", "@babel/runtime-corejs3/helpers/esm/slicedToArray", "@babel/runtime-corejs3/helpers/esm/typeof", "@babel/runtime-corejs3/core-js-stable/json/stringify", "@babel/runtime-corejs3/core-js-stable/instance/concat", "@babel/runtime-corejs3/core-js-stable/instance/slice", "@babel/runtime-corejs3/core-js-stable/instance/map", "@babel/runtime-corejs3/core-js-stable/instance/filter", "@babel/runtime-corejs3/core-js-stable/instance/includes", "@babel/runtime-corejs3/core-js-stable/set", "@babel/runtime-corejs3/core-js-stable/instance/sort", "@babel/runtime-corejs3/core-js-stable/instance/flat-map", "@babel/runtime-corejs3/core-js-stable/instance/every", "@babel/runtime-corejs3/core-js-stable/object/keys", "@babel/runtime-corejs3/core-js-stable/object/values", "@babel/runtime-corejs3/core-js-stable/array/is-array", "@babel/runtime-corejs3/core-js-stable/instance/reduce", "@babel/runtime-corejs3/core-js-stable/object/entries", "@babel/runtime-corejs3/core-js-stable/instance/find", "@babel/runtime-corejs3/core-js-stable/instance/reverse", "teoria", "bach-cljs", "bach-json-schema", "ajv"], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require("@babel/runtime-corejs3/helpers/esm/defineProperty"), require("@babel/runtime-corejs3/helpers/esm/toConsumableArray"), require("@babel/runtime-corejs3/helpers/esm/classCallCheck"), require("@babel/runtime-corejs3/helpers/esm/createClass"), require("@babel/runtime-corejs3/helpers/esm/slicedToArray"), require("@babel/runtime-corejs3/helpers/esm/typeof"), require("@babel/runtime-corejs3/core-js-stable/json/stringify"), require("@babel/runtime-corejs3/core-js-stable/instance/concat"), require("@babel/runtime-corejs3/core-js-stable/instance/slice"), require("@babel/runtime-corejs3/core-js-stable/instance/map"), require("@babel/runtime-corejs3/core-js-stable/instance/filter"), require("@babel/runtime-corejs3/core-js-stable/instance/includes"), require("@babel/runtime-corejs3/core-js-stable/set"), require("@babel/runtime-corejs3/core-js-stable/instance/sort"), require("@babel/runtime-corejs3/core-js-stable/instance/flat-map"), require("@babel/runtime-corejs3/core-js-stable/instance/every"), require("@babel/runtime-corejs3/core-js-stable/object/keys"), require("@babel/runtime-corejs3/core-js-stable/object/values"), require("@babel/runtime-corejs3/core-js-stable/array/is-array"), require("@babel/runtime-corejs3/core-js-stable/instance/reduce"), require("@babel/runtime-corejs3/core-js-stable/object/entries"), require("@babel/runtime-corejs3/core-js-stable/instance/find"), require("@babel/runtime-corejs3/core-js-stable/instance/reverse"), require("teoria"), require("bach-cljs"), require("bach-json-schema"), require("ajv"));
+    factory(exports, require("@babel/runtime-corejs3/helpers/esm/toConsumableArray"), require("@babel/runtime-corejs3/helpers/esm/classCallCheck"), require("@babel/runtime-corejs3/helpers/esm/createClass"), require("@babel/runtime-corejs3/helpers/esm/defineProperty"), require("@babel/runtime-corejs3/helpers/esm/slicedToArray"), require("@babel/runtime-corejs3/helpers/esm/typeof"), require("@babel/runtime-corejs3/core-js-stable/json/stringify"), require("@babel/runtime-corejs3/core-js-stable/instance/concat"), require("@babel/runtime-corejs3/core-js-stable/instance/slice"), require("@babel/runtime-corejs3/core-js-stable/instance/map"), require("@babel/runtime-corejs3/core-js-stable/instance/filter"), require("@babel/runtime-corejs3/core-js-stable/instance/includes"), require("@babel/runtime-corejs3/core-js-stable/set"), require("@babel/runtime-corejs3/core-js-stable/instance/sort"), require("@babel/runtime-corejs3/core-js-stable/instance/flat-map"), require("@babel/runtime-corejs3/core-js-stable/instance/every"), require("@babel/runtime-corejs3/core-js-stable/object/keys"), require("@babel/runtime-corejs3/core-js-stable/object/values"), require("@babel/runtime-corejs3/core-js-stable/array/is-array"), require("@babel/runtime-corejs3/core-js-stable/instance/reduce"), require("@babel/runtime-corejs3/core-js-stable/object/entries"), require("@babel/runtime-corejs3/core-js-stable/instance/find"), require("@babel/runtime-corejs3/core-js-stable/instance/reverse"), require("teoria"), require("bach-cljs"), require("bach-json-schema"), require("ajv"));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.defineProperty, global.toConsumableArray, global.classCallCheck, global.createClass, global.slicedToArray, global._typeof, global.stringify, _concatInstanceProperty2(global), _sliceInstanceProperty2(global), _mapInstanceProperty2(global), _filterInstanceProperty2(global), _includesInstanceProperty2(global), global.set, _sortInstanceProperty2(global), _flatMapInstanceProperty2(global), _everyInstanceProperty2(global), _keysInstanceProperty(global), _valuesInstanceProperty(global), global.isArray, _reduceInstanceProperty2(global), _entriesInstanceProperty(global), _findInstanceProperty2(global), _reverseInstanceProperty2(global), global.teoria, global.bachCljs, global.bachJsonSchema, global.ajv);
+    factory(mod.exports, global.toConsumableArray, global.classCallCheck, global.createClass, global.defineProperty, global.slicedToArray, global._typeof, global.stringify, _concatInstanceProperty2(global), _sliceInstanceProperty2(global), _mapInstanceProperty2(global), _filterInstanceProperty2(global), _includesInstanceProperty2(global), global.set, _sortInstanceProperty2(global), _flatMapInstanceProperty2(global), _everyInstanceProperty2(global), _keysInstanceProperty(global), _valuesInstanceProperty(global), global.isArray, _reduceInstanceProperty2(global), _entriesInstanceProperty(global), _findInstanceProperty2(global), _reverseInstanceProperty2(global), global.teoria, global.bachCljs, global.bachJsonSchema, global.ajv);
     global.unknown = mod.exports;
   }
-})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _defineProperty2, _toConsumableArray2, _classCallCheck2, _createClass2, _slicedToArray2, _typeof2, _stringify, _concat, _slice, _map, _filter, _includes, _set, _sort, _flatMap, _every, _keys, _values, _isArray, _reduce, _entries, _find, _reverse, _teoria, _bachCljs, _bachJsonSchema, _ajv) {
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _toConsumableArray2, _classCallCheck2, _createClass2, _defineProperty2, _slicedToArray2, _typeof2, _stringify, _concat, _slice, _map, _filter, _includes, _set, _sort, _flatMap, _every, _keys, _values, _isArray, _reduce, _entries, _find, _reverse, _teoria, _bachCljs, _bachJsonSchema, _ajv) {
   "use strict";
 
   var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
@@ -77,11 +77,11 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
   _exports.scaleToString = scaleToString;
   _exports.scaleify = scaleify;
   _exports.steps = steps;
-  _exports.validate = _exports.valid = _exports.unitsOf = _exports.timesOf = _exports.notesOf = _exports.compose = _exports.Note = _exports.Music = _exports.MUSICAL_ELEMENTS = _exports.Elements = _exports.Element = _exports.Durations = void 0;
-  _defineProperty2 = _interopRequireDefault(_defineProperty2);
+  _exports.validate = _exports.valid = _exports.unitsOf = _exports.timesOf = _exports.notesOf = _exports.durationsOf = _exports.compose = _exports.Note = _exports.Music = _exports.MUSICAL_ELEMENTS = _exports.Elements = _exports.Element = _exports.Durations = void 0;
   _toConsumableArray2 = _interopRequireDefault(_toConsumableArray2);
   _classCallCheck2 = _interopRequireDefault(_classCallCheck2);
   _createClass2 = _interopRequireDefault(_createClass2);
+  _defineProperty2 = _interopRequireDefault(_defineProperty2);
   _slicedToArray2 = _interopRequireDefault(_slicedToArray2);
   _typeof2 = _interopRequireDefault(_typeof2);
   _stringify = _interopRequireDefault(_stringify);
@@ -240,31 +240,39 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
     return (0, _filter["default"])(left).call(left, function (note) {
       return (0, _includes["default"])(right).call(right, note);
     });
-  } // TODO: Remove
-
+  }
 
   var unitsOf = function unitsOf(source) {
-    return {
-      step: source.units.beat.step,
-      pulse: source.units.beat.pulse,
-      bar: source.units.bar.step,
-      ms: 1 / source.units.time.bar
-    };
+    var _source$units = source.units,
+        beat = _source$units.beat,
+        bar = _source$units.bar,
+        time = _source$units.time;
+    return durationsOf({
+      step: 1,
+      pulse: 1 / (beat.step / beat.pulse),
+      bar: bar.step,
+      ms: 1 / time.step,
+      second: 1 / time.step * 1000
+    });
   };
 
   _exports.unitsOf = unitsOf;
 
   var timesOf = function timesOf(source) {
-    var _source$units$time = source.units.time,
-        step = _source$units$time.step,
-        pulse = _source$units$time.pulse,
-        bar = _source$units$time.bar;
-    return {
+    source.units;
+    return durationsOf(_objectSpread({
       ms: 1,
-      second: 1000,
-      step: step,
-      pulse: pulse,
-      bar: bar,
+      second: 1000
+    }, source.units.time));
+  };
+
+  _exports.timesOf = timesOf;
+
+  var durationsOf = function durationsOf(units) {
+    var step = units.step,
+        pulse = units.pulse,
+        bar = units.bar;
+    return _objectSpread(_objectSpread({}, units), {}, {
       's': step,
       'p': pulse,
       'm': bar,
@@ -276,10 +284,10 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
       '64n': bar / 64,
       '4up': bar - bar / 4,
       '8up': bar - bar / 8
-    };
+    });
   };
 
-  _exports.timesOf = timesOf;
+  _exports.durationsOf = durationsOf;
 
   var Note = /*#__PURE__*/function () {
     function Note() {
@@ -498,13 +506,24 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
         return duration / (this.times[as] / this.times[is]);
       }
     }, {
-      key: "metronize",
-      value: function metronize(duration) {
+      key: "unitize",
+      value: function unitize(duration) {
         var _ref2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
             _ref2$is = _ref2.is,
-            is = _ref2$is === void 0 ? 'ms' : _ref2$is,
+            is = _ref2$is === void 0 ? 'step' : _ref2$is,
             _ref2$as = _ref2.as,
             as = _ref2$as === void 0 ? 'pulse' : _ref2$as;
+
+        return duration / (this.units[as] / this.units[is]);
+      }
+    }, {
+      key: "metronize",
+      value: function metronize(duration) {
+        var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+            _ref3$is = _ref3.is,
+            is = _ref3$is === void 0 ? 'ms' : _ref3$is,
+            _ref3$as = _ref3.as,
+            as = _ref3$as === void 0 ? 'pulse' : _ref3$as;
 
         var index = this.cast(duration, {
           is: is,
@@ -533,12 +552,12 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
     }, {
       key: "clamp",
       value: function clamp(duration) {
-        var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-            _ref3$is = _ref3.is,
-            is = _ref3$is === void 0 ? 'step' : _ref3$is,
-            _ref3$min = _ref3.min,
-            min = _ref3$min === void 0 ? 0 : _ref3$min,
-            max = _ref3.max;
+        var _ref4 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+            _ref4$is = _ref4.is,
+            is = _ref4$is === void 0 ? 'step' : _ref4$is,
+            _ref4$min = _ref4.min,
+            min = _ref4$min === void 0 ? 0 : _ref4$min,
+            max = _ref4.max;
 
         var step = this.cast(duration, {
           is: is,
@@ -557,12 +576,12 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
     }, {
       key: "cyclic",
       value: function cyclic(duration) {
-        var _ref4 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-            _ref4$is = _ref4.is,
-            is = _ref4$is === void 0 ? 'step' : _ref4$is,
-            _ref4$min = _ref4.min,
-            min = _ref4$min === void 0 ? 0 : _ref4$min,
-            max = _ref4.max;
+        var _ref5 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+            _ref5$is = _ref5.is,
+            is = _ref5$is === void 0 ? 'step' : _ref5$is,
+            _ref5$min = _ref5.min,
+            min = _ref5$min === void 0 ? 0 : _ref5$min,
+            max = _ref5.max;
 
         this.cast(duration, {
           is: is,
@@ -582,12 +601,12 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
     }, {
       key: "interpolate",
       value: function interpolate(ratio) {
-        var _ref5 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-            _ref5$is = _ref5.is,
-            is = _ref5$is === void 0 ? 'step' : _ref5$is,
-            _ref5$min = _ref5.min,
-            min = _ref5$min === void 0 ? 0 : _ref5$min,
-            max = _ref5.max;
+        var _ref6 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+            _ref6$is = _ref6.is,
+            is = _ref6$is === void 0 ? 'step' : _ref6$is,
+            _ref6$min = _ref6.min,
+            min = _ref6$min === void 0 ? 0 : _ref6$min,
+            max = _ref6.max;
 
         var head = this.cast(min || 0, {
           is: is,
@@ -610,11 +629,11 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
         var index = this.cyclic(step);
         var state = this.steps[index];
 
-        var _ref6 = state || [],
-            _ref7 = (0, _slicedToArray2["default"])(_ref6, 3),
-            context = _ref7[0],
-            play = _ref7[1],
-            stop = _ref7[2];
+        var _ref7 = state || [],
+            _ref8 = (0, _slicedToArray2["default"])(_ref7, 3),
+            context = _ref8[0],
+            play = _ref8[1],
+            stop = _ref8[2];
 
         return {
           beat: context[0],
@@ -632,15 +651,15 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
         var _context8,
             _this = this;
 
-        var _ref8 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-            _ref8$is = _ref8.is,
-            is = _ref8$is === void 0 ? 'ms' : _ref8$is,
-            _ref8$units = _ref8.units,
-            units = _ref8$units === void 0 ? ['8n', '4n'] : _ref8$units,
-            _ref8$calc = _ref8.calc,
-            calc = _ref8$calc === void 0 ? 'floor' : _ref8$calc,
-            _ref8$size = _ref8.size,
-            size = _ref8$size === void 0 ? 'min' : _ref8$size;
+        var _ref9 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+            _ref9$is = _ref9.is,
+            is = _ref9$is === void 0 ? 'ms' : _ref9$is,
+            _ref9$units = _ref9.units,
+            units = _ref9$units === void 0 ? ['8n', '4n'] : _ref9$units,
+            _ref9$calc = _ref9.calc,
+            calc = _ref9$calc === void 0 ? 'floor' : _ref9$calc,
+            _ref9$size = _ref9.size,
+            size = _ref9$size === void 0 ? 'min' : _ref9$size;
 
         var durations = (0, _sort["default"])(_context8 = (0, _map["default"])(units).call(units, function (unit) {
           var value = _this.cast(duration, {
@@ -731,10 +750,10 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
 
   var Elements = /*#__PURE__*/function () {
     function Elements() {
-      var _ref9 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-          source = _ref9.source,
-          store = _ref9.store,
-          cast = _ref9.cast;
+      var _ref10 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          source = _ref10.source,
+          store = _ref10.store,
+          cast = _ref10.cast;
 
       (0, _classCallCheck2["default"])(this, Elements);
       this.source = compose(source);
@@ -799,20 +818,20 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
         throw TypeError('Element id must be a string in the format of "kind.hash"');
       }
     }, {
-      key: "every",
-      value: function every(kind) {
-        var _context13;
-
-        return (0, _map["default"])(_context13 = (0, _values["default"])(this.data[kind])).call(_context13, function (elem) {
-          return new Element(elem);
-        });
-      }
-    }, {
       key: "one",
       value: function one(kind) {
+        var _context13;
+
+        return (0, _every["default"])(_context13 = this).call(_context13, kind)[0];
+      }
+    }, {
+      key: "every",
+      value: function every(kind) {
         var _context14;
 
-        return (0, _every["default"])(_context14 = this).call(_context14, kind)[0];
+        return (0, _map["default"])(_context14 = (0, _values["default"])(this.data[kind])).call(_context14, function (elem) {
+          return new Element(elem);
+        });
       }
     }, {
       key: "resolve",
@@ -833,12 +852,12 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
 
     }, {
       key: "register",
-      value: function register(_ref10) {
+      value: function register(_ref11) {
         var _context15;
 
-        var kind = _ref10.kind,
-            value = _ref10.value,
-            props = _ref10.props;
+        var kind = _ref11.kind,
+            value = _ref11.value,
+            props = _ref11.props;
         if (!kind || typeof kind !== 'string') throw TypeError('kind must be a non-empty string');
         if (value == null) throw TypeError('value must be defined and non-null');
         var elem = (0, _bachCljs.elementize)(kind, (0, _concat["default"])(_context15 = [value]).call(_context15, (0, _toConsumableArray2["default"])(props)));
@@ -862,17 +881,17 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
         };
         if (!elements) return null; // TODO: Validate element shape with JSON Schema
 
-        return (0, _reduce["default"])(_context16 = (0, _entries["default"])(elements)).call(_context16, function (acc, _ref11) {
+        return (0, _reduce["default"])(_context16 = (0, _entries["default"])(elements)).call(_context16, function (acc, _ref12) {
           var _context17;
 
-          var _ref12 = (0, _slicedToArray2["default"])(_ref11, 2),
-              kind = _ref12[0],
-              ids = _ref12[1];
+          var _ref13 = (0, _slicedToArray2["default"])(_ref12, 2),
+              kind = _ref13[0],
+              ids = _ref13[1];
 
-          var elems = (0, _reduce["default"])(_context17 = (0, _entries["default"])(ids)).call(_context17, function (acc, _ref13) {
-            var _ref14 = (0, _slicedToArray2["default"])(_ref13, 2),
-                id = _ref14[0],
-                elem = _ref14[1];
+          var elems = (0, _reduce["default"])(_context17 = (0, _entries["default"])(ids)).call(_context17, function (acc, _ref14) {
+            var _ref15 = (0, _slicedToArray2["default"])(_ref14, 2),
+                id = _ref15[0],
+                elem = _ref15[1];
 
             return _objectSpread(_objectSpread({}, acc), {}, (0, _defineProperty2["default"])({}, id, as(_objectSpread({
               id: id,
@@ -944,8 +963,8 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
         var _context20,
             _this5 = this;
 
-        return (0, _flatMap["default"])(_context20 = this.data.items).call(_context20, function (_ref15) {
-          var elements = _ref15.elements;
+        return (0, _flatMap["default"])(_context20 = this.data.items).call(_context20, function (_ref16) {
+          var elements = _ref16.elements;
           return (0, _map["default"])(elements).call(elements, function (elem) {
             return _this5.store.resolve(elem);
           });
@@ -954,16 +973,16 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
     }, {
       key: "kinds",
       get: function get() {
-        return this.all(function (_ref16) {
-          var kind = _ref16.kind;
+        return this.all(function (_ref17) {
+          var kind = _ref17.kind;
           return kind;
         });
       }
     }, {
       key: "values",
       get: function get() {
-        return this.all(function (_ref17) {
-          var value = _ref17.value;
+        return this.all(function (_ref18) {
+          var value = _ref18.value;
           return value;
         });
       }
@@ -1039,8 +1058,8 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
     }, {
       key: "notesOf",
       value: function notesOf(elements) {
-        return Note.unite((0, _flatMap["default"])(elements).call(elements, function (_ref18) {
-          var notes = _ref18.notes;
+        return Note.unite((0, _flatMap["default"])(elements).call(elements, function (_ref19) {
+          var notes = _ref19.notes;
           return notes;
         }));
       }
@@ -1122,8 +1141,8 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
         return Note.unite((0, _flatMap["default"])(_context28 = this.beats).call(_context28, function (beat) {
           var _context29;
 
-          return (0, _flatMap["default"])(_context29 = beat.elements).call(_context29, function (_ref19) {
-            var notes = _ref19.notes;
+          return (0, _flatMap["default"])(_context29 = beat.elements).call(_context29, function (_ref20) {
+            var notes = _ref20.notes;
             return notes;
           });
         }));
