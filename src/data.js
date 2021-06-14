@@ -88,23 +88,33 @@ export function notesIntersect (left, right) {
  return left.filter(note => right.includes(note))
 }
 
-// TODO: Remove
-export const unitsOf = source => ({
-  step: source.units.beat.step,
-  pulse: source.units.beat.pulse,
-  bar: source.units.bar.step,
-  ms: (1 / source.units.time.bar)
-})
+export const unitsOf = source => {
+  const { beat, bar, time } = source.units
+
+  return durationsOf({
+    step: 1,
+    pulse: 1 / (beat.step / beat.pulse),
+    bar: bar.step,
+    ms: 1 / time.step,
+    second: (1 / time.step) * 1000
+  })
+}
 
 export const timesOf = source => {
-  const { time: { step, pulse, bar } } = source.units
+  const { time } = source.units
 
-  return {
+  return durationsOf({
     ms: 1,
     second: 1000,
-    step,
-    pulse,
-    bar,
+    ...source.units.time
+  })
+}
+
+export const durationsOf = (units) => {
+  const { step, pulse, bar } = units
+
+  return {
+    ...units,
     's': step,
     'p': pulse,
     'm': bar,
