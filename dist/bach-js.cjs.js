@@ -42,9 +42,11 @@ var _sortInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/insta
 
 var _flatMapInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/flat-map");
 
-var _Object$values = require("@babel/runtime-corejs3/core-js-stable/object/values");
+var _everyInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/every");
 
 var _Object$keys = require("@babel/runtime-corejs3/core-js-stable/object/keys");
+
+var _Object$values = require("@babel/runtime-corejs3/core-js-stable/object/values");
 
 var _Array$isArray = require("@babel/runtime-corejs3/core-js-stable/array/is-array");
 
@@ -52,13 +54,13 @@ var _reduceInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/ins
 
 var _Object$entries = require("@babel/runtime-corejs3/core-js-stable/object/entries");
 
-var _everyInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/every");
-
 var _findInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/find");
+
+var _reverseInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/reverse");
 
 function ownKeys(object, enumerableOnly) { var keys = _Object$keys(object); if (_Object$getOwnPropertySymbols) { var symbols = _Object$getOwnPropertySymbols(object); if (enumerableOnly) { symbols = _filterInstanceProperty(symbols).call(symbols, function (sym) { return _Object$getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context28; _forEachInstanceProperty(_context28 = ownKeys(Object(source), true)).call(_context28, function (key) { _defineProperty(target, key, source[key]); }); } else if (_Object$getOwnPropertyDescriptors) { _Object$defineProperties(target, _Object$getOwnPropertyDescriptors(source)); } else { var _context29; _forEachInstanceProperty(_context29 = ownKeys(Object(source))).call(_context29, function (key) { _Object$defineProperty(target, key, _Object$getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { var _context31; _forEachInstanceProperty(_context31 = ownKeys(Object(source), true)).call(_context31, function (key) { _defineProperty(target, key, source[key]); }); } else if (_Object$getOwnPropertyDescriptors) { _Object$defineProperties(target, _Object$getOwnPropertyDescriptors(source)); } else { var _context32; _forEachInstanceProperty(_context32 = ownKeys(Object(source))).call(_context32, function (key) { _Object$defineProperty(target, key, _Object$getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 _Object$defineProperty(exports, '__esModule', {
   value: true
@@ -714,11 +716,7 @@ var Elements = /*#__PURE__*/function () {
           _this2 = this;
 
       return _flatMapInstanceProperty(_context10 = this.kinds).call(_context10, function (kind) {
-        var _context11;
-
-        return _mapInstanceProperty(_context11 = _Object$values(_this2.data[kind])).call(_context11, function (elem) {
-          return new Element(elem);
-        });
+        return _everyInstanceProperty(_this2).call(_this2, kind);
       });
     }
   }, {
@@ -729,18 +727,18 @@ var Elements = /*#__PURE__*/function () {
   }, {
     key: "values",
     get: function get() {
-      var _context12;
+      var _context11;
 
-      return _mapInstanceProperty(_context12 = this.all).call(_context12, function (elem) {
+      return _mapInstanceProperty(_context11 = this.all).call(_context11, function (elem) {
         return elem.value;
       });
     }
   }, {
     key: "ids",
     get: function get() {
-      var _context13;
+      var _context12;
 
-      return _mapInstanceProperty(_context13 = this.all).call(_context13, function (elem) {
+      return _mapInstanceProperty(_context12 = this.all).call(_context12, function (elem) {
         return elem.id;
       });
     }
@@ -764,6 +762,22 @@ var Elements = /*#__PURE__*/function () {
       throw TypeError('Element id must be a string in the format of "kind.hash"');
     }
   }, {
+    key: "every",
+    value: function every(kind) {
+      var _context13;
+
+      return _mapInstanceProperty(_context13 = _Object$values(this.data[kind])).call(_context13, function (elem) {
+        return new Element(elem);
+      });
+    }
+  }, {
+    key: "one",
+    value: function one(kind) {
+      var _context14;
+
+      return _everyInstanceProperty(_context14 = this).call(_context14, kind)[0];
+    }
+  }, {
     key: "resolve",
     value: function resolve(elem) {
       var _this3 = this;
@@ -783,14 +797,14 @@ var Elements = /*#__PURE__*/function () {
   }, {
     key: "register",
     value: function register(_ref10) {
-      var _context14;
+      var _context15;
 
       var kind = _ref10.kind,
           value = _ref10.value,
           props = _ref10.props;
       if (!kind || typeof kind !== 'string') throw TypeError('kind must be a non-empty string');
       if (value == null) throw TypeError('value must be defined and non-null');
-      var elem = bach.elementize(kind, _concatInstanceProperty(_context14 = [value]).call(_context14, _toConsumableArray(props)));
+      var elem = bach.elementize(kind, _concatInstanceProperty(_context15 = [value]).call(_context15, _toConsumableArray(props)));
       var uid = Element.uid(elem.id);
       var record = this.cast(_objectSpread(_objectSpread({}, elem), {}, {
         id: uid,
@@ -804,21 +818,21 @@ var Elements = /*#__PURE__*/function () {
   }], [{
     key: "cast",
     value: function cast(elements) {
-      var _context15;
+      var _context16;
 
       var as = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function (_) {
         return _;
       };
       if (!elements) return null; // TODO: Validate element shape with JSON Schema
 
-      return _reduceInstanceProperty(_context15 = _Object$entries(elements)).call(_context15, function (acc, _ref11) {
-        var _context16;
+      return _reduceInstanceProperty(_context16 = _Object$entries(elements)).call(_context16, function (acc, _ref11) {
+        var _context17;
 
         var _ref12 = _slicedToArray(_ref11, 2),
             kind = _ref12[0],
             ids = _ref12[1];
 
-        var elems = _reduceInstanceProperty(_context16 = _Object$entries(ids)).call(_context16, function (acc, _ref13) {
+        var elems = _reduceInstanceProperty(_context17 = _Object$entries(ids)).call(_context17, function (acc, _ref13) {
           var _ref14 = _slicedToArray(_ref13, 2),
               id = _ref14[0],
               elem = _ref14[1];
@@ -874,14 +888,14 @@ var Beat = /*#__PURE__*/function () {
   }, {
     key: "items",
     get: function get() {
-      var _context17,
+      var _context18,
           _this4 = this;
 
-      return _mapInstanceProperty(_context17 = this.data.items).call(_context17, function (item) {
-        var _context18;
+      return _mapInstanceProperty(_context18 = this.data.items).call(_context18, function (item) {
+        var _context19;
 
         return _objectSpread(_objectSpread({}, item), {}, {
-          elements: _mapInstanceProperty(_context18 = item.elements).call(_context18, function (elem) {
+          elements: _mapInstanceProperty(_context19 = item.elements).call(_context19, function (elem) {
             return _this4.store.resolve(elem);
           })
         });
@@ -890,10 +904,10 @@ var Beat = /*#__PURE__*/function () {
   }, {
     key: "elements",
     get: function get() {
-      var _context19,
+      var _context20,
           _this5 = this;
 
-      return _flatMapInstanceProperty(_context19 = this.data.items).call(_context19, function (_ref15) {
+      return _flatMapInstanceProperty(_context20 = this.data.items).call(_context20, function (_ref15) {
         var elements = _ref15.elements;
         return _mapInstanceProperty(elements).call(elements, function (elem) {
           return _this5.store.resolve(elem);
@@ -926,48 +940,55 @@ var Beat = /*#__PURE__*/function () {
   }, {
     key: "parts",
     get: function get() {
-      var _context20;
+      var _context21;
 
-      return _reduceInstanceProperty(_context20 = this.elements).call(_context20, function (parts, elem) {
+      return _reduceInstanceProperty(_context21 = this.elements).call(_context21, function (parts, elem) {
         return _objectSpread(_objectSpread({}, parts), {}, _defineProperty({}, elem.kind, elem));
       }, {});
     }
   }, {
     key: "musical",
     get: function get() {
-      var _context21;
+      var _context22;
 
-      return _everyInstanceProperty(_context21 = this.elements).call(_context21, function (elem) {
+      return _everyInstanceProperty(_context22 = this.elements).call(_context22, function (elem) {
         return elem.musical;
       });
     }
   }, {
     key: "all",
     value: function all() {
-      var _context22;
+      var _context23;
 
       var cast = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function (_) {
         return _;
       };
-      return _toConsumableArray(new _Set(_mapInstanceProperty(_context22 = this.elements).call(_context22, cast)));
+      return _toConsumableArray(new _Set(_mapInstanceProperty(_context23 = this.elements).call(_context23, cast)));
     }
   }, {
     key: "find",
     value: function find(kind) {
-      var _context23;
+      var _context24;
 
-      return _findInstanceProperty(_context23 = this.elements).call(_context23, function (elem) {
+      return _findInstanceProperty(_context24 = this.elements).call(_context24, function (elem) {
         return kind === elem.kind;
       });
     }
   }, {
     key: "filter",
     value: function filter(kind) {
-      var _context24;
+      var _context25;
 
-      return _filterInstanceProperty(_context24 = this.elements).call(_context24, function (elem) {
+      return _filterInstanceProperty(_context25 = this.elements).call(_context25, function (elem) {
         return kind === elem.kind;
       });
+    }
+  }, {
+    key: "last",
+    value: function last(kind) {
+      var _context26, _context27;
+
+      return _reverseInstanceProperty(_context26 = _filterInstanceProperty(_context27 = this).call(_context27, kind)).call(_context26)[0];
     }
   }, {
     key: "either",
@@ -1061,12 +1082,12 @@ var Music = /*#__PURE__*/function () {
   }, {
     key: "notes",
     get: function get() {
-      var _context25;
+      var _context28;
 
-      return Note.unite(_flatMapInstanceProperty(_context25 = this.beats).call(_context25, function (beat) {
-        var _context26;
+      return Note.unite(_flatMapInstanceProperty(_context28 = this.beats).call(_context28, function (beat) {
+        var _context29;
 
-        return _flatMapInstanceProperty(_context26 = beat.elements).call(_context26, function (_ref19) {
+        return _flatMapInstanceProperty(_context29 = beat.elements).call(_context29, function (_ref19) {
           var notes = _ref19.notes;
           return notes;
         });
@@ -1075,9 +1096,9 @@ var Music = /*#__PURE__*/function () {
   }, {
     key: "musical",
     get: function get() {
-      var _context27;
+      var _context30;
 
-      return _everyInstanceProperty(_context27 = this.beats).call(_context27, function (beat) {
+      return _everyInstanceProperty(_context30 = this.beats).call(_context30, function (beat) {
         return beat.musical;
       });
     } // get playable () {
