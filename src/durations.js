@@ -1,101 +1,139 @@
-import { normalize, unitsOf, barsOf, timesOf, intervalsOf } from './data'
+import { compose, unitsOf, timesOf } from './data'
 import { gcd, clamp, lerp } from './math'
 
+/**
+ * Provides essential duration values and calculations of a bach track.
+ * Enables trivial conversions between any duration unit via cast (based
+ * on milliseconds) and unitize (based on steps, bach's iteration unit).
+ */
 export class Durations {
 
   constructor (source) {
-    this.source = normalize(source)
-  }
-
-  get data () {
-    return this.source.data
-  }
-
-  get all () {
-    return this.data.flat().map(beat => beat.duration)
+    this.source = compose(source)
   }
 
   get steps () {
-    return this.all.flatMap((duration, index) => Array(duration).fill(index))
+    return this.source.steps
   }
 
-  get shortest () {
-    return this.all.sort((left, right) => left - right)[0]
+  get metrics () {
+    return this.source.metrics
   }
 
-  get longest () {
-    return this.all.sort((left, right) => right- left)[0]
+  get min () {
+    return this.metrics.min
+  }
+
+  get max () {
+    return this.metrics.max
   }
 
   get total () {
-    return this.source.headers['total-pulse-beats']
+    return this.metrics.total
+  }
+
+  get step () {
+    return this.units.step
+  }
+
+  get pulse () {
+    return this.units.pulse
   }
 
   get bar () {
-    return barsOf(this.source)
+    return this.units.bar
   }
 
-  get unit () {
+  get units () {
     return unitsOf(this.source)
   }
 
-  get time () {
+  get times () {
     return timesOf(this.source)
   }
 
   get interval () {
-    return intervalsOf(this.source).pulse
+    return this.times.step
   }
 
-  cast (duration, { is = 'pulse', as = 'ms' } = {}) {
-    return duration / (this.time[as] / this.time[is])
+  cast (duration, { is = 'step', as = 'pulse' } = {}) {
+    return duration / (this.times[as] / this.times[is])
   }
 
-  unitize (duration, { is = 'pulse', as = 'beat' } = {}) {
-    return duration / (this.unit[as] / this.unit[is])
+  unitize (duration, { is = 'step', as = 'pulse' } = {}) {
+    return duration / (this.units[as] / this.units[is])
   }
 
-  metronize (duration, { is = 'pulse', as = 'beat' }) {
+  metronize (duration, { is = 'ms', as = 'pulse' } = {}) {
     const index = this.cast(duration, { is, as })
-    const bar = this.cast(this.bar.pulse, { as })
+    const bar = this.cast(this.bar, { as })
 
     return Math.floor(index % bar)
   }
 
-  ratio (duration, is = 'pulse') {
-    return this.cast(duration, { is, as: 'pulse' }) / this.total
+  ratio (duration, is = 'step') {
+    return this.cast(duration, { is, as: 'step' }) / this.total
   }
 
-  percentage (duration, is = 'pulse') {
+  percentage (duration, is = 'step') {
     return this.ratio(duration, is) * 100
   }
 
-  clamp (duration, { is = 'pulse', min = 0, max } = {}) {
-    const total = this.cast(duration, { is, as: 'pulse' })
+  clamp (duration, { is = 'step', min = 0, max } = {}) {
+    const step = this.cast(duration, { is, as: 'step' })
+    const head = this.cast(min || 0, { is, as: 'step' })
+    const tail = this.cast(max || this.total, { is, as: 'step' })
 
-    return clamp(duration, min, max || total)
+    return clamp(step, head, tail)
   }
 
-  interpolate (ratio, { is = 'pulse', min = 0, max } = {}) {
-    const x = this.cast(min || 0, { is, as: 'pulse' })
-    const y = this.cast(max || duration, { is, as: 'pulse' })
+  cyclic (duration, { is = 'step', min = 0, max } = {}) {
+    const step = this.cast(duration, { is, as: 'step' })
+    const head = this.cast(min || 0, { is, as: 'step' })
+    const tail = this.cast(max || this.total, { is, as: 'step' })
+    const key = duration >= head ? duration : duration + tail
 
-    return lerp(ratio, x, y)
+    return key % tail
+  }
+
+  interpolate (ratio, { is = 'step', min = 0, max } = {}) {
+    const head = this.cast(min || 0, { is, as: 'step' })
+    const tail = this.cast(max || this.total, { is, as: 'step' })
+
+    return lerp(ratio, head, tail)
+  }
+
+  at (duration, is = 'step') {
+    const step = Math.floor(this.cast(duration, { is, as: 'step' }))
+    const index = this.cyclic(step)
+    const state = this.steps[index]
+    const [context, play, stop] = state || []
+
+    return {
+      beat: context[0],
+      elems: context.slice(1),
+      play,
+      stop,
+      index
+    }
   }
 
   // TODO: Either replace or improve via inspiration with this:
   // @see: https://tonejs.github.io/docs/r13/Time#quantize
-  rhythmic ({
-    duration,
+  rhythmic (duration, {
     is = 'ms',
-    units = ['eight', 'quarter'],
-    calc = 'abs',
+    units = ['8n', '4n'],
+    calc = 'floor',
     size = 'min'
-  }) {
+  } = {}) {
     const durations = units
-      .map(unit => Math[calc](this.cast(duration, { is, as: unit })))
-      .sort((a, b) => Math.abs(time - a) - Math.abs(time - b))
-      .filter(_ => _)
+      .map(unit => {
+        const value = this.cast(duration, { is, as: unit })
+        const result = Math[calc](value)
+
+        return this.cast(result, { is: unit, as: is })
+      })
+      .sort((a, b) => Math.abs(duration - a) - Math.abs(duration - b))
 
     return Math[size](...durations)
   }

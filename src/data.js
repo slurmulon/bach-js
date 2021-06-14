@@ -1,5 +1,4 @@
 import bach from 'bach-cljs'
-import { Beat } from './elements'
 import { Note } from './note'
 import { valid } from './validate'
 import {
@@ -9,11 +8,16 @@ import {
   Chord as TeoriaChord
 } from 'teoria'
 
-// Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
-// Main entry point for integrating with core bach ClojureScript library.
+/**
+ * Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
+ * Given a string, automatically upgrades source to v3 (simple replacement of !play with play!).
+ * Main entry point for integrating with core bach ClojureScript library.
+ */
 export const compose = source => {
   if (typeof source === 'string') {
-    return bach(source)
+    const upgraded = source.replace(/!play/i, 'play!')
+
+    return bach.compose(upgraded)
   }
 
   if (typeof source === 'object') {
@@ -22,79 +26,6 @@ export const compose = source => {
 
   throw TypeError(`Unsupported Bach.JSON data type (${typeof source}). Must be a bach.json object or raw bach string.`)
 }
-
-// Creates Bach.JSON beat elements from minimal data.
-// WARN: Now dup'd in rebach
-export const atomize = (kind, value) => ({
-  keyword: kind.toLowerCase(),
-  arguments: [value]
-})
-
-// Consumes bach.json source data and parses/normalizes each beat.
-// Light-weight alternative to using Track constructor.
-export const normalize = source => {
-  const bach = typeof source === 'string' ? compose(source) : source
-
-  return Object.assign({}, bach, {
-    data: bach.data.map(Beat.from)
-  })
-}
-
-// Converts a parsed Track's `data` back into its serialized form (vanilla bach.json).
-export const serialize = track => {
-  const data = track.data
-    .map(measure => {
-      return measure.map(beat => {
-        return beat && beat.data
-      })
-    })
-
-  return Object.assign({}, track, { data })
-}
-
-// Creates a reduced and simplified version of the track with only populated sections.
-// Ideal data format for high-level iteration and/or cursor tracing in bach engines.
-export const sectionize = source => source.data
-  .map(measure =>
-    measure
-      .filter(beat => !!beat.data)
-      .map(partitionBeat)
-  )
-  .reduce((all, one) => all.concat(one), [])
-
-// Groups sequentially identical phrases by summation of duration:
-// TODO
-export const condense = source => {
-  // e.g.
-  // [1 -> :A, 3 -> :A]
-  //    becomes
-  // [4 -> :A]
-  //
-  // Note: Does not wrap head and tail if there's more than 2 elements
-}
-
-// Provides a reduced/simplified representation of a Bach beat item/element
-export const simplifyBeatItem = item => {
-  const { keyword, arguments: [value] } = item
-  const kind = keyword.toLowerCase()
-
-  return { kind, value }
-}
-
-// Expands a beat and its items into a usable object grouped by "parts".
-// TODO: Instead of "parts" we should probably stick with "items", to be consistent with Bach
-export const partitionBeat = beat => beat.data.items
-  .map(simplifyBeatItem)
-  .reduce((acc, item) => {
-    const parts = Object.assign({}, acc.parts, {
-      [item.kind]: item.value
-    })
-
-    return Object.assign(acc, {
-      duration: beat.data.duration,
-      parts
-    })
-  }, {})
 
 export function scaleify (value) {
   if (typeof value === 'string') {
@@ -159,89 +90,51 @@ export function notesIntersect (left, right) {
  return left.filter(note => right.includes(note))
 }
 
-// TODO: Use empty-schema (or another approach) to return default bach.json ehaders instead of empty object
-export const headersOf = source => (source && source.headers) || {}
+/**
+ * Given bach source, provides a key/value map of duration
+ * units normalized to a step beat (the base unit of iteration in bach).
+ */
+export const unitsOf = source => {
+  const { beat, bar, time } = source.units
 
-export const intervalsOf = source => ({
-  pulse: headersOf(source)['ms-per-pulse-beat'],
-  beat: headersOf(source)['ms-per-beat-unit']
+  return durationsOf({
+    step: 1,
+    pulse: 1 / (beat.step / beat.pulse),
+    bar: bar.step,
+    ms: 1 / time.step,
+    second: (1 / time.step) * 1000
+  })
+}
+
+/**
+ * Given bach source, provides a key/value map of duration
+ * units normalized to a millisecond.
+ */
+export const timesOf = source => durationsOf({
+  ms: 1,
+  second: 1000,
+  ...source.units.time
 })
 
-export const unitsOf = source => ({
-  beat: headersOf(source)['beat-unit'] || 1/4,
-  pulse: headersOf(source)['pulse-beat'] || 1/4,
-  second: 1,
-  ms: 1/1000
-})
+/**
+ * Provides full set of duration units given an object with a step, pulse and bar,
+ * each with a value defining their ratio to a base unit (typically 1).
+ */
+export const durationsOf = (units) => {
+  const { step, pulse, bar } = units
 
-export const barsOf = source => ({
-  beat: headersOf(source)['beat-units-per-measure'] || 4,
-  pulse: headersOf(source)['pulse-beats-per-measure'] || 4,
-  bar: 1,
-  measure: 1
-})
-
-export const timesOf = source => {
-  const intervals = intervalsOf(source)
-  const bars = barsOf(source)
-  const bar = bars.pulse * intervals.pulse
-
-  // TODO: Probably move most if not all of these into unitsOf, and then just modify here post-calc
-  //  - Could have `unitsOf` accept an option `scale` prop (defaulting to 1) that determiens the reference unit
-  //  - UPDATE: Can just replace unitsOf with this (rename timesOf to unitsOf)
-  const units = {
-    ms: 1,
-    second: 1000,
-    pulse: intervals.pulse,
-    beat: intervals.beat,
-    bar,
-    measure: bar,
-    half: bar / 2,
-    quarter: bar / 4,
-    eight: bar / 8,
-    sixteen: bar / 16,
-    upbeat: bar - (bar / 4),
-    upeight: bar - (bar / 8)
-  }
-
-  // TODO: After we replace teoria with tone, this can be done more dynamically (standardize around their notation duration format)
-  const aliases = {
-    'b': units.beat,
-    'p': units.pulse,
-    '1m': units.bar,
-    '4n': units.quarter,
-    '8n': units.eight,
-    '16n': units.sixteen,
+  return {
+    ...units,
+    's': step,
+    'p': pulse,
+    'm': bar,
+    '2n': bar / 2,
+    '4n': bar / 4,
+    '8n': bar / 8,
+    '16n': bar / 16,
     '32n': bar / 32,
-    '64n': bar / 64
+    '64n': bar / 64,
+    '4up': bar - (bar / 4),
+    '8up': bar - (bar / 8)
   }
-
-  return Object.assign(units, aliases)
-}
-
-export const steps = (ratio, all) => {
-  ratio %= 1
-
-  if (ratio < 0) ratio += 1
-
-  return all[Math.floor(ratio * all.length)]
-}
-
-// TODO: Just remove, pointless
-export default {
-  atomize,
-  normalize,
-  serialize,
-  sectionize,
-  scaleify,
-  chordify,
-  scaleToString,
-  notesInChord,
-  notesInScale,
-  notesIn,
-  headersOf,
-  unitsOf,
-  barsOf,
-  simplifyBeatItem,
-  partitionBeat
 }

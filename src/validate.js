@@ -1,9 +1,7 @@
 import schema from 'bach-json-schema'
 import Ajv from 'ajv'
 
-const ajv = new Ajv()
-
-ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'))
+const ajv = new Ajv({ strictTuples: false })
 
 export const validate = ajv.compile(schema)
 

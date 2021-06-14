@@ -1,12 +1,15 @@
 {
   "name": "bach-js",
-  "version": "2.5.0",
+  "version": "3.0.0-beta.6",
   "description": "Bach music notation library for JS",
-  "main": "dist/bundle.js",
+  "main": "dist/bach-js.cjs.js",
+  "module": "dist/bach-js.esm.js",
+  "browser": "dist/bach-js.umd.js",
   "scripts": {
     "build": "rollup -c",
+    "dev": "npm link bach-cljs bach-json-schema && npm run build && npm link",
     "prepublish": "npm run build",
-    "test": "npm run build && mocha --compilers js:babel-core/register"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -26,25 +29,25 @@
   },
   "homepage": "https://github.com/slurmulon/bach-js#readme",
   "dependencies": {
-    "ajv": "^6.4.0",
-    "bach-cljs": "1.0.5",
-    "bach-json-schema": "github:slurmulon/bach-json-schema",
-    "teoria": "^2.5.0"
+    "@babel/runtime": "^7.14.0",
+    "@babel/runtime-corejs3": "^7.14.0",
+    "ajv": "^8.5.0",
+    "bach-cljs": "github:slurmulon/bach#v3.0.0-beta.1",
+    "bach-json-schema": "github:slurmulon/bach-json-schema#v3.0.2",
+    "core-js": "^3.11.2",
+    "teoria": "^2.5.0",
+    "tonal": "^2.2.2"
   },
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.25.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-es2015-rollup": "^3.0.0",
-    "chai": "^4.1.1",
-    "chai-things": "^0.2.0",
-    "karma": "^1.7.0",
-    "karma-mocha": "^1.3.0",
-    "mocha": "^3.5.0",
-    "rollup": "^0.45.2",
-    "rollup-plugin-babel": "^2.7.1",
-    "rollup-plugin-json": "^2.3.0",
-    "sinon": "^4.5.0",
-    "sinon-chai": "^3.0.0"
+    "@babel/core": "^7.14.0",
+    "@babel/plugin-transform-runtime": "^7.13.15",
+    "@babel/preset-env": "^7.14.0",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^18.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^11.2.1",
+    "babel-jest": "^26.6.3",
+    "jest": "^26.6.3",
+    "rollup": "^2.46.0"
   }
 }

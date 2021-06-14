@@ -1,125 +1,150 @@
+import { elementize } from 'bach-cljs'
 import { note as teoriaNote } from 'teoria'
-import { notesIn } from './data'
+
+import { compose } from './data'
+import { Note } from './note'
 
 /**
- * Represents a single playable element (Note, Scale, Chord, Mode, Triad or Rest)
+ * Represents a single and unique playable element.
+ * Uniqueness and equality are determined by `id`.
  */
-// FIXME: Support rests (~)
 export class Element {
 
   constructor (data) {
     this.data = data
-    // TODO: Consider using nanoid to generate pseudo-unique beat element identifiers
-    // this.id = id || nanoid()
+  }
+
+  get id () {
+    return `${this.data.kind}.${this.data.id}`
+  }
+
+  get uid () {
+    return Element.uid(this.id)
   }
 
   get value () {
-    return this.inputs[0]
+    return this.data.value
   }
 
-  get inputs () {
-    return this.data['arguments']
+  get props () {
+    return this.data.props || []
   }
 
   get kind () {
-    return this.data.keyword.toLowerCase()
+    return this.data.kind.toLowerCase()
+  }
+
+  get duration () {
+    return this.data.duration
   }
 
   get notes () {
-    return notesIn(this.kind, this.value)
+    return Note.all(this.kind, this.value)
   }
 
   get musical () {
     return MUSICAL_ELEMENTS.includes(this.kind)
   }
 
-  // TODO: Refactor to use data/scaleify and data/chordify
-  identify () {
-    try {
-      teoria.note(this.value)
-
-      return 'note'
-    } catch (_) {}
-
-    try {
-      const [key, scale] = this.value.split(' ')
-
-      teoria.note(key).scale(scale.toLowerCase())
-
-      return 'scale'
-    } catch (_) {}
-
-    // FIXME: Make this support an optional octave (e.g. "Cm" and "C2m")
-    try {
-      const [key, chord] = [this.value.substring(0,2), this.value.substring(2)]
-
-      teoria.note(key).chord(chord.toLowerCase())
-
-      return 'chord'
-    } catch (_) {}
+  static uid (id) {
+    return id.split('.').pop()
   }
 
 }
 
 /**
- * Represents a single beat in a track.
- *
- * Beats are represented as a tuple and may contain multiple elements
- *
- * duration -> items (elements)
+ * Provides a centralized and shareable store of parsed elements in a bach track.
  */
-export class Beat {
+export class Elements {
 
-  constructor (data) {
-    this.data = data
-    // TODO: Consider using nanoid to generate pseudo-unique beat identifiers
-    // this.id = id || nanoid()
+  constructor ({ source, store, cast } = {}) {
+    this.source = compose(source)
+    this.cast = cast || (_ => _)
+    this.data = store || Elements.cast(this.source.elements, cast)
   }
 
-  get duration () {
-    return this.exists ? this.data.duration : 0
-  }
-
-  get items () {
-    if (this.empty) return []
-
-    return this.data.items.map(item => new Element(item))
+  get all () {
+    return this.kinds.flatMap(kind => this.every(kind))
   }
 
   get kinds () {
-    return [...new Set(this.items.map(({ kind }) => kind))]
+    return Object.keys(this.data)
   }
 
   get values () {
-    return this.items.reduce((acc, item) => {
-      return Object.assign(acc, { [item.kind]: item.value })
-    }, {})
+    return this.all.map(elem => elem.value)
   }
 
-  get empty () {
-    return !this.data
+  get ids () {
+    return this.all.map(elem => elem.id)
   }
 
-  get exists () {
-    return !this.empty
-  }
+  get (id) {
+    const parts = typeof id === 'string' ? id.split('.') : []
 
-  get musical () {
-    return this.items.every(item => item.musical)
-  }
+    if (parts.length === 2) {
+      const [kind, uid] = parts
+      const elem = this.data[kind][uid]
 
-  first (kind) {
-    return this.items.find(item => kind == item.kind)
-  }
-
-  static from (beats) {
-    if (Array.isArray(beats)) { // in other words, a measure
-      return beats.map(beat => new Beat(beat))
+      return elem ? { ...elem, id: uid, kind } : null
     }
 
-    return new Beat(beats)
+    throw TypeError('Element id must be a string in the format of "kind.hash"')
+  }
+
+  one (kind) {
+    return this.every(kind)[0]
+  }
+
+  every (kind) {
+    return Object.values(this.data[kind]).map(elem => new Element(elem))
+  }
+
+  resolve (elem) {
+    // FIXME: Use json-schema validator here instead to support cross-context typing.
+    // if (elem instanceof Element) return elem
+    if (typeof elem === 'object') return elem
+    if (typeof elem === 'string') return this.get(elem)
+    if (Array.isArray(elem)) return elem.map(el => this.get(el))
+    if (elem == null) return null
+
+    throw TypeError('Failed to resolve element due to unsupported data type')
+  }
+
+  // TODO: Rename to `insert`
+  register ({ kind, value, props }) {
+    if (!kind || typeof kind !== 'string') throw TypeError('kind must be a non-empty string')
+    if (value == null) throw TypeError('value must be defined and non-null')
+
+    const elem = elementize(kind, [value, ...props])
+    const uid = Element.uid(elem.id)
+    const record = this.cast({ ...elem, id: uid, kind })
+
+    this.data[kind] = this.data[kind] || {}
+    this.data[kind][uid] = record
+
+    this.source.elements = this.data
+
+    return new Element(record)
+  }
+
+  static cast (elements, as = _ => _) {
+    if (!elements) return null
+
+    // TODO: Validate element shape with JSON Schema
+    return Object.entries(elements)
+      .reduce((acc, [kind, ids]) => {
+        const elems = Object.entries(ids)
+          .reduce((acc, [id, elem]) => ({
+            ...acc,
+            [id]: as({ id, kind, ...elem })
+          }), {})
+
+        return { ...acc, [kind]: elems }
+      }, {})
   }
 
 }
 
-export const MUSICAL_ELEMENTS = ['note', 'chord', 'scale']
+// TODO: Hoist out to Music, leaky abstraction
+export const MUSICAL_ELEMENTS = ['note', 'chord', 'scale', ' penta'] // triad
