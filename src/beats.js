@@ -77,6 +77,10 @@ export class Beat {
     return this.elements.filter(elem => kind === elem.kind)
   }
 
+  last (kind) {
+    return this.filter(kind).reverse()[0]
+  }
+
   either (kinds) {
     return kinds.reduce((acc, kind) => acc.length ? acc : this.filter(kind), [])
   }

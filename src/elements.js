@@ -62,10 +62,7 @@ export class Elements {
   }
 
   get all () {
-    return this.kinds.flatMap(kind =>
-      Object.values(this.data[kind])
-        .map(elem => new Element(elem))
-    )
+    return this.kinds.flatMap(kind => this.every(kind))
   }
 
   get kinds () {
@@ -91,6 +88,14 @@ export class Elements {
     }
 
     throw TypeError('Element id must be a string in the format of "kind.hash"')
+  }
+
+  one (kind) {
+    return this.every(kind)[0]
+  }
+
+  every (kind) {
+    return Object.values(this.data[kind]).map(elem => new Element(elem))
   }
 
   resolve (elem) {
