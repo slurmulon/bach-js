@@ -8,9 +8,11 @@ import {
   Chord as TeoriaChord
 } from 'teoria'
 
-// Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
-// Given a string, automatically upgrades source to v3 (simple replacement of !play with play!).
-// Main entry point for integrating with core bach ClojureScript library.
+/**
+ * Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
+ * Given a string, automatically upgrades source to v3 (simple replacement of !play with play!).
+ * Main entry point for integrating with core bach ClojureScript library.
+ */
 export const compose = source => {
   if (typeof source === 'string') {
     const upgraded = source.replace(/!play/i, 'play!')
@@ -88,6 +90,10 @@ export function notesIntersect (left, right) {
  return left.filter(note => right.includes(note))
 }
 
+/**
+ * Given bach source, provides a key/value map of duration
+ * units normalized to a step beat (the base unit of iteration in bach).
+ */
 export const unitsOf = source => {
   const { beat, bar, time } = source.units
 
@@ -100,16 +106,20 @@ export const unitsOf = source => {
   })
 }
 
-export const timesOf = source => {
-  const { time } = source.units
+/**
+ * Given bach source, provides a key/value map of duration
+ * units normalized to a millisecond.
+ */
+export const timesOf = source => durationsOf({
+  ms: 1,
+  second: 1000,
+  ...source.units.time
+})
 
-  return durationsOf({
-    ms: 1,
-    second: 1000,
-    ...source.units.time
-  })
-}
-
+/**
+ * Provides full set of duration units given an object with a step, pulse and bar,
+ * each with a value defining their ratio to a base unit (typically 1).
+ */
 export const durationsOf = (units) => {
   const { step, pulse, bar } = units
 
