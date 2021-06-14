@@ -133,9 +133,12 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
     }
 
     return bach;
-  }; // Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
-  // Given a string, automatically upgrades source to v3 (simple replacement of !play with play!).
-  // Main entry point for integrating with core bach ClojureScript library.
+  };
+  /**
+   * Either "composes" raw bach data into bach.json or, when provided an object, validates its structure as bach.json.
+   * Given a string, automatically upgrades source to v3 (simple replacement of !play with play!).
+   * Main entry point for integrating with core bach ClojureScript library.
+   */
 
 
   _exports.valid = valid;
@@ -241,6 +244,11 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
       return (0, _includes["default"])(right).call(right, note);
     });
   }
+  /**
+   * Given bach source, provides a key/value map of duration
+   * units normalized to a step beat (the base unit of iteration in bach).
+   */
+
 
   var unitsOf = function unitsOf(source) {
     var _source$units = source.units,
@@ -255,16 +263,25 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
       second: 1 / time.step * 1000
     });
   };
+  /**
+   * Given bach source, provides a key/value map of duration
+   * units normalized to a millisecond.
+   */
+
 
   _exports.unitsOf = unitsOf;
 
   var timesOf = function timesOf(source) {
-    source.units;
     return durationsOf(_objectSpread({
       ms: 1,
       second: 1000
     }, source.units.time));
   };
+  /**
+   * Provides full set of duration units given an object with a step, pulse and bar,
+   * each with a value defining their ratio to a base unit (typically 1).
+   */
+
 
   _exports.timesOf = timesOf;
 
@@ -431,6 +448,12 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
     if (ratio < 0) ratio += 1;
     return all[Math.floor(ratio * all.length)];
   }
+  /**
+   * Provides essential duration values and calculations of a bach track.
+   * Enables trivial conversions between any duration unit via cast (based
+   * on milliseconds) and unitize (based on steps, bach's iteration unit).
+   */
+
 
   var Durations = /*#__PURE__*/function () {
     function Durations(source) {
@@ -481,7 +504,6 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
     }, {
       key: "units",
       get: function get() {
-        // TODO: Remove, just return this.units
         return unitsOf(this.source);
       }
     }, {
@@ -719,7 +741,7 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
     }, {
       key: "kind",
       get: function get() {
-        return this.data.kind; //.toLowerCase()
+        return this.data.kind.toLowerCase();
       }
     }, {
       key: "duration",
@@ -730,8 +752,7 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
       key: "notes",
       get: function get() {
         return Note.all(this.kind, this.value);
-      } // TODO: Hoist out to Music, leaky abstraction
-
+      }
     }, {
       key: "musical",
       get: function get() {
@@ -745,6 +766,10 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
     }]);
     return Element;
   }();
+  /**
+   * Provides a centralized and shareable store of parsed elements in a bach track.
+   */
+
 
   _exports.Element = Element;
 
@@ -838,15 +863,14 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
       value: function resolve(elem) {
         var _this3 = this;
 
-        // FIXME: Use json-schema validator here instead to support cross-context typing (instanceof doesn't work from workers etc.)
+        // FIXME: Use json-schema validator here instead to support cross-context typing.
         // if (elem instanceof Element) return elem
         if ((0, _typeof2["default"])(elem) === 'object') return elem;
         if (typeof elem === 'string') return this.get(elem);
         if ((0, _isArray["default"])(elem)) return (0, _map["default"])(elem).call(elem, function (el) {
           return _this3.get(el);
         });
-        if (elem == null) return null; // if (typeof elem === 'object') return new Element(this.cast(elem))
-
+        if (elem == null) return null;
         throw TypeError('Failed to resolve element due to unsupported data type');
       } // TODO: Rename to `insert`
 
@@ -991,7 +1015,7 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
       get: function get() {
         return this.notesOf(this.elements);
       } // Provides map of elements in a beat grouped by kind.
-      // FIXME: Doesn't support multiple elements of the same kind
+      // WARN: Doesn't support multiple elements of the same kind.
 
     }, {
       key: "parts",
@@ -1155,10 +1179,7 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
         return (0, _every["default"])(_context30 = this.beats).call(_context30, function (beat) {
           return beat.musical;
         });
-      } // get playable () {
-      //   return this.elements.every(({ notes }) => !!notes.length)
-      // }
-
+      }
     }, {
       key: "step",
       get: function get() {
@@ -1194,9 +1215,6 @@ var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/ob
         });
         return this.beats[cursor];
       }
-    }, {
-      key: "adjust",
-      value: function adjust(tempo) {}
     }]);
     return Music;
   }();
