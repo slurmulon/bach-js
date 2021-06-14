@@ -1,6 +1,11 @@
 import { compose, unitsOf, timesOf } from './data'
 import { gcd, clamp, lerp } from './math'
 
+/**
+ * Provides essential duration values and calculations of a bach track.
+ * Enables trivial conversions between any duration unit via cast (based
+ * on milliseconds) and unitize (based on steps, bach's iteration unit).
+ */
 export class Durations {
 
   constructor (source) {
@@ -40,7 +45,6 @@ export class Durations {
   }
 
   get units () {
-    // TODO: Remove, just return this.units
     return unitsOf(this.source)
   }
 

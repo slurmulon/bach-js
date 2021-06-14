@@ -31,7 +31,7 @@ export class Element {
   }
 
   get kind () {
-    return this.data.kind//.toLowerCase()
+    return this.data.kind.toLowerCase()
   }
 
   get duration () {
@@ -42,7 +42,6 @@ export class Element {
     return Note.all(this.kind, this.value)
   }
 
-  // TODO: Hoist out to Music, leaky abstraction
   get musical () {
     return MUSICAL_ELEMENTS.includes(this.kind)
   }
@@ -53,6 +52,9 @@ export class Element {
 
 }
 
+/**
+ * Provides a centralized and shareable store of parsed elements in a bach track.
+ */
 export class Elements {
 
   constructor ({ source, store, cast } = {}) {
@@ -99,13 +101,12 @@ export class Elements {
   }
 
   resolve (elem) {
-    // FIXME: Use json-schema validator here instead to support cross-context typing (instanceof doesn't work from workers etc.)
+    // FIXME: Use json-schema validator here instead to support cross-context typing.
     // if (elem instanceof Element) return elem
     if (typeof elem === 'object') return elem
     if (typeof elem === 'string') return this.get(elem)
     if (Array.isArray(elem)) return elem.map(el => this.get(el))
     if (elem == null) return null
-    // if (typeof elem === 'object') return new Element(this.cast(elem))
 
     throw TypeError('Failed to resolve element due to unsupported data type')
   }

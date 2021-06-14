@@ -53,7 +53,7 @@ export class Beat {
   }
 
   // Provides map of elements in a beat grouped by kind.
-  // FIXME: Doesn't support multiple elements of the same kind
+  // WARN: Doesn't support multiple elements of the same kind.
   get parts () {
     return this.elements.reduce((parts, elem) => ({
      ...parts,
