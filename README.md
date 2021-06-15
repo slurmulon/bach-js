@@ -4,9 +4,9 @@
 
 `bach` is a notation for representing musical tracks with a focus on human readability.
 
-You can find detailed information on the `bach` notation by visiting the [repository home page](https://github.com/slurmulon/bach).
+You can find detailed information on the `bach` notation by visiting the [project's home page](https://codebach.tech).
 
-This library parses `bach` into [bach.json](https://github.com/slurmulon/bach-json-schema) data and establishes the semantics.
+This library parses `bach` into [`bach.json`](https://github.com/slurmulon/bach-json-schema) data and establishes the semantics for playback, primarily around music.
 
 It also provides a collection of common data transformation and utility methods that make working with `bach.json` even easier.
 
@@ -21,13 +21,32 @@ npm i slurmulon/bach-js
 ## Usage
 
 ```js
-import { Track } from 'bach-js'
+import { Music } from 'bach-js'
 
-const track = new Track("@Tempo = 78 !Play [1 -> { Scale('B mixolydian') Chord('B') } 1 -> Chord('A')]")
+const music = new Music(`
+  @tempo = 136
+  @meter = 3|4
 
-console.log(track.headers)
-console.log(track.data)
+  play! [
+    6/4 -> {
+      Scale('C# phrygian')
+      Chord('C#m')
+    }
+    6/4 -> Chord('Dmaj7')
+  ]
+`)
+
+console.log(music.headers)
+console.log(music.units)
+console.log(music.beats)
+console.log(music.elements)
+console.log(music.notes)
+console.log(music.at(4.5, { is: 'second' }))
 ```
+
+To see real-world usage check out the web-based [`bach-editor`](https://editor.codebach.tech).
+
+To synchronize `bach` with audio in a browser or browser-like environment, see [`gig`](https://github.com/slurmulon/gig).
 
 ## License
 
