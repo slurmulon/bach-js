@@ -9,13 +9,22 @@ export class Music {
   constructor (source) {
     this.source = source
     this.data = compose(source)
-    this.store = this.parses ? new Elements({
+    this.init()
+  }
+
+  init () {
+    if (!this.parses) return null
+
+    this.store = new Elements({
       source: this.data,
       cast: elem => ({
         ...elem,
         notes: Note.all(elem.kind, elem.value)
       })
-    }) : null
+    })
+
+    this.beats = Beat.from(this.data.beats, this.store)
+    this.durations = new Durations(this.data)
   }
 
   get headers () {
@@ -42,13 +51,13 @@ export class Music {
     return this.store.all
   }
 
-  get beats () {
-    return Beat.from(this.data.beats, this.store)
-  }
+  // get beats () {
+  //   return Beat.from(this.data.beats, this.store)
+  // }
 
-  get durations () {
-    return new Durations(this.data)
-  }
+  // get durations () {
+  //   return new Durations(this.data)
+  // }
 
   get notes () {
     return Note.unite(

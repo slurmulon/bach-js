@@ -79,7 +79,7 @@ export function notesIn (kind, value) {
 // TODO: Allow custom note resolvers to be registered globally or locally so people can easily define their own semantics
 //  - Could call this `itemsOf` to be more generic and flexible
 export const notesOf = {
-  note:  value => value,
+  note:  value => [value],
   chord: value => notesInChord(value),
   scale: value => notesInScale(value),
   penta: value => notesInScale(value)

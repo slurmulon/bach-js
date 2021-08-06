@@ -10,6 +10,12 @@ export class Durations {
 
   constructor (source) {
     this.source = compose(source)
+    this.init()
+  }
+
+  init () {
+    this.units = unitsOf(this.source)
+    this.times = timesOf(this.source)
   }
 
   get steps () {
@@ -44,14 +50,6 @@ export class Durations {
     return this.units.bar
   }
 
-  get units () {
-    return unitsOf(this.source)
-  }
-
-  get times () {
-    return timesOf(this.source)
-  }
-
   get interval () {
     return this.times.step
   }
@@ -71,27 +69,76 @@ export class Durations {
     return Math.floor(index % bar)
   }
 
-  ratio (duration, is = 'step') {
-    return this.cast(duration, { is, as: 'step' }) / this.total
+  // TODO: Probably apply offset to index here based on min value, or additional optional base value.
+  scope (duration, { is = 'step', as = 'step', origin = 0, min = 0, max } = {}) {
+    const index = this.cast(duration - origin, { is, as })
+    const head = this.cast(min || 0, { is, as })
+    const total = this.cast(this.total, { is: 'step', as: is })
+    const tail = this.cast(max || total, { is, as })
+
+    return { duration, index, head, tail }
+  }
+
+  // delta (duration, scope) {
+  elapsed (duration, scope) {
+    const { index, head } = this.scope(duration, scope)
+
+    return index - head
+  }
+
+  // TODO: Allow custom min/max here
+  // ratio (duration, is = 'step') {
+  //   return this.cast(duration, { is, as: 'step' }) / this.total
+  // }
+  ratio (duration, scope) {
+    const { index, tail } = this.scope(duration, scope)
+
+    return index / tail
+  }
+
+  // progress (duration, { is = 'step', as = 'step', min = 0, max } = {}) {
+  progress (duration, scope) {
+    // const index = this.cast(duration, { is, as })
+    // const head = this.cast(min || 0, { is, as })
+    // const total = this.cast(this.total, { is: 'step', as: is })
+    // const tail = this.cast(max || total, { is, as })
+    const { index, head, tail } = this.scope(duration, scope)
+    const delta = index - head
+    const range = tail - head
+
+    return delta / range
   }
 
   percentage (duration, is = 'step') {
     return this.ratio(duration, is) * 100
   }
 
-  clamp (duration, { is = 'step', min = 0, max } = {}) {
-    const step = this.cast(duration, { is, as: 'step' })
-    const head = this.cast(min || 0, { is, as: 'step' })
-    const tail = this.cast(max || this.total, { is, as: 'step' })
+  clamp (duration, scope) {
+  // clamp (duration, { is = 'step', min = 0, max } = {}) {
+    // const step = this.cast(duration, { is, as: 'step' })
+    // const head = this.cast(min || 0, { is, as: 'step' })
+    // const tail = this.cast(max || this.total, { is, as: 'step' })
+    // return clamp(step, head, tail)
 
-    return clamp(step, head, tail)
+    const { index, head, tail } = this.scope(duration, scope)
+
+    return clamp(index, head, tail)
   }
 
-  cyclic (duration, { is = 'step', min = 0, max } = {}) {
-    const step = this.cast(duration, { is, as: 'step' })
-    const head = this.cast(min || 0, { is, as: 'step' })
-    const tail = this.cast(max || this.total, { is, as: 'step' })
-    const key = duration >= head ? duration : duration + tail
+  // cyclic (duration, { is = 'step', min = 0, max } = {}) {
+  cyclic (duration, { is = 'step', as = 'step', min = 0, max } = {}) {
+    // const step = this.cast(duration, { is, as: 'step' })
+    // const head = this.cast(min || 0, { is, as: 'step' })
+    // const tail = this.cast(max || this.total, { is, as: 'step' })
+    // const key = duration >= head ? duration : duration + tail
+
+    // return key % tail
+
+    const index = this.cast(duration, { is, as })
+    const head = this.cast(min || 0, { is, as })
+    const total = this.cast(this.total, { is: 'step', as: is })
+    const tail = this.cast(max || total, { is, as })
+    const key = index >= head ? index : index + tail
 
     return key % tail
   }
