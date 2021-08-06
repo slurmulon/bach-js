@@ -192,7 +192,7 @@ function notesIn(kind, value) {
 
 var notesOf = {
   note: function note(value) {
-    return value;
+    return [value];
   },
   chord: function chord(value) {
     return notesInChord(value);
@@ -419,9 +419,16 @@ var Durations = /*#__PURE__*/function () {
     _classCallCheck(this, Durations);
 
     this.source = compose(source);
+    this.init();
   }
 
   _createClass(Durations, [{
+    key: "init",
+    value: function init() {
+      this.units = unitsOf(this.source);
+      this.times = timesOf(this.source);
+    }
+  }, {
     key: "steps",
     get: function get() {
       return this.source.steps;
@@ -460,16 +467,6 @@ var Durations = /*#__PURE__*/function () {
     key: "bar",
     get: function get() {
       return this.units.bar;
-    }
-  }, {
-    key: "units",
-    get: function get() {
-      return unitsOf(this.source);
-    }
-  }, {
-    key: "times",
-    get: function get() {
-      return timesOf(this.source);
     }
   }, {
     key: "interval",
@@ -515,80 +512,111 @@ var Durations = /*#__PURE__*/function () {
         as: as
       });
       return Math.floor(index % bar);
-    }
+    } // TODO: Probably apply offset to index here based on min value, or additional optional base value.
+
   }, {
-    key: "ratio",
-    value: function ratio(duration) {
-      var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
-      return this.cast(duration, {
-        is: is,
-        as: 'step'
-      }) / this.total;
-    }
-  }, {
-    key: "percentage",
-    value: function percentage(duration) {
-      var is = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'step';
-      return this.ratio(duration, is) * 100;
-    }
-  }, {
-    key: "clamp",
-    value: function clamp(duration) {
+    key: "scope",
+    value: function scope(duration) {
       var _ref4 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
           _ref4$is = _ref4.is,
           is = _ref4$is === void 0 ? 'step' : _ref4$is,
+          _ref4$as = _ref4.as,
+          as = _ref4$as === void 0 ? 'step' : _ref4$as,
+          _ref4$origin = _ref4.origin,
+          origin = _ref4$origin === void 0 ? 0 : _ref4$origin,
           _ref4$min = _ref4.min,
           min = _ref4$min === void 0 ? 0 : _ref4$min,
           max = _ref4.max;
 
-      var step = this.cast(duration, {
+      var index = this.cast(duration - origin, {
         is: is,
-        as: 'step'
+        as: as
       });
       var head = this.cast(min || 0, {
         is: is,
-        as: 'step'
+        as: as
       });
-      var tail = this.cast(max || this.total, {
+      var total = this.cast(this.total, {
+        is: 'step',
+        as: is
+      });
+      var tail = this.cast(max || total, {
         is: is,
-        as: 'step'
+        as: as
       });
-      return _clamp(step, head, tail);
+      return {
+        duration: duration,
+        index: index,
+        head: head,
+        tail: tail
+      };
+    }
+  }, {
+    key: "elapsed",
+    value: function elapsed(duration, scope) {
+      var _this$scope = this.scope(duration, scope),
+          index = _this$scope.index,
+          head = _this$scope.head;
+
+      return index - head;
+    }
+  }, {
+    key: "ratio",
+    value: function ratio(duration, scope) {
+      var _this$scope2 = this.scope(duration, scope),
+          index = _this$scope2.index,
+          tail = _this$scope2.tail;
+
+      return index / tail;
+    }
+  }, {
+    key: "progress",
+    value: function progress(duration, scope) {
+      var _this$scope3 = this.scope(duration, scope),
+          index = _this$scope3.index,
+          head = _this$scope3.head,
+          tail = _this$scope3.tail;
+
+      var delta = index - head;
+      var range = tail - head;
+      return delta / range;
+    }
+  }, {
+    key: "percentage",
+    value: function percentage(duration, scope) {
+      return this.ratio(duration, scope) * 100;
+    }
+  }, {
+    key: "clamp",
+    value: function clamp(duration, scope) {
+      var _this$scope4 = this.scope(duration, scope),
+          index = _this$scope4.index,
+          head = _this$scope4.head,
+          tail = _this$scope4.tail;
+
+      return _clamp(index, head, tail);
     }
   }, {
     key: "cyclic",
-    value: function cyclic(duration) {
+    value: function cyclic(duration, scope) {
+      var _this$scope5 = this.scope(duration, scope),
+          index = _this$scope5.index,
+          total = _this$scope5.total,
+          head = _this$scope5.head,
+          tail = _this$scope5.tail;
+
+      var key = index >= head ? index : index + tail;
+      return key % tail;
+    }
+  }, {
+    key: "interpolate",
+    value: function interpolate(ratio) {
       var _ref5 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
           _ref5$is = _ref5.is,
           is = _ref5$is === void 0 ? 'step' : _ref5$is,
           _ref5$min = _ref5.min,
           min = _ref5$min === void 0 ? 0 : _ref5$min,
           max = _ref5.max;
-
-      this.cast(duration, {
-        is: is,
-        as: 'step'
-      });
-      var head = this.cast(min || 0, {
-        is: is,
-        as: 'step'
-      });
-      var tail = this.cast(max || this.total, {
-        is: is,
-        as: 'step'
-      });
-      var key = duration >= head ? duration : duration + tail;
-      return key % tail;
-    }
-  }, {
-    key: "interpolate",
-    value: function interpolate(ratio) {
-      var _ref6 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref6$is = _ref6.is,
-          is = _ref6$is === void 0 ? 'step' : _ref6$is,
-          _ref6$min = _ref6.min,
-          min = _ref6$min === void 0 ? 0 : _ref6$min,
-          max = _ref6.max;
 
       var head = this.cast(min || 0, {
         is: is,
@@ -611,11 +639,11 @@ var Durations = /*#__PURE__*/function () {
       var index = this.cyclic(step);
       var state = this.steps[index];
 
-      var _ref7 = state || [],
-          _ref8 = _slicedToArray(_ref7, 3),
-          context = _ref8[0],
-          play = _ref8[1],
-          stop = _ref8[2];
+      var _ref6 = state || [],
+          _ref7 = _slicedToArray(_ref6, 3),
+          context = _ref7[0],
+          play = _ref7[1],
+          stop = _ref7[2];
 
       return {
         beat: context[0],
@@ -633,15 +661,15 @@ var Durations = /*#__PURE__*/function () {
       var _context8,
           _this = this;
 
-      var _ref9 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref9$is = _ref9.is,
-          is = _ref9$is === void 0 ? 'ms' : _ref9$is,
-          _ref9$units = _ref9.units,
-          units = _ref9$units === void 0 ? ['8n', '4n'] : _ref9$units,
-          _ref9$calc = _ref9.calc,
-          calc = _ref9$calc === void 0 ? 'floor' : _ref9$calc,
-          _ref9$size = _ref9.size,
-          size = _ref9$size === void 0 ? 'min' : _ref9$size;
+      var _ref8 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref8$is = _ref8.is,
+          is = _ref8$is === void 0 ? 'ms' : _ref8$is,
+          _ref8$units = _ref8.units,
+          units = _ref8$units === void 0 ? ['8n', '4n'] : _ref8$units,
+          _ref8$calc = _ref8.calc,
+          calc = _ref8$calc === void 0 ? 'floor' : _ref8$calc,
+          _ref8$size = _ref8.size,
+          size = _ref8$size === void 0 ? 'min' : _ref8$size;
 
       var durations = _sortInstanceProperty(_context8 = _mapInstanceProperty(units).call(units, function (unit) {
         var value = _this.cast(duration, {
@@ -735,10 +763,10 @@ var Element = /*#__PURE__*/function () {
 
 var Elements = /*#__PURE__*/function () {
   function Elements() {
-    var _ref10 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        source = _ref10.source,
-        store = _ref10.store,
-        cast = _ref10.cast;
+    var _ref9 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        source = _ref9.source,
+        store = _ref9.store,
+        cast = _ref9.cast;
 
     _classCallCheck(this, Elements);
 
@@ -837,12 +865,12 @@ var Elements = /*#__PURE__*/function () {
 
   }, {
     key: "register",
-    value: function register(_ref11) {
+    value: function register(_ref10) {
       var _context15;
 
-      var kind = _ref11.kind,
-          value = _ref11.value,
-          props = _ref11.props;
+      var kind = _ref10.kind,
+          value = _ref10.value,
+          props = _ref10.props;
       if (!kind || typeof kind !== 'string') throw TypeError('kind must be a non-empty string');
       if (value == null) throw TypeError('value must be defined and non-null');
       var elem = bach.elementize(kind, _concatInstanceProperty(_context15 = [value]).call(_context15, _toConsumableArray(props)));
@@ -866,17 +894,17 @@ var Elements = /*#__PURE__*/function () {
       };
       if (!elements) return null; // TODO: Validate element shape with JSON Schema
 
-      return _reduceInstanceProperty(_context16 = _Object$entries(elements)).call(_context16, function (acc, _ref12) {
+      return _reduceInstanceProperty(_context16 = _Object$entries(elements)).call(_context16, function (acc, _ref11) {
         var _context17;
 
-        var _ref13 = _slicedToArray(_ref12, 2),
-            kind = _ref13[0],
-            ids = _ref13[1];
+        var _ref12 = _slicedToArray(_ref11, 2),
+            kind = _ref12[0],
+            ids = _ref12[1];
 
-        var elems = _reduceInstanceProperty(_context17 = _Object$entries(ids)).call(_context17, function (acc, _ref14) {
-          var _ref15 = _slicedToArray(_ref14, 2),
-              id = _ref15[0],
-              elem = _ref15[1];
+        var elems = _reduceInstanceProperty(_context17 = _Object$entries(ids)).call(_context17, function (acc, _ref13) {
+          var _ref14 = _slicedToArray(_ref13, 2),
+              id = _ref14[0],
+              elem = _ref14[1];
 
           return _objectSpread(_objectSpread({}, acc), {}, _defineProperty({}, id, as(_objectSpread({
             id: id,
@@ -948,8 +976,8 @@ var Beat = /*#__PURE__*/function () {
       var _context20,
           _this5 = this;
 
-      return _flatMapInstanceProperty(_context20 = this.data.items).call(_context20, function (_ref16) {
-        var elements = _ref16.elements;
+      return _flatMapInstanceProperty(_context20 = this.data.items).call(_context20, function (_ref15) {
+        var elements = _ref15.elements;
         return _mapInstanceProperty(elements).call(elements, function (elem) {
           return _this5.store.resolve(elem);
         });
@@ -958,16 +986,16 @@ var Beat = /*#__PURE__*/function () {
   }, {
     key: "kinds",
     get: function get() {
-      return this.all(function (_ref17) {
-        var kind = _ref17.kind;
+      return this.all(function (_ref16) {
+        var kind = _ref16.kind;
         return kind;
       });
     }
   }, {
     key: "values",
     get: function get() {
-      return this.all(function (_ref18) {
-        var value = _ref18.value;
+      return this.all(function (_ref17) {
+        var value = _ref17.value;
         return value;
       });
     }
@@ -1043,8 +1071,8 @@ var Beat = /*#__PURE__*/function () {
   }, {
     key: "notesOf",
     value: function notesOf(elements) {
-      return Note.unite(_flatMapInstanceProperty(elements).call(elements, function (_ref19) {
-        var notes = _ref19.notes;
+      return Note.unite(_flatMapInstanceProperty(elements).call(elements, function (_ref18) {
+        var notes = _ref18.notes;
         return notes;
       }));
     }
@@ -1070,17 +1098,25 @@ var Music = /*#__PURE__*/function () {
 
     this.source = source;
     this.data = compose(source);
-    this.store = this.parses ? new Elements({
-      source: this.data,
-      cast: function cast(elem) {
-        return _objectSpread(_objectSpread({}, elem), {}, {
-          notes: Note.all(elem.kind, elem.value)
-        });
-      }
-    }) : null;
+    this.init();
   }
 
   _createClass(Music, [{
+    key: "init",
+    value: function init() {
+      if (!this.parses) return null;
+      this.store = new Elements({
+        source: this.data,
+        cast: function cast(elem) {
+          return _objectSpread(_objectSpread({}, elem), {}, {
+            notes: Note.all(elem.kind, elem.value)
+          });
+        }
+      });
+      this.beats = Beat.from(this.data.beats, this.store);
+      this.durations = new Durations(this.data);
+    }
+  }, {
     key: "headers",
     get: function get() {
       return this.data.headers;
@@ -1111,16 +1147,6 @@ var Music = /*#__PURE__*/function () {
       return this.store.all;
     }
   }, {
-    key: "beats",
-    get: function get() {
-      return Beat.from(this.data.beats, this.store);
-    }
-  }, {
-    key: "durations",
-    get: function get() {
-      return new Durations(this.data);
-    }
-  }, {
     key: "notes",
     get: function get() {
       var _context28;
@@ -1128,8 +1154,8 @@ var Music = /*#__PURE__*/function () {
       return Note.unite(_flatMapInstanceProperty(_context28 = this.beats).call(_context28, function (beat) {
         var _context29;
 
-        return _flatMapInstanceProperty(_context29 = beat.elements).call(_context29, function (_ref20) {
-          var notes = _ref20.notes;
+        return _flatMapInstanceProperty(_context29 = beat.elements).call(_context29, function (_ref19) {
+          var notes = _ref19.notes;
           return notes;
         });
       }));
