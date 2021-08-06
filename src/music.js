@@ -51,14 +51,6 @@ export class Music {
     return this.store.all
   }
 
-  // get beats () {
-  //   return Beat.from(this.data.beats, this.store)
-  // }
-
-  // get durations () {
-  //   return new Durations(this.data)
-  // }
-
   get notes () {
     return Note.unite(
       this.beats.flatMap(beat =>

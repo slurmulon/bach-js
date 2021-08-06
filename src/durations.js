@@ -79,29 +79,19 @@ export class Durations {
     return { duration, index, head, tail }
   }
 
-  // delta (duration, scope) {
   elapsed (duration, scope) {
     const { index, head } = this.scope(duration, scope)
 
     return index - head
   }
 
-  // TODO: Allow custom min/max here
-  // ratio (duration, is = 'step') {
-  //   return this.cast(duration, { is, as: 'step' }) / this.total
-  // }
   ratio (duration, scope) {
     const { index, tail } = this.scope(duration, scope)
 
     return index / tail
   }
 
-  // progress (duration, { is = 'step', as = 'step', min = 0, max } = {}) {
   progress (duration, scope) {
-    // const index = this.cast(duration, { is, as })
-    // const head = this.cast(min || 0, { is, as })
-    // const total = this.cast(this.total, { is: 'step', as: is })
-    // const tail = this.cast(max || total, { is, as })
     const { index, head, tail } = this.scope(duration, scope)
     const delta = index - head
     const range = tail - head
@@ -109,35 +99,18 @@ export class Durations {
     return delta / range
   }
 
-  percentage (duration, is = 'step') {
-    return this.ratio(duration, is) * 100
+  percentage (duration, scope) {
+    return this.ratio(duration, scope) * 100
   }
 
   clamp (duration, scope) {
-  // clamp (duration, { is = 'step', min = 0, max } = {}) {
-    // const step = this.cast(duration, { is, as: 'step' })
-    // const head = this.cast(min || 0, { is, as: 'step' })
-    // const tail = this.cast(max || this.total, { is, as: 'step' })
-    // return clamp(step, head, tail)
-
     const { index, head, tail } = this.scope(duration, scope)
 
     return clamp(index, head, tail)
   }
 
-  // cyclic (duration, { is = 'step', min = 0, max } = {}) {
-  cyclic (duration, { is = 'step', as = 'step', min = 0, max } = {}) {
-    // const step = this.cast(duration, { is, as: 'step' })
-    // const head = this.cast(min || 0, { is, as: 'step' })
-    // const tail = this.cast(max || this.total, { is, as: 'step' })
-    // const key = duration >= head ? duration : duration + tail
-
-    // return key % tail
-
-    const index = this.cast(duration, { is, as })
-    const head = this.cast(min || 0, { is, as })
-    const total = this.cast(this.total, { is: 'step', as: is })
-    const tail = this.cast(max || total, { is, as })
+  cyclic (duration, scope) {
+    const { index, total, head, tail } = this.scope(duration, scope)
     const key = index >= head ? index : index + tail
 
     return key % tail
