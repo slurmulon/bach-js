@@ -195,12 +195,76 @@ describe('metronize', () => {
   
 })
 
+describe('scope', () => {
+  describe('provides an object with cast durations describing a scope (used by other methods)', () => {
+    it('defaults to full scope', () => {
+      const result = durations.scope(4)
+
+      expect(result).toEqual({ duration: 4, index: 4, head: 0, tail: 40 })
+    })
+
+    it('using cast', () => {
+      // const result = durations.scope(
+    })
+
+    it('using min', () => {
+      const result = durations.scope(4, { min: 2 })
+
+      expect(result).toEqual({ duration: 4, index: 4, head: 2, tail: 40 })
+    })
+
+    it('using max', () => {
+      const result = durations.scope(4, { max: 25 })
+
+      expect(result).toEqual({ duration: 4, index: 4, head: 0, tail: 25 })
+    })
+
+    it('using min + max', () => {
+      const result = durations.scope(4, { min: 3, max: 8 })
+
+      expect(result).toEqual({ duration: 4, index: 4, head: 3, tail: 8 })
+    })
+  })
+})
+
 describe('ratio', () => {
   describe('provides the ratio of a duration in relation to the total', () => {
-    it('is steps', () => {
+    it('using steps', () => {
       const result = durations.ratio(16)
 
       expect(result).toBe(0.4)
+    })
+  })
+})
+
+describe('progress', () => {
+  describe('provides the progress of a duration (between 0 and 1) within a scope', () => {
+    it('using default scope', () => {
+      const result = durations.progress(10)
+
+      expect(result).toBe(0.25)
+    })
+
+    it('using cast', () => {
+
+    })
+
+    it('using min', () => {
+      const result = durations.progress(30, { min: 20 })
+
+      expect(result).toBe(0.5)
+    })
+
+    it('using max', () => {
+      const result = durations.progress(30, { min: 20 })
+
+      expect(result).toBe(0.5)
+    })
+
+    it('using min + max', () => {
+      const result = durations.progress(14, { min: 7, max: 21 })
+
+      expect(result).toBe(0.5)
     })
   })
 })
@@ -233,6 +297,16 @@ describe('cyclic', () => {
       const result = durations.cyclic(-10)
 
       expect(result).toBe(30)
+    })
+  })
+
+  describe('supports inplace duration casts', () => {
+    it('step -> pulse', () => {
+      // const result = durations.cast(60, { is: 'step', as: 'pulse' })
+      const result = durations.cyclic(60, { is: 'step', as: 'pulse' })
+
+      expect(result).toBe(40)
+
     })
   })
 })
