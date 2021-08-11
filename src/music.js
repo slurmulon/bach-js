@@ -7,9 +7,7 @@ import { compose, notesIn } from './data'
 export class Music {
 
   constructor (source) {
-    this.source = source
-    this.data = compose(source)
-    this.init()
+    this.assign(source)
   }
 
   init () {
@@ -25,6 +23,15 @@ export class Music {
 
     this.beats = Beat.from(this.data.beats, this.store)
     this.durations = new Durations(this.data)
+  }
+
+  assign (source) {
+    this.source = source
+    this.data = compose(source)
+
+    this.init()
+
+    return this
   }
 
   get headers () {
