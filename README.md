@@ -226,10 +226,12 @@ music.at(1850, 'ms') // at 1850 milliseconds
 
 #### `.assign(bach)`
 
-Updates and replaces source `bach` data, re-calculating expensive computed properties.
+Updates and replaces source `bach` data.
 
-```
-const music = new Music('play! [1 -> chord('a'), 1 ->  chord('b')]')
+Re-computes and caches properties that, as a getter, are expensive when accessed frequently.
+
+```js
+const music = new Music(`play! [1 -> chord('a'), 1 ->  chord('b')]`)
 
 music.assign('play! [1 -> chord('b'), 1 ->  chord('c')]')
 ```
