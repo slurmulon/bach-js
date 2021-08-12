@@ -377,8 +377,4 @@ durations.invlerp(4, { min: 2, max: 6 }) // 0.5
 
 Copyright &copy; Erik Vavro. All rights reserved.
 
-Licensed under MIT.## License
-
-Copyright &copy; Erik Vavro. All rights reserved.
-
-Licensed under the [MIT License](https://opensource.org/licenses/MIT).
+Licensed under MIT.
