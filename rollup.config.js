@@ -45,6 +45,7 @@ export default [
       {
         file: pkg.main,
         format: 'cjs',
+        sourcemap: true,
         plugins: [getBabelOutputPlugin({
           presets: ['@babel/preset-env'],
           plugins: [['@babel/plugin-transform-runtime', { corejs: 3, useESModules: false }]]
@@ -53,6 +54,7 @@ export default [
       {
         file: pkg.module,
         format: 'esm',
+        sourcemap: true,
         plugins: [getBabelOutputPlugin({
           presets: [['@babel/preset-env', { modules: 'umd' }]],
           plugins: [['@babel/plugin-transform-runtime', { corejs: 3, useESModules: true }]]
