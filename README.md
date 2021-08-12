@@ -233,7 +233,7 @@ Re-computes and caches properties that, as a getter, are expensive when accessed
 ```js
 const music = new Music(`play! [1 -> chord('a'), 1 ->  chord('b')]`)
 
-music.assign('play! [1 -> chord('b'), 1 ->  chord('c')]')
+music.assign(`play! [1 -> chord('b'), 1 ->  chord('c')]`)
 ```
 
 ### :clock1: `Durations`
