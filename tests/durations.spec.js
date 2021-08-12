@@ -3,16 +3,22 @@ import { basic as source, compound } from './fixtures/bach'
 
 const durations = new Durations(source)
 
-describe('interval', () => {
-  it('provides the number of milliseconds in a step', () => {
-    expect(durations.interval).toEqual(800)
-  })
-})
+// describe('interval', () => {
+//   it('provides the number of milliseconds in a step', () => {
+//     expect(durations.interval).toEqual(800)
+//   })
+// })
 
 describe('cast', () => {
   describe('units', () => {
-    it('step -> pulse (default)', () => {
+    it('identity', () => {
       const result = durations.cast(4)
+
+      expect(result).toBe(4)
+    })
+
+    it('step -> pulse', () => {
+      const result = durations.cast(4, { as: 'pulse' })
 
       expect(result).toBe(8)
     })
@@ -99,108 +105,184 @@ describe('cast', () => {
   })
 })
 
-describe('unitize', () => {
-  const durations = new Durations(compound)
+// describe('unitize', () => {
+//   const durations = new Durations(compound)
 
-  describe('units', () => {
-    it('step -> pulse (default)', () => {
-      const result = durations.unitize(2)
+//   describe('units', () => {
+//     it('step -> pulse (default)', () => {
+//       const result = durations.unitize(2)
 
-      expect(result).toBe(12)
-    })
+//       expect(result).toBe(12)
+//     })
 
-    it('pulse -> step', () => {
-      const result = durations.unitize(6, { is: 'pulse', as: 'step' })
+//     it('pulse -> step', () => {
+//       const result = durations.unitize(6, { is: 'pulse', as: 'step' })
 
-      expect(result).toBe(1)
-    })
+//       expect(result).toBe(1)
+//     })
 
-    it('step -> bar', () => {
-      const result = durations.unitize(4, { as: 'bar' })
+//     it('step -> bar', () => {
+//       const result = durations.unitize(4, { as: 'bar' })
 
-      expect(result).toBe(4)
-    })
+//       expect(result).toBe(4)
+//     })
 
-    it('pulse -> bar', () => {
-      const result = durations.unitize(18, { is: 'pulse', as: 'bar' })
+//     it('pulse -> bar', () => {
+//       const result = durations.unitize(18, { is: 'pulse', as: 'bar' })
+
+//       expect(result).toBe(3)
+//     })
+
+//     it('bar -> step', () => {
+//       const result = durations.unitize(4, { is: 'bar', as: 'step' })
+
+//       expect(result).toBe(4)
+//     })
+
+//     it('bar -> pulse', () => {
+//       const result = durations.unitize(2, { is: 'bar', as: 'pulse' })
+
+//       expect(result).toBe(12)
+//     })
+//   })
+
+//   describe('time', () => {
+//     it('step -> ms', () => {
+//       const result = durations.unitize(2, { as: 'ms' })
+
+//       expect(result).toBe(6000)
+//     })
+
+//     it('pulse -> ms', () => {
+//       const result = durations.unitize(3, { is: 'pulse', as: 'ms' })
+
+//       expect(result).toBe(1500)
+//     })
+
+//     it('bar -> ms', () => {
+//       const result = durations.unitize(2.5, { is: 'bar', as: 'ms' })
+
+//       expect(result).toBe(7500)
+//     })
+
+//     it('step -> second', () => {
+//       const result = durations.unitize(2, { as: 'second' })
+
+//       expect(result).toBe(6)
+//     })
+
+//     it('pulse -> second', () => {
+//       const result = durations.unitize(5, { is: 'pulse', as: 'second' })
+
+//       expect(result).toBe(2.5)
+//     })
+
+//     it('bar -> second', () => {
+//       const result = durations.unitize(2.5, { is: 'bar', as: 'second' })
+
+//       expect(result).toBe(7.5)
+//     })
+
+//     it('ms -> second', () => {
+//       const result = durations.unitize(2345, { is: 'ms', as: 'second' })
+
+//       expect(result).toBe(2.345)
+//     })
+
+//     it('second -> ms', () => {
+//       const result = durations.unitize(4.567, { is: 'second', as: 'ms' })
+
+//       expect(result).toBe(4567)
+//     })
+//   })
+// })
+
+describe('metronize', () => {
+  describe('converts a duration into a pulse beat cycled to a bar (i.e. the metronome beat)', () => {
+    it('default (ms -> pulse)', () => {
+      const result = durations.metronize(1500)
 
       expect(result).toBe(3)
     })
 
-    it('bar -> step', () => {
-      const result = durations.unitize(4, { is: 'bar', as: 'step' })
+    it('rounds', () => {
+      const result = durations.metronize(2310)
 
-      expect(result).toBe(4)
-    })
-
-    it('bar -> pulse', () => {
-      const result = durations.unitize(2, { is: 'bar', as: 'pulse' })
-
-      expect(result).toBe(12)
-    })
-  })
-
-  describe('time', () => {
-    it('step -> ms', () => {
-      const result = durations.unitize(2, { as: 'ms' })
-
-      expect(result).toBe(6000)
-    })
-
-    it('pulse -> ms', () => {
-      const result = durations.unitize(3, { is: 'pulse', as: 'ms' })
-
-      expect(result).toBe(1500)
-    })
-
-    it('bar -> ms', () => {
-      const result = durations.unitize(2.5, { is: 'bar', as: 'ms' })
-
-      expect(result).toBe(7500)
-    })
-
-    it('step -> second', () => {
-      const result = durations.unitize(2, { as: 'second' })
-
-      expect(result).toBe(6)
-    })
-
-    it('pulse -> second', () => {
-      const result = durations.unitize(5, { is: 'pulse', as: 'second' })
-
-      expect(result).toBe(2.5)
-    })
-
-    it('bar -> second', () => {
-      const result = durations.unitize(2.5, { is: 'bar', as: 'second' })
-
-      expect(result).toBe(7.5)
-    })
-
-    it('ms -> second', () => {
-      const result = durations.unitize(2345, { is: 'ms', as: 'second' })
-
-      expect(result).toBe(2.345)
-    })
-
-    it('second -> ms', () => {
-      const result = durations.unitize(4.567, { is: 'second', as: 'ms' })
-
-      expect(result).toBe(4567)
+      expect(result).toBe(1)
     })
   })
 })
 
-describe('metronize', () => {
-  
+describe('scope', () => {
+  describe('provides an object with cast durations describing a scope (used by other methods)', () => {
+    it('defaults to full scope', () => {
+      const result = durations.scope(4, { as: 'step' })
+
+      expect(result).toEqual({ value: 4, index: 4, head: 0, tail: 40 })
+    })
+
+    it('using cast', () => {
+      // const result = durations.scope(
+    })
+
+    it('using min', () => {
+      const result = durations.scope(4, { min: 2 })
+
+      expect(result).toEqual({ value: 4, index: 4, head: 2, tail: 40 })
+    })
+
+    it('using max', () => {
+      const result = durations.scope(4, { max: 25 })
+
+      expect(result).toEqual({ value: 4, index: 4, head: 0, tail: 25 })
+    })
+
+    it('using min + max', () => {
+      const result = durations.scope(4, { min: 3, max: 8 })
+
+      expect(result).toEqual({ value: 4, index: 4, head: 3, tail: 8 })
+    })
+  })
 })
 
-describe('ratio', () => {
-  describe('provides the ratio of a duration in relation to the total', () => {
-    it('is steps', () => {
-      const result = durations.ratio(16)
+// describe('ratio', () => {
+//   describe('provides the ratio of a duration in relation to the total', () => {
+//     it('using steps', () => {
+//       const result = durations.ratio(16)
 
-      expect(result).toBe(0.4)
+//       expect(result).toBe(0.4)
+//     })
+//   })
+// })
+
+describe('progress', () => {
+  describe('provides the progress of a duration (between 0 and 1) within a scope', () => {
+    it('using default scope', () => {
+      const result = durations.progress(10)
+
+      expect(result).toBe(0.25)
+    })
+
+    it('using cast', () => {
+
+    })
+
+    it('using min', () => {
+      const result = durations.progress(30, { min: 20 })
+
+      expect(result).toBe(0.5)
+    })
+
+    it('using max', () => {
+      const result = durations.progress(30, { min: 20 })
+
+      expect(result).toBe(0.5)
+    })
+
+    it('using min + max', () => {
+      const result = durations.progress(14, { min: 7, max: 21 })
+
+      expect(result).toBe(0.5)
     })
   })
 })
@@ -233,6 +315,16 @@ describe('cyclic', () => {
       const result = durations.cyclic(-10)
 
       expect(result).toBe(30)
+    })
+  })
+
+  describe('supports inplace duration casts', () => {
+    it('step -> pulse', () => {
+      // const result = durations.cast(60, { is: 'step', as: 'pulse' })
+      const result = durations.cyclic(60, { is: 'step', as: 'pulse' })
+
+      expect(result).toBe(40)
+
     })
   })
 })
@@ -289,35 +381,36 @@ describe('at', () => {
   })
 })
 
-describe('interpolate', () => {
+describe('lerp', () => {
   describe('provides the step index at a given ratio', () => {
-    it('basic', () => {
-      const result = durations.interpolate(0.25)
+    it('default (step -> pulse)', () => {
+      const result = durations.lerp(0.25)
 
       expect(result).toBe(10)
+      // expect(result).toBe(20)
     })
 
     describe('using', () => {
       it('is', () => {
-        const result = durations.interpolate(0.5, { is: 'pulse', min: 0, max: 80 })
+        const result = durations.lerp(0.5, { is: 'pulse', as: 'step', min: 0, max: 80 })
 
         expect(result).toBe(20)
       })
 
       it('min', () => {
-        const result = durations.interpolate(0.5, { min: 20 })
+        const result = durations.lerp(0.5, { as: 'step', min: 20 })
 
         expect(result).toBe(30)
       })
 
       it('max', () => {
-        const result = durations.interpolate(0.5, { max: 10 })
+        const result = durations.lerp(0.5, { as: 'step', max: 10 })
 
         expect(result).toBe(5)
       })
 
       it('min and max', () => {
-        const result = durations.interpolate(0.5, { min: 20, max: 60 })
+        const result = durations.lerp(0.5, { as: 'step', min: 20, max: 60 })
 
         expect(result).toBe(40)
       })

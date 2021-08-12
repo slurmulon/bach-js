@@ -1,23 +1,43 @@
-import { compose, unitsOf, timesOf } from './data'
+import { compose } from './data'
 import { gcd, clamp, lerp } from './math'
+import { Units } from 'segu'
 
 /**
  * Provides essential duration values and calculations of a bach track.
  * Enables trivial conversions between any duration unit via cast (based
  * on milliseconds) and unitize (based on steps, bach's iteration unit).
  */
-export class Durations {
+export class Durations extends Units {
 
-  constructor (source) {
-    this.source = compose(source)
+  constructor (source, lens) {
+    super({ map: null, lens })
+
+    this.source = source
+    this.data = compose(source)
+
+    this.init()
+  }
+
+  init () {
+    this.map = Durations.map(this.data)
+
+    this.lens.assign({ unit: 'step', max: this.total })
+  }
+
+  get units () {
+    return this.data.units
   }
 
   get steps () {
-    return this.source.steps
+    return this.data.steps
+  }
+
+  get bar () {
+    return this.units.bar
   }
 
   get metrics () {
-    return this.source.metrics
+    return this.data.metrics
   }
 
   get min () {
@@ -30,77 +50,6 @@ export class Durations {
 
   get total () {
     return this.metrics.total
-  }
-
-  get step () {
-    return this.units.step
-  }
-
-  get pulse () {
-    return this.units.pulse
-  }
-
-  get bar () {
-    return this.units.bar
-  }
-
-  get units () {
-    return unitsOf(this.source)
-  }
-
-  get times () {
-    return timesOf(this.source)
-  }
-
-  get interval () {
-    return this.times.step
-  }
-
-  cast (duration, { is = 'step', as = 'pulse' } = {}) {
-    return duration / (this.times[as] / this.times[is])
-  }
-
-  unitize (duration, { is = 'step', as = 'pulse' } = {}) {
-    return duration / (this.units[as] / this.units[is])
-  }
-
-  metronize (duration, { is = 'ms', as = 'pulse' } = {}) {
-    const index = this.cast(duration, { is, as })
-    const bar = this.cast(this.bar, { as })
-
-    return Math.floor(index % bar)
-  }
-
-  ratio (duration, is = 'step') {
-    return this.cast(duration, { is, as: 'step' }) / this.total
-  }
-
-  percentage (duration, is = 'step') {
-    return this.ratio(duration, is) * 100
-  }
-
-  clamp (duration, { is = 'step', min = 0, max } = {}) {
-    const step = this.cast(duration, { is, as: 'step' })
-    const head = this.cast(min || 0, { is, as: 'step' })
-    const tail = this.cast(max || this.total, { is, as: 'step' })
-
-    return clamp(step, head, tail)
-  }
-
-  cyclic (duration, { is = 'step', min = 0, max } = {}) {
-    const step = this.cast(duration, { is, as: 'step' })
-    const head = this.cast(min || 0, { is, as: 'step' })
-    const tail = this.cast(max || this.total, { is, as: 'step' })
-    const key = duration >= head ? duration : duration + tail
-
-    return key % tail
-  }
-
-  interpolate (ratio, { is = 'step', min = 0, max } = {}) {
-    const head = this.cast(min || 0, { is, as: 'step' })
-    const tail = this.cast(max || this.total, { is, as: 'step' })
-
-    return lerp(ratio, head, tail)
   }
 
   at (duration, is = 'step') {
@@ -116,6 +65,13 @@ export class Durations {
       stop,
       index
     }
+  }
+
+  metronize (duration, { is = 'ms', as = 'pulse' } = {}) {
+    const index = this.cast(duration, { is, as })
+    const bar = this.cast(this.bar.step, { as })
+
+    return Math.floor(index % bar)
   }
 
   // TODO: Either replace or improve via inspiration with this:
@@ -136,6 +92,33 @@ export class Durations {
       .sort((a, b) => Math.abs(duration - a) - Math.abs(duration - b))
 
     return Math[size](...durations)
+  }
+
+  static map (source) {
+    const data = compose(source, false)
+    const { beat, step, pulse, time, bar } = data.units
+
+    return {
+      step: 1,
+      pulse: 1 / (beat.step / beat.pulse),
+      bar: bar.step,
+      ms: 1 / time.step,
+      second: (1 / time.step) * 1000,
+      's': step,
+      'p': pulse,
+      'm': bar.step,
+      '2n': bar.step / 2,
+      '4n': bar.step / 4,
+      '8n': bar.step / 8,
+      '16n': bar.step / 16,
+      '32n': bar.step / 32,
+      '64n': bar.step / 64,
+      '4up': bar.step - (bar.step / 4),
+      '8up': bar.step - (bar.step / 8),
+      '16up': bar.step - (bar.step / 16),
+      '32up': bar.step - (bar.step / 32),
+      '64up': bar.step - (bar.step / 64)
+    }
   }
 
 }

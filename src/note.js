@@ -1,6 +1,8 @@
 import { note as teoriaNote, Note as TeoriaNote } from 'teoria'
 import { notesIn } from './data'
 
+// TODO: Replce with individual functions and remove class, no longer necessary
+// TODO: Remove cyclic reference between data module by bringing in all note related functions.
 export class Note {
 
   static parse (value) {
