@@ -1,4 +1,4 @@
-import { compose, unitsOf, timesOf } from './data'
+import { compose } from './data'
 import { gcd, clamp, lerp } from './math'
 import { Units } from 'segu'
 
@@ -7,13 +7,11 @@ import { Units } from 'segu'
  * Enables trivial conversions between any duration unit via cast (based
  * on milliseconds) and unitize (based on steps, bach's iteration unit).
  */
-// export class Durations {
 export class Durations extends Units {
 
   constructor (source, lens) {
     super({ map: null, lens })
 
-    // this.source = compose(source)
     this.source = source
     this.data = compose(source)
 
@@ -26,12 +24,16 @@ export class Durations extends Units {
     this.lens.assign({ unit: 'step', max: this.total })
   }
 
+  get units () {
+    return this.data.units
+  }
+
   get steps () {
     return this.data.steps
   }
 
   get bar () {
-    return this.data.units.bar.step
+    return this.units.bar
   }
 
   get metrics () {
@@ -67,7 +69,7 @@ export class Durations extends Units {
 
   metronize (duration, { is = 'ms', as = 'pulse' } = {}) {
     const index = this.cast(duration, { is, as })
-    const bar = this.cast(this.bar, { as })
+    const bar = this.cast(this.bar.step, { as })
 
     return Math.floor(index % bar)
   }
