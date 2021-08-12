@@ -13,7 +13,7 @@ import {
  * Given a string, automatically upgrades source to v3 (simple replacement of !play with play!).
  * Main entry point for integrating with core bach ClojureScript library.
  */
-export const compose = source => {
+export const compose = (source, strict = true) => {
   if (typeof source === 'string') {
     const upgraded = source.replace(/!play/i, 'play!')
 
@@ -21,7 +21,7 @@ export const compose = source => {
   }
 
   if (typeof source === 'object') {
-    return valid(source)
+    return strict ? valid(source) : source
   }
 
   throw TypeError(`Unsupported Bach.JSON data type (${typeof source}). Must be a bach.json object or raw bach string.`)
