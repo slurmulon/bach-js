@@ -50,4 +50,6 @@ To synchronize `bach` with audio in a browser or browser-like environment, see [
 
 ## License
 
-MIT
+Copyright &copy; Erik Vavro. All rights reserved.
+
+Licensed under the [MIT License](https://opensource.org/licenses/MIT).
