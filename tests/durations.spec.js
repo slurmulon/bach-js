@@ -198,7 +198,19 @@ describe('cast', () => {
 // })
 
 describe('metronize', () => {
-  
+  describe('converts a duration into a pulse beat cycled to a bar (i.e. the metronome beat)', () => {
+    it('default (ms -> pulse)', () => {
+      const result = durations.metronize(1500)
+
+      expect(result).toBe(3)
+    })
+
+    it('rounds', () => {
+      const result = durations.metronize(2310)
+
+      expect(result).toBe(1)
+    })
+  })
 })
 
 describe('scope', () => {
