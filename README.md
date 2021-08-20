@@ -197,6 +197,8 @@ Provides a map of each entity and event that occurs at a given duration.
 
 Automatically cycles values that are outside the range of the `bach` source (loop friendly).
 
+#### Returns
+
  - `beat`: The beat present at the duration (from `music.beats`)
  - `elems` List of elements (by id) playing at the duration (from `music.elements`)
  - `play`: List of elements that should begin playing at the duration
@@ -274,9 +276,13 @@ The following units are supported by default:
  - `4n`: Quarter note
  - `8n`: Eigth note
  - `16n`: Sixteenth note
+ - `32n`: Thirty-second note
  - `64n`: Sixty-fourth note
  - `4up`: Quarter upbeat
  - `8up`: Eigth upbeat
+ - `16up`: Sixteenth upbeat
+ - `32up`: Thirty-second upbeat
+ - `64up`: Sixty-fourth upbeat
 
 #### `.cast(duration, lens)`
 
@@ -362,11 +368,31 @@ durations.lerp(0.5, { min: 2, max: 6 }) // 4
 
 Converts a duration value into a ratio within a range (inverse of lerp).
 
+ - `is`: Input unit (default: `'step'`)
  - `min`: Lower bound of the range using `is` unit (default: `0`)
  - `max`: Lower bound of the range using `is` unit (default: `0`)
 
 ```js
 durations.invlerp(4, { min: 2, max: 6 }) // 0.5
+```
+
+#### `.metronize(durations, lens)`
+
+Converts a duration value into a cyclic metronome (pulse) beat.
+
+Defaults input unit (`is`) to miliseconds as this is the most common use case.
+
+ - `is`: Input unit (default: `'ms'`)
+ - `as`: Output unit (default: `'pulse'`)
+
+```js
+durations.metronize(0) // 0
+durations.metronize(500) // 1
+durations.metronize(1234) // 2
+durations.metronize(3000) // 3
+durations.metronize(3500) // 0
+durations.metronize(0.5, { is: 'bar' }) // 1
+durations.metronize(0.543, { is: 'bar', as: 'ms' }) // 1000
 ```
 
 ## Roadmap
