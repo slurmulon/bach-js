@@ -152,7 +152,7 @@ Primarily for internal use as the `Durations` class wraps this with a friendly i
 
  - `beat`: The value of a `step` beat and a `pulse` beat in common meter (1 = 1 measure in 4|4)
  - `bar`: The number of `step` and `pulse` beats that equate to a `bar` (measure)
- ` `time`: The number of milliseconds each `step`, `pulse` and `bar` is played for.
+ - `time`: The number of milliseconds each `step`, `pulse` and `bar` is played for.
 
 ```js
 const music = new Music(`
