@@ -5,5 +5,3 @@ export * from './beats'
 export * from './durations'
 export * from './validate'
 export * from './compose'
-// TODO: Remove
-// export * from './math'
