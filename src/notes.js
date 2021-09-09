@@ -1,7 +1,9 @@
 import { Note, Chord, Scale } from '@tonaljs/tonal'
 
 export function parse (value) {
-  if (typeof value === 'string' || (typeof value === 'object' && !Array.isArray(value))) {
+  if (typeof value === 'string') {
+    return Note.get(value.toLowerCase())
+  } else if (typeof value === 'object' && !Array.isArray(value)) {
     return Note.get(value)
   } else if (typeof value === 'number' && !Number.isNaN(value)) {
     return Note.get(Note.fromMidi(value))
@@ -11,7 +13,9 @@ export function parse (value) {
 }
 
 export function all (kind, value) {
-  const resolver = resolvers[kind]
+  if (typeof kind !== 'string') return []
+
+  const resolver = resolvers[kind.toLowerCase()]
 
   if (resolver && typeof value === 'string') {
     return resolver(value.toLowerCase())
@@ -51,7 +55,7 @@ export const resolvers = {
   scale: value => Scale.get(value).notes,
   penta: value => {
     const [tonic, type] = value.split(' ', 2)
-    const kind = type.trim().replace(/(\s*)pentatonic$/, '')
+    const kind = (type || '').trim().replace(/(\s*)pentatonic$/, '')
     const name = kind ? `${kind} pentatonic` : 'pentatonic'
 
     return Scale.get(`${tonic} ${name}`).notes
