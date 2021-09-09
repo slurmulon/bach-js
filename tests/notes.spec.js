@@ -22,8 +22,15 @@ describe('parse', () => {
       expect(result).toEqual(note)
     })
 
-    it('rejects all other types', () => {
+    it('returns empty tonal object for all other types', () => {
+      const empty = TonalNote.get(null)
 
+      expect(Notes.parse([])).toEqual(empty)
+      expect(Notes.parse(true)).toEqual(empty)
+      expect(Notes.parse(false)).toEqual(empty)
+      expect(Notes.parse(null)).toEqual(empty)
+      expect(Notes.parse(undefined)).toEqual(empty)
+      expect(Notes.parse(Symbol('C'))).toEqual(empty)
     })
   })
 })
@@ -67,6 +74,7 @@ describe('equal', () => {
     expect(Notes.equal('D2', 'D4')).toBe(true)
     expect(Notes.equal('A#', 'Bb')).toBe(true)
     expect(Notes.equal('C#2', 'Db3')).toBe(true)
+    expect(Notes.equal('C', 'G')).toBe(false)
   })
 })
 
