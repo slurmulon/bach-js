@@ -1,13 +1,13 @@
 import { Note, Chord, Scale } from '@tonaljs/tonal'
 
 export function parse (value) {
-  if (typeof value === 'string' || typeof value === 'object') {
+  if (typeof value === 'string' || (typeof value === 'object' && !Array.isArray(value))) {
     return Note.get(value)
-  } else if (!Number.isNaN(value)) {
+  } else if (typeof value === 'number' && !Number.isNaN(value)) {
     return Note.get(Note.fromMidi(value))
   }
 
-  throw TypeError(`Unknown note type (${typeof value}): ${value}`)
+  return Note.get(null)
 }
 
 export function all (kind, value) {
