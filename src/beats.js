@@ -1,5 +1,4 @@
 import { Element } from './elements'
-// import { Note } from './note'
 import Notes from './notes'
 
 /**
@@ -87,7 +86,6 @@ export class Beat {
   }
 
   notesOf (elements) {
-    // return Note.unite(elements.flatMap(({ notes }) => notes))
     return Notes.unique(elements.flatMap(({ notes }) => notes))
   }
 

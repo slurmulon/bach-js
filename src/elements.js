@@ -1,8 +1,6 @@
 import { elementize } from 'bach-cljs'
-import { note as teoriaNote } from 'teoria'
-
 import { compose } from './data'
-import { Note } from './note'
+import Notes from './notes'
 
 /**
  * Represents a single and unique playable element.
@@ -39,7 +37,7 @@ export class Element {
   }
 
   get notes () {
-    return Note.all(this.kind, this.value)
+    return Notes.all(this.kind, this.value)
   }
 
   get musical () {

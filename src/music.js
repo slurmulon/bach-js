@@ -1,4 +1,3 @@
-// import { Note } from './note'
 import Notes from './notes'
 import { Durations } from './durations'
 import { Element, Elements, MUSICAL_ELEMENTS } from './elements'
