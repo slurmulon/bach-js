@@ -2,7 +2,7 @@ import Notes from './notes'
 import { Durations } from './durations'
 import { Element, Elements, MUSICAL_ELEMENTS } from './elements'
 import { Beat } from './beats'
-import { compose } from './data'
+import { compose } from './compose'
 
 export class Music {
 

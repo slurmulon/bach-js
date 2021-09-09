@@ -1,5 +1,5 @@
 import { elementize } from 'bach-cljs'
-import { compose } from './data'
+import { compose } from './compose'
 import Notes from './notes'
 
 /**

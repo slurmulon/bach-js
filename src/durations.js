@@ -1,4 +1,4 @@
-import { compose } from './data'
+import { compose } from './compose'
 import { Units, gcd, clamp, lerp } from 'segu'
 
 /**

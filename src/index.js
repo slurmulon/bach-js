@@ -1,10 +1,9 @@
+export { default as Notes } from './notes'
 export * from './music'
 export * from './elements'
-// export * from './note'
-export { default as Notes } from './notes'
+export * from './beats'
 export * from './durations'
 export * from './validate'
-// TODO: Rename to compose
-export * from './data'
+export * from './compose'
 // TODO: Remove
-export * from './math'
+// export * from './math'

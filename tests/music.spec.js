@@ -1,6 +1,6 @@
 import { Music } from '../src/music'
 import { Beat } from '../src/beats'
-import { compose } from '../src/data'
+import { compose } from '../src/compose'
 import { basic as source } from './fixtures/bach'
 
 describe('class methods', () => {
