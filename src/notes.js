@@ -51,8 +51,21 @@ export function equal (left, right) {
 
 export const resolvers = {
   note:  value => [pitch(value)],
-  chord: value => Chord.get(value).notes,
-  scale: value => Scale.get(value).notes,
+  // chord: value => Chord.get(value).notes,
+  chord: value => pitches(Chord.get(value).notes),
+  scale: value => pitches(Scale.get(value).notes),
+  // scale: value => {
+  //   const name = value
+  //     .trim()
+  //     .replace(/harmonicminor$/, 'harmonic minor')
+  //     .replace(/harmonicmajor$/, 'harmonic major')
+  //     .replace(/doubleharmonic$/, 'double harmonic major')
+  //     .replace(/harmonicminor$/, 'harmonic minor')
+  //     .replace(/ionian$/, 'ionian pentatonic')
+  //     .replace(/blues$/, 'major blues')
+
+  //   return Scale.get(name).notes
+  // },
   penta: value => {
     const [tonic, type] = value.split(' ', 2)
     const kind = (type || '').trim().replace(/(\s*)pentatonic$/, '')
