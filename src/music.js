@@ -1,8 +1,9 @@
-import { Note } from './note'
+// import { Note } from './note'
+import Notes from './notes'
 import { Durations } from './durations'
 import { Element, Elements, MUSICAL_ELEMENTS } from './elements'
 import { Beat } from './beats'
-import { compose, notesIn } from './data'
+import { compose } from './data'
 
 export class Music {
 
@@ -17,7 +18,7 @@ export class Music {
       source: this.data,
       cast: elem => ({
         ...elem,
-        notes: Note.all(elem.kind, elem.value)
+        notes: Notes.all(elem.kind, elem.value)
       })
     })
 
@@ -59,7 +60,7 @@ export class Music {
   }
 
   get notes () {
-    return Note.unite(
+    return Notes.unique(
       this.beats.flatMap(beat =>
         beat.elements.flatMap(({ notes }) => notes)
       )

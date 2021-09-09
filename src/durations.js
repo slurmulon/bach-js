@@ -1,6 +1,7 @@
 import { compose } from './data'
-import { gcd, clamp, lerp } from './math'
-import { Units } from 'segu'
+// import { gcd, clamp, lerp } from './math'
+// import { Units } from 'segu'
+import { Units, gcd, clamp, lerp } from 'segu'
 
 /**
  * Provides essential duration values and calculations of a bach track.

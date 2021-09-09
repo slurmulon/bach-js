@@ -1,5 +1,6 @@
 import { Element } from './elements'
-import { Note } from './note'
+// import { Note } from './note'
+import Notes from './notes'
 
 /**
  * Represents a single beat in a track.
@@ -86,7 +87,8 @@ export class Beat {
   }
 
   notesOf (elements) {
-    return Note.unite(elements.flatMap(({ notes }) => notes))
+    // return Note.unite(elements.flatMap(({ notes }) => notes))
+    return Notes.unique(elements.flatMap(({ notes }) => notes))
   }
 
   static from (beats, store) {
