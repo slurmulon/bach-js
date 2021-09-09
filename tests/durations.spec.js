@@ -3,12 +3,6 @@ import { basic as source, compound } from './fixtures/bach'
 
 const durations = new Durations(source)
 
-// describe('interval', () => {
-//   it('provides the number of milliseconds in a step', () => {
-//     expect(durations.interval).toEqual(800)
-//   })
-// })
-
 describe('cast', () => {
   describe('units', () => {
     it('identity', () => {
