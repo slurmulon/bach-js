@@ -105,6 +105,12 @@ describe('all', () => {
         expect(result).toEqual(['A', 'C', 'D', 'E', 'G'])
       })
 
+      it('using tonal format (implicit)', () => {
+        const result = Notes.all('penta', 'A')
+
+        expect(result).toEqual(['A', 'B', 'C#', 'E', 'F#'])
+      })
+
       it('using tonal format (major alias)', () => {
         const result = Notes.all('penta', 'C pentatonic')
 
@@ -115,6 +121,38 @@ describe('all', () => {
         const result = Notes.all('penta', 'G majorpentatonic')
 
         expect(result).toEqual(['G', 'A', 'B', 'D', 'E'])
+      })
+    })
+
+    describe('kinds are case-insensitive', () => {
+      it('as note', () => {
+        expect(Notes.all('NoTe', 'F#')).toEqual(['F#'])
+      })
+
+      it('as scale', () => {
+        expect(Notes.all('sCAlE', 'A minor')).toEqual(['A', 'B', 'C', 'D', 'E', 'F', 'G'])
+      })
+
+      it('as chord', () => {
+        expect(Notes.all('CHOrD', 'G')).toEqual(['G', 'B', 'D'])
+      })
+
+      it('as penta', () => {
+        expect(Notes.all('penTA', 'C pentatonic')).toEqual(['C', 'D', 'E', 'G', 'A'])
+      })
+    })
+
+    describe('values are case-insensitive', () => {
+      it('as scale', () => {
+        expect(Notes.all('scale', 'a MinoR')).toEqual(['A', 'B', 'C', 'D', 'E', 'F', 'G'])
+      })
+
+      it('as chord', () => {
+        expect(Notes.all('chord', 'fMAj7')).toEqual(['F', 'A', 'C', 'E'])
+      })
+
+      it('as penta', () => {
+        expect(Notes.all('penta', 'd MiNOR PEntaTOniC')).toEqual(['D', 'F', 'G', 'A', 'C'])
       })
     })
 
