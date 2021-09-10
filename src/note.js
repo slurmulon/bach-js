@@ -50,7 +50,16 @@ export class Note {
   }
 
   static unite (notes = []) {
-    return [...new Set(Note.valuesOf(notes))]
+    return notes.reduce((all, note) => {
+      const value = Note.valueOf(note)
+      const has = Note.includes(all, value)
+
+      return !has ? all.concat(value) : all
+    }, [])
+  }
+
+  static includes (notes = [], note) {
+    return notes.some(other => Note.equals(other, note))
   }
 
   static equals (left, right) {
