@@ -12,6 +12,8 @@ var _includesInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/
 
 var _reduceInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/instance/reduce");
 
+var _someInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/instance/some");
+
 var _entriesInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/entries");
 
 var _sortInstanceProperty2 = require("@babel/runtime-corejs3/core-js-stable/instance/sort");
@@ -48,17 +50,17 @@ var _Reflect$construct = require("@babel/runtime-corejs3/core-js-stable/reflect/
 
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["exports", "@babel/runtime-corejs3/helpers/esm/inherits", "@babel/runtime-corejs3/helpers/esm/possibleConstructorReturn", "@babel/runtime-corejs3/helpers/esm/getPrototypeOf", "@babel/runtime-corejs3/helpers/esm/defineProperty", "@babel/runtime-corejs3/helpers/esm/toConsumableArray", "@babel/runtime-corejs3/helpers/esm/classCallCheck", "@babel/runtime-corejs3/helpers/esm/createClass", "@babel/runtime-corejs3/helpers/esm/slicedToArray", "@babel/runtime-corejs3/helpers/esm/typeof", "@babel/runtime-corejs3/core-js-stable/json/stringify", "@babel/runtime-corejs3/core-js-stable/instance/concat", "@babel/runtime-corejs3/core-js-stable/instance/slice", "@babel/runtime-corejs3/core-js-stable/instance/map", "@babel/runtime-corejs3/core-js-stable/instance/filter", "@babel/runtime-corejs3/core-js-stable/instance/includes", "@babel/runtime-corejs3/core-js-stable/set", "@babel/runtime-corejs3/core-js-stable/number/max-safe-integer", "@babel/runtime-corejs3/core-js-stable/object/assign", "@babel/runtime-corejs3/core-js-stable/instance/reduce", "@babel/runtime-corejs3/core-js-stable/object/entries", "@babel/runtime-corejs3/core-js-stable/instance/sort", "@babel/runtime-corejs3/core-js-stable/instance/flat-map", "@babel/runtime-corejs3/core-js-stable/instance/every", "@babel/runtime-corejs3/core-js-stable/object/keys", "@babel/runtime-corejs3/core-js-stable/object/values", "@babel/runtime-corejs3/core-js-stable/array/is-array", "@babel/runtime-corejs3/core-js-stable/instance/find", "@babel/runtime-corejs3/core-js-stable/instance/reverse", "teoria", "bach-cljs", "bach-json-schema", "ajv"], factory);
+    define(["exports", "@babel/runtime-corejs3/helpers/esm/toConsumableArray", "@babel/runtime-corejs3/helpers/esm/inherits", "@babel/runtime-corejs3/helpers/esm/possibleConstructorReturn", "@babel/runtime-corejs3/helpers/esm/getPrototypeOf", "@babel/runtime-corejs3/helpers/esm/defineProperty", "@babel/runtime-corejs3/helpers/esm/classCallCheck", "@babel/runtime-corejs3/helpers/esm/createClass", "@babel/runtime-corejs3/helpers/esm/slicedToArray", "@babel/runtime-corejs3/helpers/esm/typeof", "@babel/runtime-corejs3/core-js-stable/json/stringify", "@babel/runtime-corejs3/core-js-stable/instance/concat", "@babel/runtime-corejs3/core-js-stable/instance/slice", "@babel/runtime-corejs3/core-js-stable/instance/map", "@babel/runtime-corejs3/core-js-stable/instance/filter", "@babel/runtime-corejs3/core-js-stable/instance/includes", "@babel/runtime-corejs3/core-js-stable/instance/reduce", "@babel/runtime-corejs3/core-js-stable/instance/some", "@babel/runtime-corejs3/core-js-stable/number/max-safe-integer", "@babel/runtime-corejs3/core-js-stable/object/assign", "@babel/runtime-corejs3/core-js-stable/object/entries", "@babel/runtime-corejs3/core-js-stable/instance/sort", "@babel/runtime-corejs3/core-js-stable/instance/flat-map", "@babel/runtime-corejs3/core-js-stable/instance/every", "@babel/runtime-corejs3/core-js-stable/object/keys", "@babel/runtime-corejs3/core-js-stable/object/values", "@babel/runtime-corejs3/core-js-stable/array/is-array", "@babel/runtime-corejs3/core-js-stable/set", "@babel/runtime-corejs3/core-js-stable/instance/find", "@babel/runtime-corejs3/core-js-stable/instance/reverse", "teoria", "bach-cljs", "bach-json-schema", "ajv"], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require("@babel/runtime-corejs3/helpers/esm/inherits"), require("@babel/runtime-corejs3/helpers/esm/possibleConstructorReturn"), require("@babel/runtime-corejs3/helpers/esm/getPrototypeOf"), require("@babel/runtime-corejs3/helpers/esm/defineProperty"), require("@babel/runtime-corejs3/helpers/esm/toConsumableArray"), require("@babel/runtime-corejs3/helpers/esm/classCallCheck"), require("@babel/runtime-corejs3/helpers/esm/createClass"), require("@babel/runtime-corejs3/helpers/esm/slicedToArray"), require("@babel/runtime-corejs3/helpers/esm/typeof"), require("@babel/runtime-corejs3/core-js-stable/json/stringify"), require("@babel/runtime-corejs3/core-js-stable/instance/concat"), require("@babel/runtime-corejs3/core-js-stable/instance/slice"), require("@babel/runtime-corejs3/core-js-stable/instance/map"), require("@babel/runtime-corejs3/core-js-stable/instance/filter"), require("@babel/runtime-corejs3/core-js-stable/instance/includes"), require("@babel/runtime-corejs3/core-js-stable/set"), require("@babel/runtime-corejs3/core-js-stable/number/max-safe-integer"), require("@babel/runtime-corejs3/core-js-stable/object/assign"), require("@babel/runtime-corejs3/core-js-stable/instance/reduce"), require("@babel/runtime-corejs3/core-js-stable/object/entries"), require("@babel/runtime-corejs3/core-js-stable/instance/sort"), require("@babel/runtime-corejs3/core-js-stable/instance/flat-map"), require("@babel/runtime-corejs3/core-js-stable/instance/every"), require("@babel/runtime-corejs3/core-js-stable/object/keys"), require("@babel/runtime-corejs3/core-js-stable/object/values"), require("@babel/runtime-corejs3/core-js-stable/array/is-array"), require("@babel/runtime-corejs3/core-js-stable/instance/find"), require("@babel/runtime-corejs3/core-js-stable/instance/reverse"), require("teoria"), require("bach-cljs"), require("bach-json-schema"), require("ajv"));
+    factory(exports, require("@babel/runtime-corejs3/helpers/esm/toConsumableArray"), require("@babel/runtime-corejs3/helpers/esm/inherits"), require("@babel/runtime-corejs3/helpers/esm/possibleConstructorReturn"), require("@babel/runtime-corejs3/helpers/esm/getPrototypeOf"), require("@babel/runtime-corejs3/helpers/esm/defineProperty"), require("@babel/runtime-corejs3/helpers/esm/classCallCheck"), require("@babel/runtime-corejs3/helpers/esm/createClass"), require("@babel/runtime-corejs3/helpers/esm/slicedToArray"), require("@babel/runtime-corejs3/helpers/esm/typeof"), require("@babel/runtime-corejs3/core-js-stable/json/stringify"), require("@babel/runtime-corejs3/core-js-stable/instance/concat"), require("@babel/runtime-corejs3/core-js-stable/instance/slice"), require("@babel/runtime-corejs3/core-js-stable/instance/map"), require("@babel/runtime-corejs3/core-js-stable/instance/filter"), require("@babel/runtime-corejs3/core-js-stable/instance/includes"), require("@babel/runtime-corejs3/core-js-stable/instance/reduce"), require("@babel/runtime-corejs3/core-js-stable/instance/some"), require("@babel/runtime-corejs3/core-js-stable/number/max-safe-integer"), require("@babel/runtime-corejs3/core-js-stable/object/assign"), require("@babel/runtime-corejs3/core-js-stable/object/entries"), require("@babel/runtime-corejs3/core-js-stable/instance/sort"), require("@babel/runtime-corejs3/core-js-stable/instance/flat-map"), require("@babel/runtime-corejs3/core-js-stable/instance/every"), require("@babel/runtime-corejs3/core-js-stable/object/keys"), require("@babel/runtime-corejs3/core-js-stable/object/values"), require("@babel/runtime-corejs3/core-js-stable/array/is-array"), require("@babel/runtime-corejs3/core-js-stable/set"), require("@babel/runtime-corejs3/core-js-stable/instance/find"), require("@babel/runtime-corejs3/core-js-stable/instance/reverse"), require("teoria"), require("bach-cljs"), require("bach-json-schema"), require("ajv"));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.inherits, global.possibleConstructorReturn, global.getPrototypeOf, global.defineProperty, global.toConsumableArray, global.classCallCheck, global.createClass, global.slicedToArray, global._typeof, global.stringify, _concatInstanceProperty2(global), _sliceInstanceProperty2(global), _mapInstanceProperty2(global), _filterInstanceProperty2(global), _includesInstanceProperty2(global), global.set, global.maxSafeInteger, global.assign, _reduceInstanceProperty2(global), _entriesInstanceProperty(global), _sortInstanceProperty2(global), _flatMapInstanceProperty2(global), _everyInstanceProperty2(global), _keysInstanceProperty(global), _valuesInstanceProperty(global), global.isArray, _findInstanceProperty2(global), _reverseInstanceProperty2(global), global.teoria, global.bachCljs, global.bachJsonSchema, global.ajv);
+    factory(mod.exports, global.toConsumableArray, global.inherits, global.possibleConstructorReturn, global.getPrototypeOf, global.defineProperty, global.classCallCheck, global.createClass, global.slicedToArray, global._typeof, global.stringify, _concatInstanceProperty2(global), _sliceInstanceProperty2(global), _mapInstanceProperty2(global), _filterInstanceProperty2(global), _includesInstanceProperty2(global), _reduceInstanceProperty2(global), _someInstanceProperty2(global), global.maxSafeInteger, global.assign, _entriesInstanceProperty(global), _sortInstanceProperty2(global), _flatMapInstanceProperty2(global), _everyInstanceProperty2(global), _keysInstanceProperty(global), _valuesInstanceProperty(global), global.isArray, global.set, _findInstanceProperty2(global), _reverseInstanceProperty2(global), global.teoria, global.bachCljs, global.bachJsonSchema, global.ajv);
     global.unknown = mod.exports;
   }
-})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _inherits2, _possibleConstructorReturn2, _getPrototypeOf2, _defineProperty2, _toConsumableArray2, _classCallCheck2, _createClass2, _slicedToArray2, _typeof2, _stringify, _concat, _slice, _map, _filter, _includes, _set, _maxSafeInteger, _assign, _reduce, _entries, _sort, _flatMap, _every, _keys, _values, _isArray, _find, _reverse, _teoria, _bachCljs, _bachJsonSchema, _ajv) {
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _toConsumableArray2, _inherits2, _possibleConstructorReturn2, _getPrototypeOf2, _defineProperty2, _classCallCheck2, _createClass2, _slicedToArray2, _typeof2, _stringify, _concat, _slice, _map, _filter, _includes, _reduce, _some, _maxSafeInteger, _assign, _entries, _sort, _flatMap, _every, _keys, _values, _isArray, _set, _find, _reverse, _teoria, _bachCljs, _bachJsonSchema, _ajv) {
   "use strict";
 
   var _interopRequireDefault = require("@babel/runtime-corejs3/helpers/interopRequireDefault");
@@ -80,11 +82,11 @@ var _Reflect$construct = require("@babel/runtime-corejs3/core-js-stable/reflect/
   _exports.scaleify = scaleify;
   _exports.steps = steps;
   _exports.validate = _exports.valid = _exports.notesOf = _exports.compose = _exports.Note = _exports.Music = _exports.MUSICAL_ELEMENTS = _exports.Elements = _exports.Element = _exports.Durations = void 0;
+  _toConsumableArray2 = _interopRequireDefault(_toConsumableArray2);
   _inherits2 = _interopRequireDefault(_inherits2);
   _possibleConstructorReturn2 = _interopRequireDefault(_possibleConstructorReturn2);
   _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf2);
   _defineProperty2 = _interopRequireDefault(_defineProperty2);
-  _toConsumableArray2 = _interopRequireDefault(_toConsumableArray2);
   _classCallCheck2 = _interopRequireDefault(_classCallCheck2);
   _createClass2 = _interopRequireDefault(_createClass2);
   _slicedToArray2 = _interopRequireDefault(_slicedToArray2);
@@ -95,10 +97,10 @@ var _Reflect$construct = require("@babel/runtime-corejs3/core-js-stable/reflect/
   _map = _interopRequireDefault(_map);
   _filter = _interopRequireDefault(_filter);
   _includes = _interopRequireDefault(_includes);
-  _set = _interopRequireDefault(_set);
+  _reduce = _interopRequireDefault(_reduce);
+  _some = _interopRequireDefault(_some);
   _maxSafeInteger = _interopRequireDefault(_maxSafeInteger);
   _assign = _interopRequireDefault(_assign);
-  _reduce = _interopRequireDefault(_reduce);
   _entries = _interopRequireDefault(_entries);
   _sort = _interopRequireDefault(_sort);
   _flatMap = _interopRequireDefault(_flatMap);
@@ -106,6 +108,7 @@ var _Reflect$construct = require("@babel/runtime-corejs3/core-js-stable/reflect/
   _keys = _interopRequireDefault(_keys);
   _values = _interopRequireDefault(_values);
   _isArray = _interopRequireDefault(_isArray);
+  _set = _interopRequireDefault(_set);
   _find = _interopRequireDefault(_find);
   _reverse = _interopRequireDefault(_reverse);
   _bachCljs = _interopRequireWildcard(_bachCljs);
@@ -320,7 +323,20 @@ var _Reflect$construct = require("@babel/runtime-corejs3/core-js-stable/reflect/
       key: "unite",
       value: function unite() {
         var notes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-        return (0, _toConsumableArray2["default"])(new _set["default"](Note.valuesOf(notes)));
+        return (0, _reduce["default"])(notes).call(notes, function (all, note) {
+          var value = Note.valueOf(note);
+          var has = (0, _includes["default"])(Note).call(Note, all, value);
+          return !has ? (0, _concat["default"])(all).call(all, value) : all;
+        }, []);
+      }
+    }, {
+      key: "includes",
+      value: function includes() {
+        var notes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+        var note = arguments.length > 1 ? arguments[1] : undefined;
+        return (0, _some["default"])(notes).call(notes, function (other) {
+          return Note.equals(other, note);
+        });
       }
     }, {
       key: "equals",
