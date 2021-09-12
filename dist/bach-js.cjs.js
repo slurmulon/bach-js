@@ -12,6 +12,8 @@ var _Object$getOwnPropertyDescriptors = require("@babel/runtime-corejs3/core-js-
 
 var _Object$defineProperties = require("@babel/runtime-corejs3/core-js-stable/object/define-properties");
 
+var _toConsumableArray = require("@babel/runtime-corejs3/helpers/toConsumableArray");
+
 var _inherits = require("@babel/runtime-corejs3/helpers/inherits");
 
 var _possibleConstructorReturn = require("@babel/runtime-corejs3/helpers/possibleConstructorReturn");
@@ -19,8 +21,6 @@ var _possibleConstructorReturn = require("@babel/runtime-corejs3/helpers/possibl
 var _getPrototypeOf = require("@babel/runtime-corejs3/helpers/getPrototypeOf");
 
 var _defineProperty = require("@babel/runtime-corejs3/helpers/defineProperty");
-
-var _toConsumableArray = require("@babel/runtime-corejs3/helpers/toConsumableArray");
 
 var _classCallCheck = require("@babel/runtime-corejs3/helpers/classCallCheck");
 
@@ -44,13 +44,13 @@ var _filterInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/ins
 
 var _includesInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/includes");
 
-var _Set = require("@babel/runtime-corejs3/core-js-stable/set");
+var _reduceInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/reduce");
+
+var _someInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/some");
 
 var _Number$MAX_SAFE_INTEGER = require("@babel/runtime-corejs3/core-js-stable/number/max-safe-integer");
 
 var _Object$assign = require("@babel/runtime-corejs3/core-js-stable/object/assign");
-
-var _reduceInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/reduce");
 
 var _Object$entries = require("@babel/runtime-corejs3/core-js-stable/object/entries");
 
@@ -65,6 +65,8 @@ var _Object$keys = require("@babel/runtime-corejs3/core-js-stable/object/keys");
 var _Object$values = require("@babel/runtime-corejs3/core-js-stable/object/values");
 
 var _Array$isArray = require("@babel/runtime-corejs3/core-js-stable/array/is-array");
+
+var _Set = require("@babel/runtime-corejs3/core-js-stable/set");
 
 var _findInstanceProperty = require("@babel/runtime-corejs3/core-js-stable/instance/find");
 
@@ -291,7 +293,22 @@ var Note = /*#__PURE__*/function () {
     key: "unite",
     value: function unite() {
       var notes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-      return _toConsumableArray(new _Set(Note.valuesOf(notes)));
+      return _reduceInstanceProperty(notes).call(notes, function (all, note) {
+        var value = Note.valueOf(note);
+
+        var has = _includesInstanceProperty(Note).call(Note, all, value);
+
+        return !has ? _concatInstanceProperty(all).call(all, value) : all;
+      }, []);
+    }
+  }, {
+    key: "includes",
+    value: function includes() {
+      var notes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+      var note = arguments.length > 1 ? arguments[1] : undefined;
+      return _someInstanceProperty(notes).call(notes, function (other) {
+        return Note.equals(other, note);
+      });
     }
   }, {
     key: "equals",
