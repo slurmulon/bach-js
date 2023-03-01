@@ -1,12 +1,15 @@
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import { getBabelOutputPlugin } from '@rollup/plugin-babel'
+import { terser } from 'rollup-plugin-terser'
 import json from '@rollup/plugin-json'
 import pkg from './package.json'
 
 // browser-friendly UMD build
 export default [
   {
+    // external: [/@babel\/runtime/, 'ajv', 'bach-cljs', 'bach-json-schema', 'teoria'],
+    external: [/@babel\/runtime/, 'bach-cljs', 'bach-json-schema', 'teoria'],
     input: 'src/index.js',
     output: {
       name: 'bach-js',
@@ -20,14 +23,18 @@ export default [
     plugins: [
       json(),
       resolve(),
+      // terser(),
       commonjs({
         ignore: ['bach-cljs'],
         esmExternals: true,
         requireReturnsDefault: true
       }),
       getBabelOutputPlugin({
-        presets: [['@babel/preset-env', { modules: 'umd' }]],
-        plugins: [['@babel/plugin-transform-runtime', { corejs: 3 }]]
+        // presets: [['@babel/preset-env', { modules: 'umd' }]],
+        presets: [['@babel/preset-env', { modules: 'umd', exclude: ['proposal-dynamic-import'] }]],
+
+        // plugins: [['@babel/plugin-transform-runtime', { corejs: 3 }]]
+        plugins: [['@babel/plugin-transform-runtime', { corejs: false, helpers: false, }]]
       }),
     ]
   },
@@ -46,18 +53,24 @@ export default [
         file: pkg.main,
         format: 'cjs',
         sourcemap: true,
-        plugins: [getBabelOutputPlugin({
-          presets: ['@babel/preset-env'],
-          plugins: [['@babel/plugin-transform-runtime', { corejs: 3, useESModules: false }]]
+        plugins: [terser(), getBabelOutputPlugin({
+          // presets: ['@babel/preset-env'],
+          presets: [['@babel/preset-env', { modules: 'cjs', exclude: ["proposal-dynamic-import"] }]],
+          // plugins: [['@babel/plugin-transform-runtime', { corejs: 3, useESModules: false }]]
+          plugins: [['@babel/plugin-transform-runtime', { corejs: 3, proposals: true, regenerator: true, useESModules: false }]]
+          // plugins: [['@babel/plugin-transform-runtime', { corejs: false, useESModules: false }]]
         })]
       },
       {
         file: pkg.module,
         format: 'esm',
         sourcemap: true,
-        plugins: [getBabelOutputPlugin({
-          presets: [['@babel/preset-env', { modules: 'umd' }]],
-          plugins: [['@babel/plugin-transform-runtime', { corejs: 3, useESModules: true }]]
+        plugins: [terser(), getBabelOutputPlugin({
+          // presets: [['@babel/preset-env', { modules: 'umd' }]],
+          presets: [['@babel/preset-env', { modules: 'auto' }]],
+          // plugins: [['@babel/plugin-transform-runtime', { corejs: 3, useESModules: true }]]
+          plugins: [['@babel/plugin-transform-runtime', { corejs: 3, proposals: true, regenerator: true, useESModules: true }]]
+          // plugins: [['@babel/plugin-transform-runtime', { corejs: false, useESModules: true }]]
         })]
       }
     ],
