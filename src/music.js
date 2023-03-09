@@ -2,7 +2,7 @@ import { Note } from './note'
 import { Durations } from './durations'
 import { Element, Elements, MUSICAL_ELEMENTS } from './elements'
 import { Beat } from './beats'
-import { compose, notesIn } from './data'
+import { compile, notesIn } from './data'
 
 export class Music {
 
@@ -27,8 +27,7 @@ export class Music {
 
   assign (source) {
     this.source = source
-    // this.data = compose(source)
-    this.data = JSON.parse(JSON.stringify(compose(source)))
+    this.data = compile(source)
 
     this.init()
 

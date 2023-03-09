@@ -1,4 +1,4 @@
-import { compose } from './data'
+import { compile, compose } from './data'
 import { gcd, clamp, lerp } from './math'
 import { Units } from 'segu'
 
@@ -13,8 +13,7 @@ export class Durations extends Units {
     super({ map: null, lens })
 
     this.source = source
-    // this.data = compose(source)
-    this.data = JSON.parse(JSON.stringify(compose(source)))
+    this.data = compile(source)
 
     this.init()
   }
