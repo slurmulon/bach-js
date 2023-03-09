@@ -9,7 +9,7 @@ import pkg from './package.json'
 export default [
   {
     // external: [/@babel\/runtime/, 'ajv', 'bach-cljs', 'bach-json-schema', 'teoria'],
-    external: [/@babel\/runtime/, 'bach-cljs', 'bach-json-schema', 'teoria'],
+    external: [/@babel\/runtime/, 'bach-cljs', 'bach-json-schema', 'segu', 'teoria'],
     input: 'src/index.js',
     output: {
       name: 'bach-js',
