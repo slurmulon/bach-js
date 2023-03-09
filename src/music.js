@@ -27,7 +27,8 @@ export class Music {
 
   assign (source) {
     this.source = source
-    this.data = compose(source)
+    // this.data = compose(source)
+    this.data = JSON.parse(JSON.stringify(compose(source)))
 
     this.init()
 

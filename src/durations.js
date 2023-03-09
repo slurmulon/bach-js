@@ -13,7 +13,8 @@ export class Durations extends Units {
     super({ map: null, lens })
 
     this.source = source
-    this.data = compose(source)
+    // this.data = compose(source)
+    this.data = JSON.parse(JSON.stringify(compose(source)))
 
     this.init()
   }

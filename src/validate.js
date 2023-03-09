@@ -1,9 +1,9 @@
 import schema from 'bach-json-schema'
 import Ajv from 'ajv'
 
-const ajv = new Ajv({ strictTuples: false })
+const ajv = new Ajv({ strictTuples: false, code: { es5: true }, unicodeRegExp: false })
 
-export const validate = ajv.compile(schema)
+export const validate = ajv.compile(JSON.parse(JSON.stringify(schema)))
 
 export const valid = bach => {
   if (!validate(bach)) {
