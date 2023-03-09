@@ -33,7 +33,8 @@ export function scaleify (value) {
 
     // TODO: Potentially use type.toLowerCase instead, to guarantee smooth interopability
     return teoriaScale(tonic, type.toLowerCase())
-  } else if (value instanceof TeoriaScale) {
+  // } else if (value instanceof TeoriaScale) {
+  } else if (typeof value === 'object') {
     return value
   }
 
@@ -43,7 +44,8 @@ export function scaleify (value) {
 export function chordify (value) {
   if (typeof value === 'string') {
     return teoriaChord(value)
-  } else if (value instanceof TeoriaChord) {
+  // } else if (value instanceof TeoriaChord) {
+  } else if (typeof value === 'object') {
     return value
   }
 
