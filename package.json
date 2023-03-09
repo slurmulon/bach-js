@@ -36,8 +36,7 @@
     "bach-json-schema": "github:slurmulon/bach-json-schema#v3.0.2",
     "core-js": "^3.11.2",
     "segu": "github:slurmulon/segu#v1.0.0-alpha.3",
-    "teoria": "^2.5.0",
-    "tonal": "^2.2.2"
+    "teoria": "^2.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.14.0",
