@@ -1,16 +1,16 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["exports", "teoria", "bach-cljs", "bach-json-schema"], factory);
+    define(["exports", "teoria", "bach-cljs", "bach-json-schema", "segu"], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require("teoria"), require("bach-cljs"), require("bach-json-schema"));
+    factory(exports, require("teoria"), require("bach-cljs"), require("bach-json-schema"), require("segu"));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.teoria, global.bachCljs, global.bachJsonSchema);
+    factory(mod.exports, global.teoria, global.bachCljs, global.bachJsonSchema, global.segu);
     global.unknown = mod.exports;
   }
-})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _teoria, _bachCljs, _bachJsonSchema) {
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _teoria, _bachCljs, _bachJsonSchema, _segu) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
@@ -18,11 +18,11 @@
   });
   _exports.Note = _exports.Music = _exports.MUSICAL_ELEMENTS = _exports.Elements = _exports.Element = _exports.Durations = void 0;
   _exports.chordify = chordify;
-  _exports.clamp = clamp$1;
+  _exports.clamp = clamp;
   _exports.compose = _exports.compile = void 0;
-  _exports.gcd = gcd$1;
-  _exports.invlerp = invlerp$1;
-  _exports.lerp = lerp$1;
+  _exports.gcd = gcd;
+  _exports.invlerp = invlerp;
+  _exports.lerp = lerp;
   _exports.notesIn = notesIn;
   _exports.notesInChord = notesInChord;
   _exports.notesInScale = notesInScale;
@@ -8557,11 +8557,11 @@
    * @returns {Number}
    */
   _exports.Note = Note;
-  function gcd$1(a, b) {
+  function gcd(a, b) {
     if (b == 0) {
       return a;
     }
-    return gcd$1(b, a % b);
+    return gcd(b, a % b);
   }
 
   /**
@@ -8572,7 +8572,7 @@
    * @param {Number} max
    * @returns {Number}
    */
-  function clamp$1(value) {
+  function clamp(value) {
     var min = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
     var max = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
     return Math.min(max, Math.max(min, value));
@@ -8586,7 +8586,7 @@
    * @param {Number} y
    * @returns {Number}
    */
-  function lerp$1(ratio, x, y) {
+  function lerp(ratio, x, y) {
     return x * (1 - ratio) + y * ratio;
   }
 
@@ -8599,8 +8599,8 @@
    * @returns {Number}
    */
 
-  function invlerp$1(value, x, y) {
-    return clamp$1((value - x) / (y - x));
+  function invlerp(value, x, y) {
+    return clamp((value - x) / (y - x));
   }
 
   /**
@@ -8614,338 +8614,7 @@
     if (ratio < 0) ratio += 1;
     return all[Math.floor(ratio * all.length)];
   }
-  var Lens = /*#__PURE__*/function () {
-    function Lens() {
-      var _ref80 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        _ref80$unit = _ref80.unit,
-        unit = _ref80$unit === void 0 ? 1 : _ref80$unit,
-        _ref80$is = _ref80.is,
-        is = _ref80$is === void 0 ? 1 : _ref80$is,
-        _ref80$as = _ref80.as,
-        as = _ref80$as === void 0 ? 1 : _ref80$as,
-        _ref80$min = _ref80.min,
-        min = _ref80$min === void 0 ? 0 : _ref80$min,
-        _ref80$max = _ref80.max,
-        max = _ref80$max === void 0 ? 1 : _ref80$max,
-        _ref80$grid = _ref80.grid,
-        grid = _ref80$grid === void 0 ? 1 : _ref80$grid,
-        _ref80$origin = _ref80.origin,
-        origin = _ref80$origin === void 0 ? 0 : _ref80$origin;
-      _classCallCheck(this, Lens);
-      this.data = {
-        unit: unit,
-        is: is,
-        as: as,
-        min: min,
-        max: max,
-        grid: grid,
-        origin: origin
-      };
-      // Would improve flexibility by wrapping all getters in Lens with this, allowing Units and Lens to use the same normalization function
-      // this.normalize = normalize || Units.normalize
-    }
-    _createClass(Lens, [{
-      key: "unit",
-      get: function get() {
-        return this.data.unit || this.data.is || 1;
-      }
-    }, {
-      key: "is",
-      get: function get() {
-        return this.data.is || this.unit;
-      }
-    }, {
-      key: "as",
-      get: function get() {
-        return this.data.as || this.unit;
-      }
-    }, {
-      key: "min",
-      get: function get() {
-        return this.data.min || 0;
-      }
-    }, {
-      key: "max",
-      get: function get() {
-        return this.data.max || Number.MAX_SAFE_INTEGER;
-      }
-    }, {
-      key: "grid",
-      get: function get() {
-        return this.data.grid || 1;
-      }
-    }, {
-      key: "origin",
-      get: function get() {
-        return this.data.origin || 0;
-      }
-    }, {
-      key: "use",
-      value: function use(data) {
-        return Object.assign({}, this.data, data);
-      }
-    }, {
-      key: "assign",
-      value: function assign(data) {
-        this.data = this.use(data);
-        return this;
-      }
-    }]);
-    return Lens;
-  }();
-  /**
-   * Recursively calculates the greatest common denominator (GCD) between two values
-   *
-   * @param {Number} x
-   * @param {Number} y
-   * @returns {Number}
-   */
-  function gcd(x, y) {
-    return y === 0 ? x : gcd(y, x % y);
-  }
 
-  /**
-   * Modifies a value so that it is always between x and y
-   *
-   * @param {Number} value
-   * @param {Number} x
-   * @param {Number} y
-   * @returns {Number}
-   */
-  function _clamp(value) {
-    var x = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-    var y = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
-    return Math.min(y, Math.max(x, value));
-  }
-
-  /**
-   * Interpolation function returning the value between x and y at a specific ratio
-   *
-   * @param {Number} value
-   * @param {Number} x
-   * @param {Number} y
-   * @returns {Number}
-   */
-  function _lerp(ratio, x, y) {
-    return x * (1 - ratio) + y * ratio;
-  }
-
-  /**
-   * Interpolation function returning the ratio of a value clamped between x and y
-   *
-   * @param {Number} value
-   * @param {Number} x
-   * @param {Number} y
-   * @returns {Number}
-   */
-
-  function _invlerp(value, x, y) {
-    return _clamp((value - x) / (y - x));
-  }
-
-  /**
-   * Cycles a value around an range (from x to y).
-   *
-   * @param {Number} value
-   * @param {Number} x
-   * @param {Number} y
-   * @returns {Number}
-  */
-  function _cyclic(value, x, y) {
-    return (value >= x ? value : value + y) % y;
-  }
-
-  // TODO: Support calc method for allowing conversion of units via string (like CSS):
-  var Units = /*#__PURE__*/function () {
-    function Units() {
-      var _ref81 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        _ref81$map = _ref81.map,
-        map = _ref81$map === void 0 ? {} : _ref81$map,
-        _ref81$lens = _ref81.lens,
-        lens = _ref81$lens === void 0 ? {} : _ref81$lens;
-      _classCallCheck(this, Units);
-      this.map = map;
-      this.lens = new Lens(lens);
-    }
-    _createClass(Units, [{
-      key: "normalize",
-      value: function normalize(unit) {
-        if (typeof unit === 'number') {
-          return unit;
-        }
-        if (typeof unit === 'string') {
-          var value = this.map[unit] || 1;
-          return typeof value === 'function' ? value(unit, this) : Number(value);
-        }
-        return 1;
-      }
-    }, {
-      key: "scope",
-      value: function scope() {
-        var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-        var lens = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.lens;
-        var _this$lens$use = this.lens.use(lens),
-          is = _this$lens$use.is,
-          as = _this$lens$use.as,
-          min = _this$lens$use.min,
-          max = _this$lens$use.max,
-          origin = _this$lens$use.origin;
-        var index = this.cast(value - origin, {
-          is: is,
-          as: as
-        });
-        var head = this.cast(min || 0, {
-          is: is,
-          as: as
-        });
-        var tail = this.cast(max || value, {
-          is: is,
-          as: as
-        });
-        return {
-          value: value,
-          index: index,
-          head: head,
-          tail: tail
-        };
-      }
-
-      // TODO: Allow `is` and `as` to be provided as mapping functions
-    }, {
-      key: "cast",
-      value: function cast() {
-        var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-        var _ref82 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref82$is = _ref82.is,
-          is = _ref82$is === void 0 ? this.lens.unit : _ref82$is,
-          _ref82$as = _ref82.as,
-          as = _ref82$as === void 0 ? this.lens.unit : _ref82$as;
-        return this.normalize(value) / (this.normalize(as) / this.normalize(is));
-      }
-    }, {
-      key: "snap",
-      value: function snap(value) {
-        var lens = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.lens;
-        var _this$scope = this.scope(value, lens),
-          index = _this$scope.index;
-        var unit = this.normalize(lens.as || lens.unit);
-        var calc = typeof lens.calc === 'function' ? lens.calc : Math.floor;
-        return calc(index) * unit;
-      }
-    }, {
-      key: "clamp",
-      value: function clamp(value, lens) {
-        var _this$scope2 = this.scope(value, lens),
-          index = _this$scope2.index,
-          head = _this$scope2.head,
-          tail = _this$scope2.tail;
-        return _clamp(index, head, tail);
-      }
-    }, {
-      key: "cyclic",
-      value: function cyclic(value, lens) {
-        var _this$scope3 = this.scope(value, lens),
-          index = _this$scope3.index,
-          head = _this$scope3.head,
-          tail = _this$scope3.tail;
-        return _cyclic(index, head, tail);
-      }
-    }, {
-      key: "lerp",
-      value: function lerp(ratio, lens) {
-        var _this$scope4 = this.scope(0, lens),
-          head = _this$scope4.head,
-          tail = _this$scope4.tail;
-        return _lerp(ratio, head, tail);
-      }
-    }, {
-      key: "invlerp",
-      value: function invlerp(value, lens) {
-        var _this$scope5 = this.scope(value, lens),
-          index = _this$scope5.index,
-          head = _this$scope5.head,
-          tail = _this$scope5.tail;
-        return _invlerp(index, head, tail);
-      }
-    }, {
-      key: "delta",
-      value: function delta(value, lens) {
-        var _this$scope6 = this.scope(value, lens),
-          index = _this$scope6.index,
-          head = _this$scope6.head;
-        return index - head;
-      }
-    }, {
-      key: "range",
-      value: function range(value, lens) {
-        var _this$scope7 = this.scope(value, lens),
-          head = _this$scope7.head,
-          tail = _this$scope7.tail;
-        return tail - head;
-      }
-    }, {
-      key: "progress",
-      value: function progress(value, lens) {
-        var delta = this.delta(value, lens);
-        var range = this.range(value, lens);
-        return delta / range;
-      }
-    }, {
-      key: "fold",
-      value: function fold(value) {
-        var lens = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.lens;
-        var grid = lens.grid || 1;
-        var basis = gcd(value, grid);
-        var size = this.clamp(value, lens);
-        var container = this.snap(size, {
-          as: basis
-        });
-        var ratio = Math.max(1, Math.min(value / basis, grid));
-        var min = value >= grid ? grid : basis;
-        return Math.max(min, this.snap(container, {
-          as: ratio
-        }));
-      }
-
-      // Changes the base unit to the provided key by recalculating and replacing the unit map pairs.
-      // TODO: Test, and ensure that the base unit is equal to 1 (or, could just use scale)
-    }, {
-      key: "rebase",
-      value: function rebase() {
-        var _this30 = this;
-        var unit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.lens.unit;
-        if (unit === this.lens.unit) return this;
-        var map = Object.entries(this.map).reduce(function (map, _ref83) {
-          var _ref84 = _slicedToArray(_ref83, 2),
-            key = _ref84[0],
-            value = _ref84[1];
-          return Object.assign(map, _defineProperty({}, key, _this30.cast(value, {
-            is: _this30.lens.is,
-            as: unit
-          })), _defineProperty({}, unit, 1));
-        });
-        this.map = map;
-        this.lens.unit = unit;
-        return this;
-      }
-    }, {
-      key: "clone",
-      value: function clone(props) {
-        var map = Object.assign({}, this.map, props.map);
-        var lens = Object.assign({}, this.lens, props.lens);
-        return new Units({
-          map: map,
-          lens: lens
-        });
-      }
-    }], [{
-      key: "use",
-      value: function use(props) {
-        return new Units(props);
-      }
-    }]);
-    return Units;
-  }();
   /**
    * Provides essential duration values and calculations of a bach track.
    * Enables trivial conversions between any duration unit via cast (based
@@ -8955,16 +8624,16 @@
     _inherits(Durations, _Units);
     var _super30 = _createSuper(Durations);
     function Durations(source, lens) {
-      var _this31;
+      var _this30;
       _classCallCheck(this, Durations);
-      _this31 = _super30.call(this, {
+      _this30 = _super30.call(this, {
         map: null,
         lens: lens
       });
-      _this31.source = source;
-      _this31.data = compile(source);
-      _this31.init();
-      return _this31;
+      _this30.source = source;
+      _this30.data = compile(source);
+      _this30.init();
+      return _this30;
     }
     _createClass(Durations, [{
       key: "init",
@@ -9020,11 +8689,11 @@
         }));
         var index = this.cyclic(step);
         var state = this.steps[index];
-        var _ref85 = state || [],
-          _ref86 = _slicedToArray(_ref85, 3),
-          context = _ref86[0],
-          play = _ref86[1],
-          stop = _ref86[2];
+        var _ref80 = state || [],
+          _ref81 = _slicedToArray(_ref80, 3),
+          context = _ref81[0],
+          play = _ref81[1],
+          stop = _ref81[2];
         return {
           beat: context[0],
           elems: context.slice(1),
@@ -9036,11 +8705,11 @@
     }, {
       key: "metronize",
       value: function metronize(duration) {
-        var _ref87 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref87$is = _ref87.is,
-          is = _ref87$is === void 0 ? 'ms' : _ref87$is,
-          _ref87$as = _ref87.as,
-          as = _ref87$as === void 0 ? 'pulse' : _ref87$as;
+        var _ref82 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref82$is = _ref82.is,
+          is = _ref82$is === void 0 ? 'ms' : _ref82$is,
+          _ref82$as = _ref82.as,
+          as = _ref82$as === void 0 ? 'pulse' : _ref82$as;
         var index = this.cast(duration, {
           is: is,
           as: as
@@ -9056,23 +8725,23 @@
     }, {
       key: "rhythmic",
       value: function rhythmic(duration) {
-        var _this32 = this;
-        var _ref88 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref88$is = _ref88.is,
-          is = _ref88$is === void 0 ? 'ms' : _ref88$is,
-          _ref88$units = _ref88.units,
-          units = _ref88$units === void 0 ? ['8n', '4n'] : _ref88$units,
-          _ref88$calc = _ref88.calc,
-          calc = _ref88$calc === void 0 ? 'floor' : _ref88$calc,
-          _ref88$size = _ref88.size,
-          size = _ref88$size === void 0 ? 'min' : _ref88$size;
+        var _this31 = this;
+        var _ref83 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref83$is = _ref83.is,
+          is = _ref83$is === void 0 ? 'ms' : _ref83$is,
+          _ref83$units = _ref83.units,
+          units = _ref83$units === void 0 ? ['8n', '4n'] : _ref83$units,
+          _ref83$calc = _ref83.calc,
+          calc = _ref83$calc === void 0 ? 'floor' : _ref83$calc,
+          _ref83$size = _ref83.size,
+          size = _ref83$size === void 0 ? 'min' : _ref83$size;
         var durations = units.map(function (unit) {
-          var value = _this32.cast(duration, {
+          var value = _this31.cast(duration, {
             is: is,
             as: unit
           });
           var result = Math[calc](value);
-          return _this32.cast(result, {
+          return _this31.cast(result, {
             is: unit,
             as: is
           });
@@ -9115,7 +8784,7 @@
       }
     }]);
     return Durations;
-  }(Units);
+  }(_segu.Units);
   /**
    * Represents a single and unique playable element.
    * Uniqueness and equality are determined by `id`.
@@ -9180,10 +8849,10 @@
   _exports.Element = Element;
   var Elements = /*#__PURE__*/function () {
     function Elements() {
-      var _ref89 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        source = _ref89.source,
-        store = _ref89.store,
-        cast = _ref89.cast;
+      var _ref84 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        source = _ref84.source,
+        store = _ref84.store,
+        cast = _ref84.cast;
       _classCallCheck(this, Elements);
       this.source = compose(source);
       this.cast = cast || function (_) {
@@ -9194,9 +8863,9 @@
     _createClass(Elements, [{
       key: "all",
       get: function get() {
-        var _this33 = this;
+        var _this32 = this;
         return this.kinds.flatMap(function (kind) {
-          return _this33.every(kind);
+          return _this32.every(kind);
         });
       }
     }, {
@@ -9249,13 +8918,13 @@
     }, {
       key: "resolve",
       value: function resolve(elem) {
-        var _this34 = this;
+        var _this33 = this;
         // FIXME: Use json-schema validator here instead to support cross-context typing.
         // if (elem instanceof Element) return elem
         if (_typeof(elem) === 'object') return elem;
         if (typeof elem === 'string') return this.get(elem);
         if (Array.isArray(elem)) return elem.map(function (el) {
-          return _this34.get(el);
+          return _this33.get(el);
         });
         if (elem == null) return null;
         throw TypeError('Failed to resolve element due to unsupported data type');
@@ -9264,10 +8933,10 @@
       // TODO: Rename to `insert`
     }, {
       key: "register",
-      value: function register(_ref90) {
-        var kind = _ref90.kind,
-          value = _ref90.value,
-          props = _ref90.props;
+      value: function register(_ref85) {
+        var kind = _ref85.kind,
+          value = _ref85.value,
+          props = _ref85.props;
         if (!kind || typeof kind !== 'string') throw TypeError('kind must be a non-empty string');
         if (value == null) throw TypeError('value must be defined and non-null');
         var elem = (0, _bachCljs.elementize)(kind, [value].concat(_toConsumableArray(props)));
@@ -9290,14 +8959,14 @@
         if (!elements) return null;
 
         // TODO: Validate element shape with JSON Schema
-        return Object.entries(elements).reduce(function (acc, _ref91) {
-          var _ref92 = _slicedToArray(_ref91, 2),
-            kind = _ref92[0],
-            ids = _ref92[1];
-          var elems = Object.entries(ids).reduce(function (acc, _ref93) {
-            var _ref94 = _slicedToArray(_ref93, 2),
-              id = _ref94[0],
-              elem = _ref94[1];
+        return Object.entries(elements).reduce(function (acc, _ref86) {
+          var _ref87 = _slicedToArray(_ref86, 2),
+            kind = _ref87[0],
+            ids = _ref87[1];
+          var elems = Object.entries(ids).reduce(function (acc, _ref88) {
+            var _ref89 = _slicedToArray(_ref88, 2),
+              id = _ref89[0],
+              elem = _ref89[1];
             return _objectSpread(_objectSpread({}, acc), {}, _defineProperty({}, id, as(_objectSpread({
               id: id,
               kind: kind
@@ -9344,11 +9013,11 @@
     }, {
       key: "items",
       get: function get() {
-        var _this35 = this;
+        var _this34 = this;
         return this.data.items.map(function (item) {
           return _objectSpread(_objectSpread({}, item), {}, {
             elements: item.elements.map(function (elem) {
-              return _this35.store.resolve(elem);
+              return _this34.store.resolve(elem);
             })
           });
         });
@@ -9356,27 +9025,27 @@
     }, {
       key: "elements",
       get: function get() {
-        var _this36 = this;
-        return this.data.items.flatMap(function (_ref95) {
-          var elements = _ref95.elements;
+        var _this35 = this;
+        return this.data.items.flatMap(function (_ref90) {
+          var elements = _ref90.elements;
           return elements.map(function (elem) {
-            return _this36.store.resolve(elem);
+            return _this35.store.resolve(elem);
           });
         });
       }
     }, {
       key: "kinds",
       get: function get() {
-        return this.all(function (_ref96) {
-          var kind = _ref96.kind;
+        return this.all(function (_ref91) {
+          var kind = _ref91.kind;
           return kind;
         });
       }
     }, {
       key: "values",
       get: function get() {
-        return this.all(function (_ref97) {
-          var value = _ref97.value;
+        return this.all(function (_ref92) {
+          var value = _ref92.value;
           return value;
         });
       }
@@ -9432,16 +9101,16 @@
     }, {
       key: "either",
       value: function either(kinds) {
-        var _this37 = this;
+        var _this36 = this;
         return kinds.reduce(function (acc, kind) {
-          return acc.length ? acc : _this37.filter(kind);
+          return acc.length ? acc : _this36.filter(kind);
         }, []);
       }
     }, {
       key: "notesOf",
       value: function notesOf(elements) {
-        return Note.unite(elements.flatMap(function (_ref98) {
-          var notes = _ref98.notes;
+        return Note.unite(elements.flatMap(function (_ref93) {
+          var notes = _ref93.notes;
           return notes;
         }));
       }
@@ -9520,8 +9189,8 @@
       key: "notes",
       get: function get() {
         return Note.unite(this.beats.flatMap(function (beat) {
-          return beat.elements.flatMap(function (_ref99) {
-            var notes = _ref99.notes;
+          return beat.elements.flatMap(function (_ref94) {
+            var notes = _ref94.notes;
             return notes;
           });
         }));
