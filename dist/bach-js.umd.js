@@ -1,16 +1,16 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define(["exports", "teoria", "bach-cljs", "bach-json-schema", "segu"], factory);
+    define(["exports", "teoria", "bach-cljs", "bach-json-schema"], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require("teoria"), require("bach-cljs"), require("bach-json-schema"), require("segu"));
+    factory(exports, require("teoria"), require("bach-cljs"), require("bach-json-schema"));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.teoria, global.bachCljs, global.bachJsonSchema, global.segu);
+    factory(mod.exports, global.teoria, global.bachCljs, global.bachJsonSchema);
     global.unknown = mod.exports;
   }
-})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _teoria, _bachCljs, _bachJsonSchema, _segu) {
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _teoria, _bachCljs, _bachJsonSchema) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
@@ -32,12 +32,9 @@
   _exports.scaleify = scaleify;
   _exports.steps = steps;
   _exports.validate = _exports.valid = void 0;
-  _bachCljs = _interopRequireWildcard(_bachCljs);
   _bachJsonSchema = _interopRequireDefault(_bachJsonSchema);
   var _templateObject, _templateObject2, _templateObject3, _templateObject4, _templateObject5, _templateObject6, _templateObject7, _templateObject8, _templateObject9, _templateObject10, _templateObject11, _templateObject12, _templateObject13, _templateObject14, _templateObject15, _templateObject16, _templateObject17, _templateObject18, _templateObject19, _templateObject20, _templateObject21, _templateObject22, _templateObject23, _templateObject24, _templateObject25, _templateObject26, _templateObject27, _templateObject28, _templateObject29, _templateObject30, _templateObject31, _templateObject32, _templateObject33, _templateObject34, _templateObject35, _templateObject36, _templateObject37, _templateObject38, _templateObject39, _templateObject40, _templateObject41, _templateObject42, _templateObject43, _templateObject44, _templateObject45, _templateObject46, _templateObject47, _templateObject48, _templateObject49, _templateObject50, _templateObject51, _templateObject52, _templateObject53, _templateObject54, _templateObject55, _templateObject56, _templateObject57, _templateObject58, _templateObject59, _templateObject60, _templateObject61, _templateObject62, _templateObject63, _templateObject64, _templateObject65, _templateObject66, _templateObject67, _templateObject68, _templateObject69, _templateObject70, _templateObject71, _templateObject72, _templateObject73, _templateObject74, _templateObject75, _templateObject76, _templateObject77, _templateObject78, _templateObject79, _templateObject80, _templateObject81, _templateObject82, _templateObject83, _templateObject84, _templateObject85, _templateObject86, _templateObject87, _templateObject88, _templateObject89, _templateObject90, _templateObject91, _templateObject92, _templateObject93, _templateObject94, _templateObject95, _templateObject96, _templateObject97, _templateObject98, _templateObject99, _templateObject100, _templateObject101, _templateObject102, _templateObject103, _templateObject104, _templateObject105, _templateObject106, _templateObject107, _templateObject108, _templateObject109, _templateObject110, _templateObject111, _templateObject112, _templateObject113, _templateObject114, _templateObject115, _templateObject116, _templateObject117, _templateObject118, _templateObject119, _templateObject120, _templateObject121, _templateObject122, _templateObject123, _templateObject124, _templateObject125, _templateObject126, _templateObject127, _templateObject128, _templateObject129, _templateObject130, _templateObject131, _templateObject132, _templateObject133, _templateObject134, _templateObject135, _templateObject136, _templateObject137, _templateObject138, _templateObject139, _templateObject140, _templateObject141, _templateObject142, _templateObject143, _templateObject144, _templateObject145, _templateObject146, _templateObject147, _templateObject148, _templateObject149, _templateObject150, _templateObject151, _templateObject152, _templateObject153, _templateObject154, _templateObject155, _templateObject156, _templateObject157, _templateObject158, _templateObject159, _templateObject160, _templateObject161, _templateObject162, _templateObject163, _templateObject164, _templateObject165, _templateObject166, _templateObject167, _templateObject168, _templateObject169, _templateObject170, _templateObject171, _templateObject172, _templateObject173, _templateObject174, _templateObject175, _templateObject176, _templateObject177, _templateObject178, _templateObject179, _templateObject180, _templateObject181, _templateObject182, _templateObject183, _templateObject184, _templateObject185, _templateObject186, _templateObject187, _templateObject188, _templateObject189, _templateObject190, _templateObject191, _templateObject192, _templateObject193, _templateObject194, _templateObject195, _templateObject196, _templateObject197, _templateObject198, _templateObject199, _templateObject200, _templateObject201, _templateObject202, _templateObject203, _templateObject204, _templateObject205, _templateObject206, _templateObject207, _templateObject208, _templateObject209, _templateObject210, _templateObject211, _templateObject212, _templateObject213, _templateObject214, _templateObject215, _templateObject216, _templateObject217, _templateObject218, _templateObject219, _templateObject220, _templateObject221, _templateObject222, _templateObject223, _templateObject224, _templateObject225, _templateObject226, _templateObject227, _templateObject228, _templateObject229, _templateObject230, _templateObject231, _templateObject232, _templateObject233, _templateObject234, _templateObject235, _templateObject236, _templateObject237, _templateObject238, _templateObject239, _templateObject240, _templateObject241, _templateObject242, _templateObject243, _templateObject244, _templateObject245, _templateObject246, _templateObject247, _templateObject248, _templateObject249, _templateObject250, _templateObject251, _templateObject252, _templateObject253, _templateObject254, _templateObject255, _templateObject256, _templateObject257, _templateObject258, _templateObject259, _templateObject260, _templateObject261, _templateObject262, _templateObject263, _templateObject264, _templateObject265, _templateObject266, _templateObject267, _templateObject268, _templateObject269, _templateObject270, _templateObject271, _templateObject272, _templateObject273, _templateObject274, _templateObject275, _templateObject276, _templateObject277, _templateObject278, _templateObject279, _templateObject280, _templateObject281, _templateObject282;
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-  function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-  function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
   function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
   function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
   function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -8361,16 +8358,18 @@
     },
     unicodeRegExp: false
   });
-  var validate = ajv.compile(JSON.parse(JSON.stringify(_bachJsonSchema["default"])));
+  _bachJsonSchema["default"].$id = 'http://codebach.tech/bach.json';
+  var validate = ajv.compile(_bachJsonSchema["default"]);
   _exports.validate = validate;
   var valid = function valid(bach) {
     if (!validate(bach)) {
-      var message = 'Invalid Bach.JSON source data';
-      var pretty = function pretty(json) {
-        return JSON.stringify(json, null, 2);
-      };
-      console.error(message, pretty(bach));
-      console.error(pretty(validate.errors));
+      // TEMP: Disabled to debug potential memory leaks stemming from ajv
+      // const message = 'Invalid Bach.JSON source data'
+      // const pretty = json => JSON.stringify(json, null, 2)
+
+      // console.error(message, pretty(bach))
+      // console.error(pretty(validate.errors))
+
       throw TypeError("Invalid Bach.JSON source data");
     }
     return bach;
@@ -8386,7 +8385,7 @@
     var strict = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
     if (typeof source === 'string') {
       var upgraded = source.replace(/!play/i, 'play!');
-      return _bachCljs["default"].compose(upgraded);
+      return (0, _bachCljs.compose)(upgraded);
     }
     if (_typeof(source) === 'object') {
       return strict ? valid(source) : source;
@@ -8422,48 +8421,6 @@
   }
   function scaleToString(scale) {
     return "".concat(scale.tonic.toString().slice(0, 2), " ").concat(scale.name);
-  }
-  function notesInChord(value) {
-    return chordify(value).notes().map(function (note) {
-      return Note.valueOf(note);
-    });
-  }
-  function notesInScale(value) {
-    return scaleify(value).notes().map(function (note) {
-      return Note.valueOf(note);
-    });
-  }
-  function notesIn(kind, value) {
-    var notes = notesOf[kind];
-    if (notes) {
-      return notes(value);
-    }
-    return [];
-  }
-
-  // TODO: Allow custom note resolvers to be registered globally or locally so people can easily define their own semantics
-  //  - Could call this `itemsOf` to be more generic and flexible
-  var notesOf = {
-    note: function note(value) {
-      return [value];
-    },
-    chord: function chord(value) {
-      return notesInChord(value);
-    },
-    scale: function scale(value) {
-      return notesInScale(value);
-    },
-    penta: function penta(value) {
-      return notesInScale(value);
-    }
-  };
-
-  // TODO: Note.valueOf
-  _exports.notesOf = notesOf;
-  function notesIntersect(left, right) {
-    return left.filter(function (note) {
-      return right.includes(note);
-    });
   }
 
   // TODO: Replce with individual functions and remove class, no longer necessary
@@ -8549,33 +8506,153 @@
     }]);
     return Note;
   }();
+  _exports.Note = Note;
+  function notesInChord(value) {
+    return chordify(value).notes().map(function (note) {
+      return Note.valueOf(note);
+    });
+  }
+  function notesInScale(value) {
+    return scaleify(value).notes().map(function (note) {
+      return Note.valueOf(note);
+    });
+  }
+  function notesIn(kind, value) {
+    var notes = notesOf[kind];
+    if (notes) {
+      return notes(value);
+    }
+    return [];
+  }
+
+  // TODO: Allow custom note resolvers to be registered globally or locally so people can easily define their own semantics
+  //  - Could call this `itemsOf` to be more generic and flexible
+  var notesOf = {
+    note: function note(value) {
+      return [value];
+    },
+    chord: function chord(value) {
+      return notesInChord(value);
+    },
+    scale: function scale(value) {
+      return notesInScale(value);
+    },
+    penta: function penta(value) {
+      return notesInScale(value);
+    }
+  };
+
+  // TODO: Note.valueOf
+  _exports.notesOf = notesOf;
+  function notesIntersect(left, right) {
+    return left.filter(function (note) {
+      return right.includes(note);
+    });
+  }
+  var Lens = /*#__PURE__*/function () {
+    function Lens() {
+      var _ref80 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        _ref80$unit = _ref80.unit,
+        unit = _ref80$unit === void 0 ? 1 : _ref80$unit,
+        _ref80$is = _ref80.is,
+        is = _ref80$is === void 0 ? 1 : _ref80$is,
+        _ref80$as = _ref80.as,
+        as = _ref80$as === void 0 ? 1 : _ref80$as,
+        _ref80$min = _ref80.min,
+        min = _ref80$min === void 0 ? 0 : _ref80$min,
+        _ref80$max = _ref80.max,
+        max = _ref80$max === void 0 ? 1 : _ref80$max,
+        _ref80$grid = _ref80.grid,
+        grid = _ref80$grid === void 0 ? 1 : _ref80$grid,
+        _ref80$origin = _ref80.origin,
+        origin = _ref80$origin === void 0 ? 0 : _ref80$origin;
+      _classCallCheck(this, Lens);
+      this.data = {
+        unit: unit,
+        is: is,
+        as: as,
+        min: min,
+        max: max,
+        grid: grid,
+        origin: origin
+      };
+      // Would improve flexibility by wrapping all getters in Lens with this, allowing Units and Lens to use the same normalization function
+      // this.normalize = normalize || Units.normalize
+    }
+    _createClass(Lens, [{
+      key: "unit",
+      get: function get() {
+        return this.data.unit || this.data.is || 1;
+      }
+    }, {
+      key: "is",
+      get: function get() {
+        return this.data.is || this.unit;
+      }
+    }, {
+      key: "as",
+      get: function get() {
+        return this.data.as || this.unit;
+      }
+    }, {
+      key: "min",
+      get: function get() {
+        return this.data.min || 0;
+      }
+    }, {
+      key: "max",
+      get: function get() {
+        return this.data.max || Number.MAX_SAFE_INTEGER;
+      }
+    }, {
+      key: "grid",
+      get: function get() {
+        return this.data.grid || 1;
+      }
+    }, {
+      key: "origin",
+      get: function get() {
+        return this.data.origin || 0;
+      }
+
+      // use (data) {
+    }, {
+      key: "use",
+      value: function use() {
+        var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this;
+        return Object.assign({}, this.data, data);
+      }
+    }, {
+      key: "assign",
+      value: function assign(data) {
+        this.data = this.use(data);
+        return this;
+      }
+    }]);
+    return Lens;
+  }();
   /**
    * Recursively calculates the greatest common denominator (GCD) between two values
    *
-   * @param {Number} a
-   * @param {Number} b
+   * @param {Number} x
+   * @param {Number} y
    * @returns {Number}
    */
-  _exports.Note = Note;
-  function gcd(a, b) {
-    if (b == 0) {
-      return a;
-    }
-    return gcd(b, a % b);
+  function gcd$1(x, y) {
+    return y === 0 ? x : gcd$1(y, x % y);
   }
 
   /**
-   * Modifies a value so that it is always between the provided min and max
+   * Modifies a value so that it is always between x and y
    *
    * @param {Number} value
-   * @param {Number} min
-   * @param {Number} max
+   * @param {Number} x
+   * @param {Number} y
    * @returns {Number}
    */
-  function clamp(value) {
-    var min = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-    var max = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
-    return Math.min(max, Math.max(min, value));
+  // export function clamp (value, x = 0, y = 1) {
+  function clamp$1(value, x, y) {
+    return Math.min(y, Math.max(x, value));
   }
 
   /**
@@ -8586,7 +8663,7 @@
    * @param {Number} y
    * @returns {Number}
    */
-  function lerp(ratio, x, y) {
+  function lerp$1(ratio, x, y) {
     return x * (1 - ratio) + y * ratio;
   }
 
@@ -8599,22 +8676,215 @@
    * @returns {Number}
    */
 
-  function invlerp(value, x, y) {
-    return clamp((value - x) / (y - x));
+  function invlerp$1(value, x, y) {
+    return clamp$1((value - x) / (y - x));
   }
 
   /**
-   * Determines the element found in an array at a given ratio
+   * Cycles a value around an range (from x to y).
    *
-   * @param {Float} ratio
-   * @param {Array} all
-   */
-  function steps(ratio, all) {
-    ratio %= 1;
-    if (ratio < 0) ratio += 1;
-    return all[Math.floor(ratio * all.length)];
+   * @param {Number} value
+   * @param {Number} x
+   * @param {Number} y
+   * @returns {Number}
+  */
+  function _cyclic(value, x, y) {
+    return (value >= x ? value : value + y) % y;
   }
 
+  // TODO: Support calc method for allowing conversion of units via string (like CSS):
+  var Units = /*#__PURE__*/function () {
+    function Units() {
+      var _ref81 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        _ref81$map = _ref81.map,
+        map = _ref81$map === void 0 ? {} : _ref81$map,
+        _ref81$lens = _ref81.lens,
+        lens = _ref81$lens === void 0 ? {} : _ref81$lens;
+      _classCallCheck(this, Units);
+      this.map = map;
+      this.lens = new Lens(lens);
+    }
+    _createClass(Units, [{
+      key: "normalize",
+      value: function normalize(unit) {
+        if (typeof unit === 'number') {
+          return unit;
+        }
+        if (typeof unit === 'string') {
+          var value = this.map[unit] || 1;
+          return typeof value === 'function' ? value(unit, this) : Number(value);
+        }
+        return 1;
+      }
+
+      // scope (value = 1, lens = this.lens) {
+    }, {
+      key: "scope",
+      value: function scope() {
+        var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+        var lens = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+        var _this$lens$use = this.lens.use(lens),
+          is = _this$lens$use.is,
+          as = _this$lens$use.as,
+          min = _this$lens$use.min,
+          max = _this$lens$use.max,
+          origin = _this$lens$use.origin;
+        var index = this.cast(value - origin, {
+          is: is,
+          as: as
+        });
+        var head = this.cast(min || 0, {
+          is: is,
+          as: as
+        });
+        var tail = this.cast(max || value, {
+          is: is,
+          as: as
+        });
+        return {
+          value: value,
+          index: index,
+          head: head,
+          tail: tail
+        };
+      }
+
+      // TODO: Allow `is` and `as` to be provided as mapping functions
+    }, {
+      key: "cast",
+      value: function cast() {
+        var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+        var _ref82 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref82$is = _ref82.is,
+          is = _ref82$is === void 0 ? this.lens.unit : _ref82$is,
+          _ref82$as = _ref82.as,
+          as = _ref82$as === void 0 ? this.lens.unit : _ref82$as;
+        return this.normalize(value) / (this.normalize(as) / this.normalize(is));
+      }
+    }, {
+      key: "snap",
+      value: function snap(value) {
+        var lens = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.lens;
+        var _this$scope = this.scope(value, lens),
+          index = _this$scope.index;
+        var unit = this.normalize(lens.as || lens.unit);
+        var calc = typeof lens.calc === 'function' ? lens.calc : Math.floor;
+        return calc(index) * unit;
+      }
+    }, {
+      key: "clamp",
+      value: function clamp(value, lens) {
+        var _this$scope2 = this.scope(value, lens),
+          index = _this$scope2.index,
+          head = _this$scope2.head,
+          tail = _this$scope2.tail;
+        return clamp$1(index, head, tail);
+      }
+    }, {
+      key: "cyclic",
+      value: function cyclic(value, lens) {
+        var _this$scope3 = this.scope(value, lens),
+          index = _this$scope3.index,
+          head = _this$scope3.head,
+          tail = _this$scope3.tail;
+        return _cyclic(index, head, tail);
+      }
+    }, {
+      key: "lerp",
+      value: function lerp(ratio, lens) {
+        var _this$scope4 = this.scope(0, lens),
+          head = _this$scope4.head,
+          tail = _this$scope4.tail;
+        return lerp$1(ratio, head, tail);
+      }
+    }, {
+      key: "invlerp",
+      value: function invlerp(value, lens) {
+        var _this$scope5 = this.scope(value, lens),
+          index = _this$scope5.index,
+          head = _this$scope5.head,
+          tail = _this$scope5.tail;
+        return invlerp$1(index, head, tail);
+      }
+    }, {
+      key: "delta",
+      value: function delta(value, lens) {
+        var _this$scope6 = this.scope(value, lens),
+          index = _this$scope6.index,
+          head = _this$scope6.head;
+        return index - head;
+      }
+    }, {
+      key: "range",
+      value: function range(value, lens) {
+        var _this$scope7 = this.scope(value, lens),
+          head = _this$scope7.head,
+          tail = _this$scope7.tail;
+        return tail - head;
+      }
+    }, {
+      key: "progress",
+      value: function progress(value, lens) {
+        var delta = this.delta(value, lens);
+        var range = this.range(value, lens);
+        return delta / range;
+      }
+    }, {
+      key: "fold",
+      value: function fold(value) {
+        var lens = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.lens;
+        var grid = lens.grid || 1;
+        var basis = gcd$1(value, grid);
+        var size = this.clamp(value, lens);
+        var container = this.snap(size, {
+          as: basis
+        });
+        var ratio = Math.max(1, Math.min(value / basis, grid));
+        var min = value >= grid ? grid : basis;
+        return Math.max(min, this.snap(container, {
+          as: ratio
+        }));
+      }
+
+      // Changes the base unit to the provided key by recalculating and replacing the unit map pairs.
+      // TODO: Test, and ensure that the base unit is equal to 1 (or, could just use scale)
+    }, {
+      key: "rebase",
+      value: function rebase() {
+        var _this30 = this;
+        var unit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.lens.unit;
+        if (unit === this.lens.unit) return this;
+        var map = Object.entries(this.map).reduce(function (map, _ref83) {
+          var _ref84 = _slicedToArray(_ref83, 2),
+            key = _ref84[0],
+            value = _ref84[1];
+          return Object.assign(map, _defineProperty({}, key, _this30.cast(value, {
+            is: _this30.lens.is,
+            as: unit
+          })), _defineProperty({}, unit, 1));
+        });
+        this.map = map;
+        this.lens.unit = unit;
+        return this;
+      }
+    }, {
+      key: "clone",
+      value: function clone(props) {
+        var map = Object.assign({}, this.map, props.map);
+        var lens = Object.assign({}, this.lens, props.lens);
+        return new Units({
+          map: map,
+          lens: lens
+        });
+      }
+    }], [{
+      key: "use",
+      value: function use(props) {
+        return new Units(props);
+      }
+    }]);
+    return Units;
+  }();
   /**
    * Provides essential duration values and calculations of a bach track.
    * Enables trivial conversions between any duration unit via cast (based
@@ -8624,16 +8894,16 @@
     _inherits(Durations, _Units);
     var _super30 = _createSuper(Durations);
     function Durations(source, lens) {
-      var _this30;
+      var _this31;
       _classCallCheck(this, Durations);
-      _this30 = _super30.call(this, {
+      _this31 = _super30.call(this, {
         map: null,
         lens: lens
       });
-      _this30.source = source;
-      _this30.data = compile(source);
-      _this30.init();
-      return _this30;
+      _this31.source = source;
+      _this31.data = compile(source);
+      _this31.init();
+      return _this31;
     }
     _createClass(Durations, [{
       key: "init",
@@ -8689,11 +8959,11 @@
         }));
         var index = this.cyclic(step);
         var state = this.steps[index];
-        var _ref80 = state || [],
-          _ref81 = _slicedToArray(_ref80, 3),
-          context = _ref81[0],
-          play = _ref81[1],
-          stop = _ref81[2];
+        var _ref85 = state || [],
+          _ref86 = _slicedToArray(_ref85, 3),
+          context = _ref86[0],
+          play = _ref86[1],
+          stop = _ref86[2];
         return {
           beat: context[0],
           elems: context.slice(1),
@@ -8705,11 +8975,11 @@
     }, {
       key: "metronize",
       value: function metronize(duration) {
-        var _ref82 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref82$is = _ref82.is,
-          is = _ref82$is === void 0 ? 'ms' : _ref82$is,
-          _ref82$as = _ref82.as,
-          as = _ref82$as === void 0 ? 'pulse' : _ref82$as;
+        var _ref87 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref87$is = _ref87.is,
+          is = _ref87$is === void 0 ? 'ms' : _ref87$is,
+          _ref87$as = _ref87.as,
+          as = _ref87$as === void 0 ? 'pulse' : _ref87$as;
         var index = this.cast(duration, {
           is: is,
           as: as
@@ -8725,23 +8995,23 @@
     }, {
       key: "rhythmic",
       value: function rhythmic(duration) {
-        var _this31 = this;
-        var _ref83 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          _ref83$is = _ref83.is,
-          is = _ref83$is === void 0 ? 'ms' : _ref83$is,
-          _ref83$units = _ref83.units,
-          units = _ref83$units === void 0 ? ['8n', '4n'] : _ref83$units,
-          _ref83$calc = _ref83.calc,
-          calc = _ref83$calc === void 0 ? 'floor' : _ref83$calc,
-          _ref83$size = _ref83.size,
-          size = _ref83$size === void 0 ? 'min' : _ref83$size;
+        var _this32 = this;
+        var _ref88 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          _ref88$is = _ref88.is,
+          is = _ref88$is === void 0 ? 'ms' : _ref88$is,
+          _ref88$units = _ref88.units,
+          units = _ref88$units === void 0 ? ['8n', '4n'] : _ref88$units,
+          _ref88$calc = _ref88.calc,
+          calc = _ref88$calc === void 0 ? 'floor' : _ref88$calc,
+          _ref88$size = _ref88.size,
+          size = _ref88$size === void 0 ? 'min' : _ref88$size;
         var durations = units.map(function (unit) {
-          var value = _this31.cast(duration, {
+          var value = _this32.cast(duration, {
             is: is,
             as: unit
           });
           var result = Math[calc](value);
-          return _this31.cast(result, {
+          return _this32.cast(result, {
             is: unit,
             as: is
           });
@@ -8784,7 +9054,7 @@
       }
     }]);
     return Durations;
-  }(_segu.Units);
+  }(Units);
   /**
    * Represents a single and unique playable element.
    * Uniqueness and equality are determined by `id`.
@@ -8849,23 +9119,24 @@
   _exports.Element = Element;
   var Elements = /*#__PURE__*/function () {
     function Elements() {
-      var _ref84 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        source = _ref84.source,
-        store = _ref84.store,
-        cast = _ref84.cast;
+      var _ref89 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        source = _ref89.source,
+        store = _ref89.store,
+        cast = _ref89.cast;
       _classCallCheck(this, Elements);
-      this.source = compose(source);
+      // this.source = compose(source)
+      this.source = compose(source, false);
       this.cast = cast || function (_) {
         return _;
       };
-      this.data = store || Elements.cast(this.source.elements, cast);
+      this.data = store || Elements.cast(this.source.elements, this.cast);
     }
     _createClass(Elements, [{
       key: "all",
       get: function get() {
-        var _this32 = this;
+        var _this33 = this;
         return this.kinds.flatMap(function (kind) {
-          return _this32.every(kind);
+          return _this33.every(kind);
         });
       }
     }, {
@@ -8918,13 +9189,13 @@
     }, {
       key: "resolve",
       value: function resolve(elem) {
-        var _this33 = this;
+        var _this34 = this;
         // FIXME: Use json-schema validator here instead to support cross-context typing.
         // if (elem instanceof Element) return elem
         if (_typeof(elem) === 'object') return elem;
         if (typeof elem === 'string') return this.get(elem);
         if (Array.isArray(elem)) return elem.map(function (el) {
-          return _this33.get(el);
+          return _this34.get(el);
         });
         if (elem == null) return null;
         throw TypeError('Failed to resolve element due to unsupported data type');
@@ -8933,10 +9204,10 @@
       // TODO: Rename to `insert`
     }, {
       key: "register",
-      value: function register(_ref85) {
-        var kind = _ref85.kind,
-          value = _ref85.value,
-          props = _ref85.props;
+      value: function register(_ref90) {
+        var kind = _ref90.kind,
+          value = _ref90.value,
+          props = _ref90.props;
         if (!kind || typeof kind !== 'string') throw TypeError('kind must be a non-empty string');
         if (value == null) throw TypeError('value must be defined and non-null');
         var elem = (0, _bachCljs.elementize)(kind, [value].concat(_toConsumableArray(props)));
@@ -8959,14 +9230,14 @@
         if (!elements) return null;
 
         // TODO: Validate element shape with JSON Schema
-        return Object.entries(elements).reduce(function (acc, _ref86) {
-          var _ref87 = _slicedToArray(_ref86, 2),
-            kind = _ref87[0],
-            ids = _ref87[1];
-          var elems = Object.entries(ids).reduce(function (acc, _ref88) {
-            var _ref89 = _slicedToArray(_ref88, 2),
-              id = _ref89[0],
-              elem = _ref89[1];
+        return Object.entries(elements).reduce(function (acc, _ref91) {
+          var _ref92 = _slicedToArray(_ref91, 2),
+            kind = _ref92[0],
+            ids = _ref92[1];
+          var elems = Object.entries(ids).reduce(function (acc, _ref93) {
+            var _ref94 = _slicedToArray(_ref93, 2),
+              id = _ref94[0],
+              elem = _ref94[1];
             return _objectSpread(_objectSpread({}, acc), {}, _defineProperty({}, id, as(_objectSpread({
               id: id,
               kind: kind
@@ -9013,11 +9284,11 @@
     }, {
       key: "items",
       get: function get() {
-        var _this34 = this;
+        var _this35 = this;
         return this.data.items.map(function (item) {
           return _objectSpread(_objectSpread({}, item), {}, {
             elements: item.elements.map(function (elem) {
-              return _this34.store.resolve(elem);
+              return _this35.store.resolve(elem);
             })
           });
         });
@@ -9025,27 +9296,27 @@
     }, {
       key: "elements",
       get: function get() {
-        var _this35 = this;
-        return this.data.items.flatMap(function (_ref90) {
-          var elements = _ref90.elements;
+        var _this36 = this;
+        return this.data.items.flatMap(function (_ref95) {
+          var elements = _ref95.elements;
           return elements.map(function (elem) {
-            return _this35.store.resolve(elem);
+            return _this36.store.resolve(elem);
           });
         });
       }
     }, {
       key: "kinds",
       get: function get() {
-        return this.all(function (_ref91) {
-          var kind = _ref91.kind;
+        return this.all(function (_ref96) {
+          var kind = _ref96.kind;
           return kind;
         });
       }
     }, {
       key: "values",
       get: function get() {
-        return this.all(function (_ref92) {
-          var value = _ref92.value;
+        return this.all(function (_ref97) {
+          var value = _ref97.value;
           return value;
         });
       }
@@ -9101,16 +9372,16 @@
     }, {
       key: "either",
       value: function either(kinds) {
-        var _this36 = this;
+        var _this37 = this;
         return kinds.reduce(function (acc, kind) {
-          return acc.length ? acc : _this36.filter(kind);
+          return acc.length ? acc : _this37.filter(kind);
         }, []);
       }
     }, {
       key: "notesOf",
       value: function notesOf(elements) {
-        return Note.unite(elements.flatMap(function (_ref93) {
-          var notes = _ref93.notes;
+        return Note.unite(elements.flatMap(function (_ref98) {
+          var notes = _ref98.notes;
           return notes;
         }));
       }
@@ -9151,7 +9422,7 @@
       key: "assign",
       value: function assign(source) {
         this.source = source;
-        this.data = compile(source);
+        this.data = compile(source, false);
         this.init();
         return this;
       }
@@ -9189,8 +9460,8 @@
       key: "notes",
       get: function get() {
         return Note.unite(this.beats.flatMap(function (beat) {
-          return beat.elements.flatMap(function (_ref94) {
-            var notes = _ref94.notes;
+          return beat.elements.flatMap(function (_ref99) {
+            var notes = _ref99.notes;
             return notes;
           });
         }));
@@ -9240,6 +9511,70 @@
     }]);
     return Music;
   }();
+  /**
+   * Recursively calculates the greatest common denominator (GCD) between two values
+   *
+   * @param {Number} a
+   * @param {Number} b
+   * @returns {Number}
+   */
   _exports.Music = Music;
+  function gcd(a, b) {
+    if (b == 0) {
+      return a;
+    }
+    return gcd(b, a % b);
+  }
+
+  /**
+   * Modifies a value so that it is always between the provided min and max
+   *
+   * @param {Number} value
+   * @param {Number} min
+   * @param {Number} max
+   * @returns {Number}
+   */
+  function clamp(value) {
+    var min = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    var max = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+    return Math.min(max, Math.max(min, value));
+  }
+
+  /**
+   * Interpolation function returning the value between x and y at a specific ratio
+   *
+   * @param {Number} value
+   * @param {Number} x
+   * @param {Number} y
+   * @returns {Number}
+   */
+  function lerp(ratio, x, y) {
+    return x * (1 - ratio) + y * ratio;
+  }
+
+  /**
+   * Interpolation function returning the ratio of a value clamped between x and y
+   *
+   * @param {Number} value
+   * @param {Number} x
+   * @param {Number} y
+   * @returns {Number}
+   */
+
+  function invlerp(value, x, y) {
+    return clamp((value - x) / (y - x));
+  }
+
+  /**
+   * Determines the element found in an array at a given ratio
+   *
+   * @param {Float} ratio
+   * @param {Array} all
+   */
+  function steps(ratio, all) {
+    ratio %= 1;
+    if (ratio < 0) ratio += 1;
+    return all[Math.floor(ratio * all.length)];
+  }
 });
 //# sourceMappingURL=bach-js.umd.js.map

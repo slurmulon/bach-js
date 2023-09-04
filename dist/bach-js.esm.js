@@ -22,10 +22,10 @@ import _JSON$stringify from "@babel/runtime-corejs3/core-js-stable/json/stringif
 import _concatInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/concat";
 import _sliceInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/slice";
 import _mapInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/map";
-import _filterInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/filter";
-import _includesInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/includes";
 import _reduceInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/reduce";
+import _includesInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/includes";
 import _someInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/some";
+import _filterInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/filter";
 import _Number$MAX_SAFE_INTEGER from "@babel/runtime-corejs3/core-js-stable/number/max-safe-integer";
 import _Object$assign from "@babel/runtime-corejs3/core-js-stable/object/assign";
 import _Object$entries from "@babel/runtime-corejs3/core-js-stable/object/entries";
@@ -39,114 +39,75 @@ import _Set from "@babel/runtime-corejs3/core-js-stable/set";
 import _findInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/find";
 import _reverseInstanceProperty from "@babel/runtime-corejs3/core-js-stable/instance/reverse";
 import { scale as t, chord as e, note as s, Note as r } from "teoria";
-import i, { elementize as n } from "bach-cljs";
+import { compose as i, elementize as n } from "bach-cljs";
 import a from "bach-json-schema";
 import u from "ajv";
 var o = new u({
-    strictTuples: !1,
-    code: {
-      es5: !0
-    },
-    unicodeRegExp: !1
-  }).compile(JSON.parse(_JSON$stringify(a))),
-  h = function h(t) {
-    if (!o(t)) {
-      var _e = "Invalid Bach.JSON source data",
-        _s = function _s(t) {
-          return _JSON$stringify(t, null, 2);
-        };
-      throw console.error(_e, _s(t)), console.error(_s(o.errors)), TypeError("Invalid Bach.JSON source data");
-    }
-    return t;
+  strictTuples: !1,
+  code: {
+    es5: !0
   },
+  unicodeRegExp: !1
+});
+a.$id = "http://codebach.tech/bach.json";
+var h = o.compile(a),
   c = function c(t) {
-    var e = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : !0;
-    if ("string" == typeof t) {
-      var _e2 = t.replace(/!play/i, "play!");
-      return i.compose(_e2);
-    }
-    if ("object" == _typeof(t)) return e ? h(t) : t;
-    throw TypeError("Unsupported Bach.JSON data type (".concat(_typeof(t), "). Must be a bach.json object or raw bach string."));
+    if (!h(t)) throw TypeError("Invalid Bach.JSON source data");
+    return t;
   },
   l = function l(t) {
     var e = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : !0;
-    var s = c(t, e);
+    if ("string" == typeof t) {
+      var _e = t.replace(/!play/i, "play!");
+      return i(_e);
+    }
+    if ("object" == _typeof(t)) return e ? c(t) : t;
+    throw TypeError("Unsupported Bach.JSON data type (".concat(_typeof(t), "). Must be a bach.json object or raw bach string."));
+  },
+  p = function p(t) {
+    var e = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : !0;
+    var s = l(t, e);
     return JSON.parse(_JSON$stringify(s));
   };
-function p(e) {
+function d(e) {
   var _context;
   if ("string" == typeof e) {
     var _e$split = e.split(" "),
       _e$split2 = _slicedToArray(_e$split, 2),
-      _s2 = _e$split2[0],
+      _s = _e$split2[0],
       _r = _e$split2[1];
-    return t(_s2, _r.toLowerCase());
+    return t(_s, _r.toLowerCase());
   }
   if ("object" == _typeof(e)) return e;
   throw TypeError(_concatInstanceProperty(_context = "Unknown scale type (".concat(_typeof(e), "): ")).call(_context, e));
 }
-function d(t) {
+function m(t) {
   var _context2;
   if ("string" == typeof t) return e(t);
   if ("object" == _typeof(t)) return t;
   throw TypeError(_concatInstanceProperty(_context2 = "Unknown chord type (".concat(_typeof(t), "): ")).call(_context2, t));
 }
-function m(t) {
+function f(t) {
   var _context3, _context4;
   return _concatInstanceProperty(_context3 = "".concat(_sliceInstanceProperty(_context4 = t.tonic.toString()).call(_context4, 0, 2), " ")).call(_context3, t.name);
 }
-function f(t) {
-  var _context5;
-  return _mapInstanceProperty(_context5 = d(t).notes()).call(_context5, function (t) {
-    return O.valueOf(t);
-  });
-}
-function g(t) {
-  var _context6;
-  return _mapInstanceProperty(_context6 = p(t).notes()).call(_context6, function (t) {
-    return O.valueOf(t);
-  });
-}
-function y(t, e) {
-  var s = b[t];
-  return s ? s(e) : [];
-}
-var b = {
-  note: function note(t) {
-    return [t];
-  },
-  chord: function chord(t) {
-    return f(t);
-  },
-  scale: function scale(t) {
-    return g(t);
-  },
-  penta: function penta(t) {
-    return g(t);
+var g = /*#__PURE__*/function () {
+  function g() {
+    _classCallCheck(this, g);
   }
-};
-function v(t, e) {
-  return _filterInstanceProperty(t).call(t, function (t) {
-    return _includesInstanceProperty(e).call(e, t);
-  });
-}
-var O = /*#__PURE__*/function () {
-  function O() {
-    _classCallCheck(this, O);
-  }
-  _createClass(O, null, [{
+  _createClass(g, null, [{
     key: "parse",
     value: function parse(t) {
-      var _context7;
+      var _context5;
       if ("string" == typeof t) return s(t);
       if ("object" == _typeof(t) || t instanceof r) return t;
-      throw TypeError(_concatInstanceProperty(_context7 = "Unknown note type (".concat(_typeof(t), "): ")).call(_context7, t));
+      throw TypeError(_concatInstanceProperty(_context5 = "Unknown note type (".concat(_typeof(t), "): ")).call(_context5, t));
     }
   }, {
     key: "all",
     value: function all(t, e) {
       try {
-        return y(t, e);
+        return v(t, e);
       } catch (t) {
         return [];
       }
@@ -154,35 +115,35 @@ var O = /*#__PURE__*/function () {
   }, {
     key: "hash",
     value: function hash(t) {
-      return O.parse(t).chroma();
+      return g.parse(t).chroma();
     }
   }, {
     key: "pitchOf",
     value: function pitchOf(t) {
-      return O.valueOf(t);
+      return g.valueOf(t);
     }
   }, {
     key: "valueOf",
     value: function valueOf(t) {
-      return O.parse(t).scientific().replace(/[0-9]+$/, "");
+      return g.parse(t).scientific().replace(/[0-9]+$/, "");
     }
   }, {
     key: "valuesOf",
     value: function valuesOf(t) {
-      return _mapInstanceProperty(t).call(t, O.valueOf);
+      return _mapInstanceProperty(t).call(t, g.valueOf);
     }
   }, {
     key: "generalize",
     value: function generalize(t) {
-      return s(O.valueOf(t));
+      return s(g.valueOf(t));
     }
   }, {
     key: "unite",
     value: function unite() {
       var t = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
       return _reduceInstanceProperty(t).call(t, function (t, e) {
-        var s = O.valueOf(e);
-        return _includesInstanceProperty(O).call(O, t, s) ? t : _concatInstanceProperty(t).call(t, s);
+        var s = g.valueOf(e);
+        return _includesInstanceProperty(g).call(g, t, s) ? t : _concatInstanceProperty(t).call(t, s);
       }, []);
     }
   }, {
@@ -191,36 +152,54 @@ var O = /*#__PURE__*/function () {
       var t = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
       var e = arguments.length > 1 ? arguments[1] : undefined;
       return _someInstanceProperty(t).call(t, function (t) {
-        return O.equals(t, e);
+        return g.equals(t, e);
       });
     }
   }, {
     key: "equals",
     value: function equals(t, e) {
-      return O.hash(t) == O.hash(e);
+      return g.hash(t) == g.hash(e);
     }
   }]);
-  return O;
+  return g;
 }();
-function w(t, e) {
-  return 0 == e ? t : w(e, t % e);
+function y(t) {
+  var _context6;
+  return _mapInstanceProperty(_context6 = m(t).notes()).call(_context6, function (t) {
+    return g.valueOf(t);
+  });
 }
-function x(t) {
-  var e = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-  var s = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
-  return Math.min(s, Math.max(e, t));
+function b(t) {
+  var _context7;
+  return _mapInstanceProperty(_context7 = d(t).notes()).call(_context7, function (t) {
+    return g.valueOf(t);
+  });
 }
-function k(t, e, s) {
-  return e * (1 - t) + s * t;
+function v(t, e) {
+  var s = w[t];
+  return s ? s(e) : [];
 }
-function M(t, e, s) {
-  return x((t - e) / (s - e));
+var w = {
+  note: function note(t) {
+    return [t];
+  },
+  chord: function chord(t) {
+    return y(t);
+  },
+  scale: function scale(t) {
+    return b(t);
+  },
+  penta: function penta(t) {
+    return b(t);
+  }
+};
+function x(t, e) {
+  return _filterInstanceProperty(t).call(t, function (t) {
+    return _includesInstanceProperty(e).call(e, t);
+  });
 }
-function j(t, e) {
-  return (t %= 1) < 0 && (t += 1), e[Math.floor(t * e.length)];
-}
-var E = /*#__PURE__*/function () {
-  function E() {
+var O = /*#__PURE__*/function () {
+  function O() {
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
       _ref$unit = _ref.unit,
       t = _ref$unit === void 0 ? 1 : _ref$unit,
@@ -236,7 +215,7 @@ var E = /*#__PURE__*/function () {
       n = _ref$grid === void 0 ? 1 : _ref$grid,
       _ref$origin = _ref.origin,
       a = _ref$origin === void 0 ? 0 : _ref$origin;
-    _classCallCheck(this, E);
+    _classCallCheck(this, O);
     this.data = {
       unit: t,
       is: e,
@@ -247,7 +226,7 @@ var E = /*#__PURE__*/function () {
       origin: a
     };
   }
-  _createClass(E, [{
+  _createClass(O, [{
     key: "unit",
     get: function get() {
       return this.data.unit || this.data.is || 1;
@@ -284,7 +263,8 @@ var E = /*#__PURE__*/function () {
     }
   }, {
     key: "use",
-    value: function use(t) {
+    value: function use() {
+      var t = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this;
       return _Object$assign({}, this.data, t);
     }
   }, {
@@ -293,33 +273,31 @@ var E = /*#__PURE__*/function () {
       return this.data = this.use(t), this;
     }
   }]);
-  return E;
+  return O;
 }();
-function N(t, e) {
-  return 0 === e ? t : N(e, t % e);
+function k(t, e) {
+  return 0 === e ? t : k(e, t % e);
 }
-function $(t) {
-  var e = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-  var s = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+function M(t, e, s) {
   return Math.min(s, Math.max(e, t));
 }
-var S = /*#__PURE__*/function () {
-  function S() {
+var j = /*#__PURE__*/function () {
+  function j() {
     var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
       _ref2$map = _mapInstanceProperty(_ref2),
       t = _ref2$map === void 0 ? {} : _ref2$map,
       _ref2$lens = _ref2.lens,
       e = _ref2$lens === void 0 ? {} : _ref2$lens;
-    _classCallCheck(this, S);
-    this.map = t, this.lens = new E(e);
+    _classCallCheck(this, j);
+    this.map = t, this.lens = new O(e);
   }
-  _createClass(S, [{
+  _createClass(j, [{
     key: "normalize",
     value: function normalize(t) {
       if ("number" == typeof t) return t;
       if ("string" == typeof t) {
-        var _e3 = _mapInstanceProperty(this)[t] || 1;
-        return "function" == typeof _e3 ? _e3(t, this) : Number(_e3);
+        var _e2 = _mapInstanceProperty(this)[t] || 1;
+        return "function" == typeof _e2 ? _e2(t, this) : Number(_e2);
       }
       return 1;
     }
@@ -327,7 +305,7 @@ var S = /*#__PURE__*/function () {
     key: "scope",
     value: function scope() {
       var t = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      var e = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.lens;
+      var e = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
       var _this$lens$use = this.lens.use(e),
         s = _this$lens$use.is,
         r = _this$lens$use.as,
@@ -377,7 +355,7 @@ var S = /*#__PURE__*/function () {
         s = _this$scope2.index,
         r = _this$scope2.head,
         i = _this$scope2.tail;
-      return $(s, r, i);
+      return M(s, r, i);
     }
   }, {
     key: "cyclic",
@@ -408,7 +386,7 @@ var S = /*#__PURE__*/function () {
         r = _this$scope5.head,
         i = _this$scope5.tail;
       return function (t, e, s) {
-        return $((t - e) / (s - e));
+        return M((t - e) / (s - e));
       }(s, r, i);
     }
   }, {
@@ -437,7 +415,7 @@ var S = /*#__PURE__*/function () {
     value: function fold(t) {
       var e = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.lens;
       var s = e.grid || 1,
-        r = N(t, s),
+        r = k(t, s),
         i = this.clamp(t, e),
         n = this.snap(i, {
           as: r
@@ -471,7 +449,7 @@ var S = /*#__PURE__*/function () {
     value: function clone(t) {
       var e = _Object$assign({}, _mapInstanceProperty(this), _mapInstanceProperty(t)),
         s = _Object$assign({}, this.lens, t.lens);
-      return new S({
+      return new j({
         map: e,
         lens: s
       });
@@ -479,27 +457,27 @@ var S = /*#__PURE__*/function () {
   }], [{
     key: "use",
     value: function use(t) {
-      return new S(t);
+      return new j(t);
     }
   }]);
-  return S;
+  return j;
 }();
-var T = /*#__PURE__*/function (_S) {
-  _inherits(T, _S);
-  var _super = _createSuper(T);
-  function T(t, e) {
+var E = /*#__PURE__*/function (_j) {
+  _inherits(E, _j);
+  var _super = _createSuper(E);
+  function E(t, e) {
     var _this2;
-    _classCallCheck(this, T);
+    _classCallCheck(this, E);
     _this2 = _super.call(this, {
       map: null,
       lens: e
-    }), _this2.source = t, _this2.data = l(t), _this2.init();
+    }), _this2.source = t, _this2.data = p(t), _this2.init();
     return _this2;
   }
-  _createClass(T, [{
+  _createClass(E, [{
     key: "init",
     value: function init() {
-      this.map = _mapInstanceProperty(T).call(T, this.data), this.lens.assign({
+      this.map = _mapInstanceProperty(E).call(E, this.data), this.lens.assign({
         unit: "step",
         max: this.total
       });
@@ -611,7 +589,7 @@ var T = /*#__PURE__*/function (_S) {
   }], [{
     key: "map",
     value: function map(t) {
-      var e = c(t, !1),
+      var e = l(t, !1),
         _e$units = e.units,
         s = _e$units.beat,
         r = _e$units.step,
@@ -641,14 +619,14 @@ var T = /*#__PURE__*/function (_S) {
       };
     }
   }]);
-  return T;
-}(S);
-var z = /*#__PURE__*/function () {
-  function z(t) {
-    _classCallCheck(this, z);
+  return E;
+}(j);
+var $ = /*#__PURE__*/function () {
+  function $(t) {
+    _classCallCheck(this, $);
     this.data = t;
   }
-  _createClass(z, [{
+  _createClass($, [{
     key: "id",
     get: function get() {
       var _context10;
@@ -657,7 +635,7 @@ var z = /*#__PURE__*/function () {
   }, {
     key: "uid",
     get: function get() {
-      return z.uid(this.id);
+      return $.uid(this.id);
     }
   }, {
     key: "value",
@@ -682,12 +660,12 @@ var z = /*#__PURE__*/function () {
   }, {
     key: "notes",
     get: function get() {
-      return O.all(this.kind, this.value);
+      return g.all(this.kind, this.value);
     }
   }, {
     key: "musical",
     get: function get() {
-      return _includesInstanceProperty(A).call(A, this.kind);
+      return _includesInstanceProperty(z).call(z, this.kind);
     }
   }], [{
     key: "uid",
@@ -695,20 +673,20 @@ var z = /*#__PURE__*/function () {
       return t.split(".").pop();
     }
   }]);
-  return z;
+  return $;
 }();
-var J = /*#__PURE__*/function () {
-  function J() {
+var T = /*#__PURE__*/function () {
+  function T() {
     var _ref10 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
       t = _ref10.source,
       e = _ref10.store,
       s = _ref10.cast;
-    _classCallCheck(this, J);
-    this.source = c(t), this.cast = s || function (t) {
+    _classCallCheck(this, T);
+    this.source = l(t, !1), this.cast = s || function (t) {
       return t;
-    }, this.data = e || J.cast(this.source.elements, s);
+    }, this.data = e || T.cast(this.source.elements, this.cast);
   }
-  _createClass(J, [{
+  _createClass(T, [{
     key: "all",
     get: function get() {
       var _context11,
@@ -743,12 +721,12 @@ var J = /*#__PURE__*/function () {
     value: function get(t) {
       var e = "string" == typeof t ? t.split(".") : [];
       if (2 === e.length) {
-        var _e4 = _slicedToArray(e, 2),
-          _t = _e4[0],
-          _s3 = _e4[1],
-          _r2 = this.data[_t][_s3];
+        var _e3 = _slicedToArray(e, 2),
+          _t = _e3[0],
+          _s2 = _e3[1],
+          _r2 = this.data[_t][_s2];
         return _r2 ? _objectSpread(_objectSpread({}, _r2), {}, {
-          id: _s3,
+          id: _s2,
           kind: _t
         }) : null;
       }
@@ -765,7 +743,7 @@ var J = /*#__PURE__*/function () {
     value: function every(t) {
       var _context15;
       return _mapInstanceProperty(_context15 = _Object$values(this.data[t])).call(_context15, function (t) {
-        return new z(t);
+        return new $(t);
       });
     }
   }, {
@@ -790,12 +768,12 @@ var J = /*#__PURE__*/function () {
       if (!t || "string" != typeof t) throw TypeError("kind must be a non-empty string");
       if (null == e) throw TypeError("value must be defined and non-null");
       var r = n(t, _concatInstanceProperty(_context16 = [e]).call(_context16, _toConsumableArray(s))),
-        i = z.uid(r.id),
+        i = $.uid(r.id),
         a = this.cast(_objectSpread(_objectSpread({}, r), {}, {
           id: i,
           kind: t
         }));
-      return this.data[t] = this.data[t] || {}, this.data[t][i] = a, this.source.elements = this.data, new z(a);
+      return this.data[t] = this.data[t] || {}, this.data[t][i] = a, this.source.elements = this.data, new $(a);
     }
   }], [{
     key: "cast",
@@ -822,15 +800,15 @@ var J = /*#__PURE__*/function () {
       }, {}) : null;
     }
   }]);
-  return J;
+  return T;
 }();
-var A = ["note", "chord", "scale", " penta"];
-var U = /*#__PURE__*/function () {
-  function U(t, e) {
-    _classCallCheck(this, U);
+var z = ["note", "chord", "scale", " penta"];
+var N = /*#__PURE__*/function () {
+  function N(t, e) {
+    _classCallCheck(this, N);
     this.data = t, this.store = e;
   }
-  _createClass(U, [{
+  _createClass(N, [{
     key: "id",
     get: function get() {
       return this.data.id;
@@ -950,7 +928,7 @@ var U = /*#__PURE__*/function () {
   }, {
     key: "notesOf",
     value: function notesOf(t) {
-      return O.unite(_flatMapInstanceProperty(t).call(t, function (_ref19) {
+      return g.unite(_flatMapInstanceProperty(t).call(t, function (_ref19) {
         var t = _ref19.notes;
         return t;
       }));
@@ -959,34 +937,34 @@ var U = /*#__PURE__*/function () {
     key: "from",
     value: function from(t, e) {
       return _Array$isArray(t) ? _mapInstanceProperty(t).call(t, function (t) {
-        return new U(t, e);
-      }) : [new U(t, e)];
+        return new N(t, e);
+      }) : [new N(t, e)];
     }
   }]);
-  return U;
+  return N;
 }();
-var B = /*#__PURE__*/function () {
-  function B(t) {
-    _classCallCheck(this, B);
+var S = /*#__PURE__*/function () {
+  function S(t) {
+    _classCallCheck(this, S);
     this.assign(t);
   }
-  _createClass(B, [{
+  _createClass(S, [{
     key: "init",
     value: function init() {
       if (!this.parses) return null;
-      this.store = new J({
+      this.store = new T({
         source: this.data,
         cast: function cast(t) {
           return _objectSpread(_objectSpread({}, t), {}, {
-            notes: O.all(t.kind, t.value)
+            notes: g.all(t.kind, t.value)
           });
         }
-      }), this.beats = U.from(this.data.beats, this.store), this.durations = new T(this.data);
+      }), this.beats = N.from(this.data.beats, this.store), this.durations = new E(this.data);
     }
   }, {
     key: "assign",
     value: function assign(t) {
-      return this.source = t, this.data = l(t), this.init(), this;
+      return this.source = t, this.data = p(t, !1), this.init(), this;
     }
   }, {
     key: "headers",
@@ -1022,7 +1000,7 @@ var B = /*#__PURE__*/function () {
     key: "notes",
     get: function get() {
       var _context29;
-      return O.unite(_flatMapInstanceProperty(_context29 = this.beats).call(_context29, function (t) {
+      return g.unite(_flatMapInstanceProperty(_context29 = this.beats).call(_context29, function (t) {
         var _context30;
         return _flatMapInstanceProperty(_context30 = t.elements).call(_context30, function (_ref20) {
           var t = _ref20.notes;
@@ -1074,7 +1052,24 @@ var B = /*#__PURE__*/function () {
       return this.beats[e];
     }
   }]);
-  return B;
+  return S;
 }();
-export { T as Durations, z as Element, J as Elements, A as MUSICAL_ELEMENTS, B as Music, O as Note, d as chordify, x as clamp, l as compile, c as compose, w as gcd, M as invlerp, k as lerp, y as notesIn, f as notesInChord, g as notesInScale, v as notesIntersect, b as notesOf, m as scaleToString, p as scaleify, j as steps, h as valid, o as validate };
+function A(t, e) {
+  return 0 == e ? t : A(e, t % e);
+}
+function J(t) {
+  var e = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  var s = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+  return Math.min(s, Math.max(e, t));
+}
+function U(t, e, s) {
+  return e * (1 - t) + s * t;
+}
+function q(t, e, s) {
+  return J((t - e) / (s - e));
+}
+function B(t, e) {
+  return (t %= 1) < 0 && (t += 1), e[Math.floor(t * e.length)];
+}
+export { E as Durations, $ as Element, T as Elements, z as MUSICAL_ELEMENTS, S as Music, g as Note, m as chordify, J as clamp, p as compile, l as compose, A as gcd, q as invlerp, U as lerp, v as notesIn, y as notesInChord, b as notesInScale, x as notesIntersect, w as notesOf, f as scaleToString, d as scaleify, B as steps, c as valid, h as validate };
 //# sourceMappingURL=bach-js.esm.js.map
