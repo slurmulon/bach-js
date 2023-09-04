@@ -1,5 +1,4 @@
 import { compile, compose } from './data'
-import { gcd, clamp, lerp } from './math'
 import { Units } from 'segu'
 
 /**

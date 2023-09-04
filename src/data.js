@@ -1,5 +1,4 @@
-import bach from 'bach-cljs'
-import { Note } from './note'
+import { compose as parse } from 'bach-cljs'
 import { valid } from './validate'
 import {
   scale as teoriaScale,
@@ -15,7 +14,7 @@ export const compose = (source, strict = true) => {
   if (typeof source === 'string') {
     const upgraded = source.replace(/!play/i, 'play!')
 
-    return bach.compose(upgraded)
+    return parse(upgraded)
   }
 
   if (typeof source === 'object') {
@@ -55,40 +54,4 @@ export function chordify (value) {
 
 export function scaleToString (scale) {
   return `${scale.tonic.toString().slice(0,2)} ${scale.name}`
-}
-
-export function notesInChord (value) {
-  return chordify(value)
-    .notes()
-    .map(note => Note.valueOf(note))
-}
-
-export function notesInScale (value) {
-  return scaleify(value)
-    .notes()
-    .map(note => Note.valueOf(note))
-}
-
-export function notesIn (kind, value) {
-  const notes = notesOf[kind]
-
-  if (notes) {
-    return notes(value)
-  }
-
-  return []
-}
-
-// TODO: Allow custom note resolvers to be registered globally or locally so people can easily define their own semantics
-//  - Could call this `itemsOf` to be more generic and flexible
-export const notesOf = {
-  note:  value => [value],
-  chord: value => notesInChord(value),
-  scale: value => notesInScale(value),
-  penta: value => notesInScale(value)
-}
-
-// TODO: Note.valueOf
-export function notesIntersect (left, right) {
- return left.filter(note => right.includes(note))
 }

@@ -58,9 +58,10 @@ export class Element {
 export class Elements {
 
   constructor ({ source, store, cast } = {}) {
-    this.source = compose(source)
+    // this.source = compose(source)
+    this.source = compose(source, false)
     this.cast = cast || (_ => _)
-    this.data = store || Elements.cast(this.source.elements, cast)
+    this.data = store || Elements.cast(this.source.elements, this.cast)
   }
 
   get all () {

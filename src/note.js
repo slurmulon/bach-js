@@ -1,5 +1,5 @@
 import { note as teoriaNote, Note as TeoriaNote } from 'teoria'
-import { notesIn } from './data'
+import { scaleify, chordify } from './data'
 
 // TODO: Replce with individual functions and remove class, no longer necessary
 // TODO: Remove cyclic reference between data module by bringing in all note related functions.
@@ -66,4 +66,40 @@ export class Note {
     return Note.hash(left) == Note.hash(right)
   }
 
+}
+
+export function notesInChord (value) {
+  return chordify(value)
+    .notes()
+    .map(note => Note.valueOf(note))
+}
+
+export function notesInScale (value) {
+  return scaleify(value)
+    .notes()
+    .map(note => Note.valueOf(note))
+}
+
+export function notesIn (kind, value) {
+  const notes = notesOf[kind]
+
+  if (notes) {
+    return notes(value)
+  }
+
+  return []
+}
+
+// TODO: Allow custom note resolvers to be registered globally or locally so people can easily define their own semantics
+//  - Could call this `itemsOf` to be more generic and flexible
+export const notesOf = {
+  note:  value => [value],
+  chord: value => notesInChord(value),
+  scale: value => notesInScale(value),
+  penta: value => notesInScale(value)
+}
+
+// TODO: Note.valueOf
+export function notesIntersect (left, right) {
+ return left.filter(note => right.includes(note))
 }
